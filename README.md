@@ -1,4 +1,6 @@
-# woleet-api-client
+# woleet-openapi-java-client
+
+WoleetApi - Woleet's Swagger/OpenAPI official Java client.
 
 ## Requirements
 
