@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 Get the proof receipt of an anchor.
 
-Use this operation to retrieve the ChainPoint standard receipt associated to a given anchor. This endpoint can be accessed publicly: authentication is required only to retreive private anchors&#39; receipts. Public anchors&#39; receipts can be retreived without authentication. 
+Use this operation to retrieve the ChainPoint standard receipt associated to a given anchor. This endpoint can be accessed publicly: authentication is required only to retrieve private anchors&#39; receipts. Public anchors&#39; receipts can be retrieved with or without authentication. 
 
 ### Example
 ```java
@@ -33,7 +33,7 @@ BasicAuth.setUsername("YOUR USERNAME");
 BasicAuth.setPassword("YOUR PASSWORD");
 
 ReceiptApi apiInstance = new ReceiptApi();
-String anchorid = "anchorid_example"; // String | Identifier of the anchor for which to build the proof receipt. 
+String anchorid = "anchorid_example"; // String | Identifier of the anchor for which to build the proof receipt.
 try {
     Receipt result = apiInstance.getReceipt(anchorid);
     System.out.println(result);
@@ -47,7 +47,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **anchorid** | **String**| Identifier of the anchor for which to build the proof receipt.  |
+ **anchorid** | **String**| Identifier of the anchor for which to build the proof receipt. |
 
 ### Return type
 
@@ -68,7 +68,7 @@ Name | Type | Description  | Notes
 
 Verify a proof receipt.
 
-Use this operation to verify a ChainPoint standard receipt.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to verify a receipt. 
+Use this operation to verify a ChainPoint standard receipt.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to verify a proof receipt. 
 
 ### Example
 ```java
@@ -78,7 +78,7 @@ Use this operation to verify a ChainPoint standard receipt.&lt;br&gt; This is a 
 
 
 ReceiptApi apiInstance = new ReceiptApi();
-Receipt receipt = new Receipt(); // Receipt | Chainpoint standard receipt to verify. 
+Receipt receipt = new Receipt(); // Receipt | Chainpoint standard receipt to verify.
 try {
     ReceiptVerificationStatus result = apiInstance.verifyReceipt(receipt);
     System.out.println(result);
@@ -92,7 +92,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **receipt** | [**Receipt**](Receipt.md)| Chainpoint standard receipt to verify.  |
+ **receipt** | [**Receipt**](Receipt.md)| Chainpoint standard receipt to verify. |
 
 ### Return type
 

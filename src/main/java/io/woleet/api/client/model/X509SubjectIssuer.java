@@ -11,19 +11,102 @@
  */
 
 
-package io.woleet.api.auth;
+package io.woleet.api.client.model;
 
-import io.woleet.api.Pair;
+import java.util.Objects;
+import com.google.gson.annotations.SerializedName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import io.woleet.api.client.model.X500Name;
 
-import java.util.Map;
-import java.util.List;
+/**
+ * X509SubjectIssuer
+ */
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-06-12T09:54:01.385+02:00")
+public class X509SubjectIssuer {
+  @SerializedName("subject")
+  private X500Name subject = null;
 
-public interface Authentication {
-    /**
-     * Apply authentication settings to header and query params.
-     *
-     * @param queryParams List of query parameters
-     * @param headerParams Map of header parameters
-     */
-    void applyToParams(List<Pair> queryParams, Map<String, String> headerParams);
+  @SerializedName("issuer")
+  private X500Name issuer = null;
+
+  public X509SubjectIssuer subject(X500Name subject) {
+    this.subject = subject;
+    return this;
+  }
+
+   /**
+   * Get subject
+   * @return subject
+  **/
+  @ApiModelProperty(example = "null", value = "")
+  public X500Name getSubject() {
+    return subject;
+  }
+
+  public void setSubject(X500Name subject) {
+    this.subject = subject;
+  }
+
+  public X509SubjectIssuer issuer(X500Name issuer) {
+    this.issuer = issuer;
+    return this;
+  }
+
+   /**
+   * Get issuer
+   * @return issuer
+  **/
+  @ApiModelProperty(example = "null", value = "")
+  public X500Name getIssuer() {
+    return issuer;
+  }
+
+  public void setIssuer(X500Name issuer) {
+    this.issuer = issuer;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    X509SubjectIssuer x509SubjectIssuer = (X509SubjectIssuer) o;
+    return Objects.equals(this.subject, x509SubjectIssuer.subject) &&
+        Objects.equals(this.issuer, x509SubjectIssuer.issuer);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(subject, issuer);
+  }
+
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class X509SubjectIssuer {\n");
+    
+    sb.append("    subject: ").append(toIndentedString(subject)).append("\n");
+    sb.append("    issuer: ").append(toIndentedString(issuer)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+  
 }
+

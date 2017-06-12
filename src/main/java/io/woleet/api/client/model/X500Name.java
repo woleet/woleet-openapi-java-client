@@ -11,19 +11,193 @@
  */
 
 
-package io.woleet.api.auth;
+package io.woleet.api.client.model;
 
-import io.woleet.api.Pair;
+import java.util.Objects;
+import com.google.gson.annotations.SerializedName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Map;
-import java.util.List;
+/**
+ * X500Name
+ */
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-06-12T09:54:01.385+02:00")
+public class X500Name {
+  @SerializedName("C")
+  private String C = null;
 
-public interface Authentication {
-    /**
-     * Apply authentication settings to header and query params.
-     *
-     * @param queryParams List of query parameters
-     * @param headerParams Map of header parameters
-     */
-    void applyToParams(List<Pair> queryParams, Map<String, String> headerParams);
+  @SerializedName("ST")
+  private String ST = null;
+
+  @SerializedName("L")
+  private String L = null;
+
+  @SerializedName("O")
+  private String O = null;
+
+  @SerializedName("OU")
+  private String OU = null;
+
+  @SerializedName("CN")
+  private String CN = null;
+
+  public X500Name C(String C) {
+    this.C = C;
+    return this;
+  }
+
+   /**
+   * Country/region
+   * @return C
+  **/
+  @ApiModelProperty(example = "null", value = "Country/region")
+  public String getC() {
+    return C;
+  }
+
+  public void setC(String C) {
+    this.C = C;
+  }
+
+  public X500Name ST(String ST) {
+    this.ST = ST;
+    return this;
+  }
+
+   /**
+   * State or Province
+   * @return ST
+  **/
+  @ApiModelProperty(example = "null", value = "State or Province")
+  public String getST() {
+    return ST;
+  }
+
+  public void setST(String ST) {
+    this.ST = ST;
+  }
+
+  public X500Name L(String L) {
+    this.L = L;
+    return this;
+  }
+
+   /**
+   * Locality
+   * @return L
+  **/
+  @ApiModelProperty(example = "null", value = "Locality")
+  public String getL() {
+    return L;
+  }
+
+  public void setL(String L) {
+    this.L = L;
+  }
+
+  public X500Name O(String O) {
+    this.O = O;
+    return this;
+  }
+
+   /**
+   * Organization
+   * @return O
+  **/
+  @ApiModelProperty(example = "null", value = "Organization")
+  public String getO() {
+    return O;
+  }
+
+  public void setO(String O) {
+    this.O = O;
+  }
+
+  public X500Name OU(String OU) {
+    this.OU = OU;
+    return this;
+  }
+
+   /**
+   * Organizational Unit
+   * @return OU
+  **/
+  @ApiModelProperty(example = "null", value = "Organizational Unit")
+  public String getOU() {
+    return OU;
+  }
+
+  public void setOU(String OU) {
+    this.OU = OU;
+  }
+
+  public X500Name CN(String CN) {
+    this.CN = CN;
+    return this;
+  }
+
+   /**
+   * Common Name
+   * @return CN
+  **/
+  @ApiModelProperty(example = "null", value = "Common Name")
+  public String getCN() {
+    return CN;
+  }
+
+  public void setCN(String CN) {
+    this.CN = CN;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    X500Name x500Name = (X500Name) o;
+    return Objects.equals(this.C, x500Name.C) &&
+        Objects.equals(this.ST, x500Name.ST) &&
+        Objects.equals(this.L, x500Name.L) &&
+        Objects.equals(this.O, x500Name.O) &&
+        Objects.equals(this.OU, x500Name.OU) &&
+        Objects.equals(this.CN, x500Name.CN);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(C, ST, L, O, OU, CN);
+  }
+
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class X500Name {\n");
+    
+    sb.append("    C: ").append(toIndentedString(C)).append("\n");
+    sb.append("    ST: ").append(toIndentedString(ST)).append("\n");
+    sb.append("    L: ").append(toIndentedString(L)).append("\n");
+    sb.append("    O: ").append(toIndentedString(O)).append("\n");
+    sb.append("    OU: ").append(toIndentedString(OU)).append("\n");
+    sb.append("    CN: ").append(toIndentedString(CN)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+  
 }
+

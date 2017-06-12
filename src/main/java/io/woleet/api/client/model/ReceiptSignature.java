@@ -11,19 +11,147 @@
  */
 
 
-package io.woleet.api.auth;
+package io.woleet.api.client.model;
 
-import io.woleet.api.Pair;
+import java.util.Objects;
+import com.google.gson.annotations.SerializedName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Map;
-import java.util.List;
+/**
+ * ReceiptSignature
+ */
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-06-12T09:54:01.385+02:00")
+public class ReceiptSignature {
+  @SerializedName("signedHash")
+  private String signedHash = null;
 
-public interface Authentication {
-    /**
-     * Apply authentication settings to header and query params.
-     *
-     * @param queryParams List of query parameters
-     * @param headerParams Map of header parameters
-     */
-    void applyToParams(List<Pair> queryParams, Map<String, String> headerParams);
+  @SerializedName("pubKey")
+  private String pubKey = null;
+
+  @SerializedName("signature")
+  private String signature = null;
+
+  @SerializedName("identityURL")
+  private String identityURL = null;
+
+  public ReceiptSignature signedHash(String signedHash) {
+    this.signedHash = signedHash;
+    return this;
+  }
+
+   /**
+   * Get signedHash
+   * @return signedHash
+  **/
+  @ApiModelProperty(example = "null", required = true, value = "")
+  public String getSignedHash() {
+    return signedHash;
+  }
+
+  public void setSignedHash(String signedHash) {
+    this.signedHash = signedHash;
+  }
+
+  public ReceiptSignature pubKey(String pubKey) {
+    this.pubKey = pubKey;
+    return this;
+  }
+
+   /**
+   * Get pubKey
+   * @return pubKey
+  **/
+  @ApiModelProperty(example = "null", required = true, value = "")
+  public String getPubKey() {
+    return pubKey;
+  }
+
+  public void setPubKey(String pubKey) {
+    this.pubKey = pubKey;
+  }
+
+  public ReceiptSignature signature(String signature) {
+    this.signature = signature;
+    return this;
+  }
+
+   /**
+   * Get signature
+   * @return signature
+  **/
+  @ApiModelProperty(example = "null", required = true, value = "")
+  public String getSignature() {
+    return signature;
+  }
+
+  public void setSignature(String signature) {
+    this.signature = signature;
+  }
+
+  public ReceiptSignature identityURL(String identityURL) {
+    this.identityURL = identityURL;
+    return this;
+  }
+
+   /**
+   * Get identityURL
+   * @return identityURL
+  **/
+  @ApiModelProperty(example = "null", value = "")
+  public String getIdentityURL() {
+    return identityURL;
+  }
+
+  public void setIdentityURL(String identityURL) {
+    this.identityURL = identityURL;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ReceiptSignature receiptSignature = (ReceiptSignature) o;
+    return Objects.equals(this.signedHash, receiptSignature.signedHash) &&
+        Objects.equals(this.pubKey, receiptSignature.pubKey) &&
+        Objects.equals(this.signature, receiptSignature.signature) &&
+        Objects.equals(this.identityURL, receiptSignature.identityURL);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(signedHash, pubKey, signature, identityURL);
+  }
+
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class ReceiptSignature {\n");
+    
+    sb.append("    signedHash: ").append(toIndentedString(signedHash)).append("\n");
+    sb.append("    pubKey: ").append(toIndentedString(pubKey)).append("\n");
+    sb.append("    signature: ").append(toIndentedString(signature)).append("\n");
+    sb.append("    identityURL: ").append(toIndentedString(identityURL)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+  
 }
+

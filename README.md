@@ -1,6 +1,4 @@
-# woleet-openapi-java-client
-
-WoleetApi - Woleet's Swagger/OpenAPI official Java client.
+# woleet-api-client
 
 ## Requirements
 
@@ -62,7 +60,7 @@ Please follow the [installation](#installation) instruction and execute the foll
 
 import io.woleet.api.*;
 import io.woleet.api.auth.*;
-import io.woleet.api.model.*;
+import io.woleet.api.client.model.*;
 import io.woleet.api.client.AnchorApi;
 
 import java.io.File;
@@ -79,7 +77,7 @@ public class AnchorApiExample {
         BasicAuth.setPassword("YOUR PASSWORD");
 
         AnchorApi apiInstance = new AnchorApi();
-        Anchor anchor = new Anchor(); // Anchor | Anchor object to create. 
+        Anchor anchor = new Anchor(); // Anchor | Anchor object to create.
         try {
             Anchor result = apiInstance.createAnchor(anchor);
             System.out.println(result);
@@ -114,13 +112,17 @@ Class | Method | HTTP request | Description
  - [Anchor](docs/Anchor.md)
  - [AnchorIds](docs/AnchorIds.md)
  - [Anchors](docs/Anchors.md)
+ - [IdentityVerificationStatus](docs/IdentityVerificationStatus.md)
  - [Receipt](docs/Receipt.md)
  - [ReceiptExtraNode](docs/ReceiptExtraNode.md)
  - [ReceiptHeader](docs/ReceiptHeader.md)
+ - [ReceiptSignature](docs/ReceiptSignature.md)
  - [ReceiptTarget](docs/ReceiptTarget.md)
  - [ReceiptTargetProofNode](docs/ReceiptTargetProofNode.md)
  - [ReceiptVerificationStatus](docs/ReceiptVerificationStatus.md)
  - [Token](docs/Token.md)
+ - [X500Name](docs/X500Name.md)
+ - [X509SubjectIssuer](docs/X509SubjectIssuer.md)
 
 
 ## Documentation for Authorization
@@ -133,7 +135,7 @@ Authentication schemes defined for the API:
 
 ## Recommendation
 
-It's recommended to create an instance of `ApiClient` per thread in a multithreaded environment to avoid any potential issue.
+It's recommended to create an instance of `ApiClient` per thread in a multithreaded environment to avoid any potential issues.
 
 ## Author
 

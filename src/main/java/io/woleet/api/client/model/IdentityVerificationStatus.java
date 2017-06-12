@@ -11,19 +11,157 @@
  */
 
 
-package io.woleet.api.auth;
+package io.woleet.api.client.model;
 
-import io.woleet.api.Pair;
-
-import java.util.Map;
+import java.util.Objects;
+import com.google.gson.annotations.SerializedName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import io.woleet.api.client.model.X509SubjectIssuer;
+import java.util.ArrayList;
 import java.util.List;
 
-public interface Authentication {
-    /**
-     * Apply authentication settings to header and query params.
-     *
-     * @param queryParams List of query parameters
-     * @param headerParams Map of header parameters
-     */
-    void applyToParams(List<Pair> queryParams, Map<String, String> headerParams);
+/**
+ * IdentityVerificationStatus
+ */
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2017-06-12T09:54:01.385+02:00")
+public class IdentityVerificationStatus {
+  /**
+   * Identity verification status code:<br> - VERIFIED: the identity is verified: the identity URL succeeded to sign a secret using the receipt's `pubKey` public key<br> - HTTP_ERROR: the identity URL returned an HTTP error<br> - INVALID_SIGNATURE: the identity URL returned an invalid signature (and thus failed to prove the ownership of the receipt's `pubKey` public key)<br> 
+   */
+  public enum CodeEnum {
+    @SerializedName("VERIFIED")
+    VERIFIED("VERIFIED"),
+    
+    @SerializedName("HTTP_ERROR")
+    HTTP_ERROR("HTTP_ERROR"),
+    
+    @SerializedName("INVALID_SIGNATURE")
+    INVALID_SIGNATURE("INVALID_SIGNATURE");
+
+    private String value;
+
+    CodeEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
+  }
+
+  @SerializedName("code")
+  private CodeEnum code = null;
+
+  @SerializedName("text")
+  private String text = null;
+
+  @SerializedName("certificates")
+  private List<X509SubjectIssuer> certificates = new ArrayList<X509SubjectIssuer>();
+
+  public IdentityVerificationStatus code(CodeEnum code) {
+    this.code = code;
+    return this;
+  }
+
+   /**
+   * Identity verification status code:<br> - VERIFIED: the identity is verified: the identity URL succeeded to sign a secret using the receipt's `pubKey` public key<br> - HTTP_ERROR: the identity URL returned an HTTP error<br> - INVALID_SIGNATURE: the identity URL returned an invalid signature (and thus failed to prove the ownership of the receipt's `pubKey` public key)<br> 
+   * @return code
+  **/
+  @ApiModelProperty(example = "null", value = "Identity verification status code:<br> - VERIFIED: the identity is verified: the identity URL succeeded to sign a secret using the receipt's `pubKey` public key<br> - HTTP_ERROR: the identity URL returned an HTTP error<br> - INVALID_SIGNATURE: the identity URL returned an invalid signature (and thus failed to prove the ownership of the receipt's `pubKey` public key)<br> ")
+  public CodeEnum getCode() {
+    return code;
+  }
+
+  public void setCode(CodeEnum code) {
+    this.code = code;
+  }
+
+  public IdentityVerificationStatus text(String text) {
+    this.text = text;
+    return this;
+  }
+
+   /**
+   * Identity verification status text giving more insight about verification errors.
+   * @return text
+  **/
+  @ApiModelProperty(example = "null", value = "Identity verification status text giving more insight about verification errors.")
+  public String getText() {
+    return text;
+  }
+
+  public void setText(String text) {
+    this.text = text;
+  }
+
+  public IdentityVerificationStatus certificates(List<X509SubjectIssuer> certificates) {
+    this.certificates = certificates;
+    return this;
+  }
+
+  public IdentityVerificationStatus addCertificatesItem(X509SubjectIssuer certificatesItem) {
+    this.certificates.add(certificatesItem);
+    return this;
+  }
+
+   /**
+   * Array of X500 subject and issuer distinguished names of all X509 certificates of the identity URL.
+   * @return certificates
+  **/
+  @ApiModelProperty(example = "null", value = "Array of X500 subject and issuer distinguished names of all X509 certificates of the identity URL.")
+  public List<X509SubjectIssuer> getCertificates() {
+    return certificates;
+  }
+
+  public void setCertificates(List<X509SubjectIssuer> certificates) {
+    this.certificates = certificates;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    IdentityVerificationStatus identityVerificationStatus = (IdentityVerificationStatus) o;
+    return Objects.equals(this.code, identityVerificationStatus.code) &&
+        Objects.equals(this.text, identityVerificationStatus.text) &&
+        Objects.equals(this.certificates, identityVerificationStatus.certificates);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(code, text, certificates);
+  }
+
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class IdentityVerificationStatus {\n");
+    
+    sb.append("    code: ").append(toIndentedString(code)).append("\n");
+    sb.append("    text: ").append(toIndentedString(text)).append("\n");
+    sb.append("    certificates: ").append(toIndentedString(certificates)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+  
 }
+
