@@ -11,52 +11,40 @@
  */
 
 
-package io.woleet.api;
+package io.woleet.api.client;
 
-import java.io.IOException;
+import io.woleet.api.ApiException;
+import io.woleet.api.client.model.Credits;
+import org.junit.Test;
+import org.junit.Ignore;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Callback for asynchronous API call.
- *
- * @param <T> The return type
+ * API tests for UserApi
  */
-public interface ApiCallback<T> {
-    /**
-     * This is called when the API call fails.
-     *
-     * @param e The exception causing the failure
-     * @param statusCode Status code of the response if available, otherwise it would be 0
-     * @param responseHeaders Headers of the response if available, otherwise it would be null
-     */
-    void onFailure(ApiException e, int statusCode, Map<String, List<String>> responseHeaders);
+@Ignore
+public class UserApiTest {
 
-    /**
-     * This is called when the API call succeeded.
-     *
-     * @param result The result deserialized from response
-     * @param statusCode Status code of the response
-     * @param responseHeaders Headers of the response
-     */
-    void onSuccess(T result, int statusCode, Map<String, List<String>> responseHeaders);
+    private final UserApi api = new UserApi();
 
+    
     /**
-     * This is called when the API upload processing.
+     * Get remaining anchoring credits.
      *
-     * @param bytesWritten bytes Written
-     * @param contentLength content length of request body
-     * @param done write end
+     * Use this operation to get the remaining anchoring credits of the authenticated user&#39;s account.&lt;br&gt; 
+     *
+     * @throws ApiException
+     *          if the Api call fails
      */
-    void onUploadProgress(long bytesWritten, long contentLength, boolean done);
+    @Test
+    public void getCreditsTest() throws ApiException {
+        Credits response = api.getCredits();
 
-    /**
-     * This is called when the API downlond processing.
-     *
-     * @param bytesRead bytes Read
-     * @param contentLength content lenngth of the response
-     * @param done Read end
-     */
-    void onDownloadProgress(long bytesRead, long contentLength, boolean done);
+        // TODO: test validations
+    }
+    
 }

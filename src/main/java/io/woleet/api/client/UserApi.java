@@ -11,52 +11,163 @@
  */
 
 
-package io.woleet.api;
+package io.woleet.api.client;
+
+import io.woleet.api.ApiCallback;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.ApiResponse;
+import io.woleet.api.Configuration;
+import io.woleet.api.Pair;
+import io.woleet.api.ProgressRequestBody;
+import io.woleet.api.ProgressResponseBody;
+
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 
-import java.util.Map;
+
+import io.woleet.api.client.model.Credits;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Callback for asynchronous API call.
- *
- * @param <T> The return type
- */
-public interface ApiCallback<T> {
-    /**
-     * This is called when the API call fails.
-     *
-     * @param e The exception causing the failure
-     * @param statusCode Status code of the response if available, otherwise it would be 0
-     * @param responseHeaders Headers of the response if available, otherwise it would be null
-     */
-    void onFailure(ApiException e, int statusCode, Map<String, List<String>> responseHeaders);
+public class UserApi {
+    private ApiClient apiClient;
 
-    /**
-     * This is called when the API call succeeded.
-     *
-     * @param result The result deserialized from response
-     * @param statusCode Status code of the response
-     * @param responseHeaders Headers of the response
-     */
-    void onSuccess(T result, int statusCode, Map<String, List<String>> responseHeaders);
+    public UserApi() {
+        this(Configuration.getDefaultApiClient());
+    }
+
+    public UserApi(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
+
+    public ApiClient getApiClient() {
+        return apiClient;
+    }
+
+    public void setApiClient(ApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
     /**
-     * This is called when the API upload processing.
-     *
-     * @param bytesWritten bytes Written
-     * @param contentLength content length of request body
-     * @param done write end
+     * Build call for getCredits
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
      */
-    void onUploadProgress(long bytesWritten, long contentLength, boolean done);
+    public com.squareup.okhttp.Call getCreditsCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = null;
+        
+        // create path and map variables
+        String localVarPath = "/user/credits";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                    .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "BasicAuth", "JWTAuth" };
+        return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+    
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call getCreditsValidateBeforeCall(final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        
+        
+        com.squareup.okhttp.Call call = getCreditsCall(progressListener, progressRequestListener);
+        return call;
+
+        
+        
+        
+        
+    }
 
     /**
-     * This is called when the API downlond processing.
-     *
-     * @param bytesRead bytes Read
-     * @param contentLength content lenngth of the response
-     * @param done Read end
+     * Get remaining anchoring credits.
+     * Use this operation to get the remaining anchoring credits of the authenticated user&#39;s account.&lt;br&gt; 
+     * @return Credits
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    void onDownloadProgress(long bytesRead, long contentLength, boolean done);
+    public Credits getCredits() throws ApiException {
+        ApiResponse<Credits> resp = getCreditsWithHttpInfo();
+        return resp.getData();
+    }
+
+    /**
+     * Get remaining anchoring credits.
+     * Use this operation to get the remaining anchoring credits of the authenticated user&#39;s account.&lt;br&gt; 
+     * @return ApiResponse&lt;Credits&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public ApiResponse<Credits> getCreditsWithHttpInfo() throws ApiException {
+        com.squareup.okhttp.Call call = getCreditsValidateBeforeCall(null, null);
+        Type localVarReturnType = new TypeToken<Credits>(){}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
+
+    /**
+     * Get remaining anchoring credits. (asynchronously)
+     * Use this operation to get the remaining anchoring credits of the authenticated user&#39;s account.&lt;br&gt; 
+     * @param callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     */
+    public com.squareup.okhttp.Call getCreditsAsync(final ApiCallback<Credits> callback) throws ApiException {
+
+        ProgressResponseBody.ProgressListener progressListener = null;
+        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
+
+        if (callback != null) {
+            progressListener = new ProgressResponseBody.ProgressListener() {
+                @Override
+                public void update(long bytesRead, long contentLength, boolean done) {
+                    callback.onDownloadProgress(bytesRead, contentLength, done);
+                }
+            };
+
+            progressRequestListener = new ProgressRequestBody.ProgressRequestListener() {
+                @Override
+                public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
+                    callback.onUploadProgress(bytesWritten, contentLength, done);
+                }
+            };
+        }
+
+        com.squareup.okhttp.Call call = getCreditsValidateBeforeCall(progressListener, progressRequestListener);
+        Type localVarReturnType = new TypeToken<Credits>(){}.getType();
+        apiClient.executeAsync(call, localVarReturnType, callback);
+        return call;
+    }
 }

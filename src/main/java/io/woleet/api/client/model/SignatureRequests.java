@@ -11,52 +11,209 @@
  */
 
 
-package io.woleet.api;
+package io.woleet.api.client.model;
 
+import java.util.Objects;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import io.woleet.api.client.model.SignatureRequest;
 import java.io.IOException;
-
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Callback for asynchronous API call.
- *
- * @param <T> The return type
+ * SignatureRequests
  */
-public interface ApiCallback<T> {
-    /**
-     * This is called when the API call fails.
-     *
-     * @param e The exception causing the failure
-     * @param statusCode Status code of the response if available, otherwise it would be 0
-     * @param responseHeaders Headers of the response if available, otherwise it would be null
-     */
-    void onFailure(ApiException e, int statusCode, Map<String, List<String>> responseHeaders);
 
-    /**
-     * This is called when the API call succeeded.
-     *
-     * @param result The result deserialized from response
-     * @param statusCode Status code of the response
-     * @param responseHeaders Headers of the response
-     */
-    void onSuccess(T result, int statusCode, Map<String, List<String>> responseHeaders);
+public class SignatureRequests {
+  @SerializedName("content")
+  private List<SignatureRequest> content = null;
 
-    /**
-     * This is called when the API upload processing.
-     *
-     * @param bytesWritten bytes Written
-     * @param contentLength content length of request body
-     * @param done write end
-     */
-    void onUploadProgress(long bytesWritten, long contentLength, boolean done);
+  @SerializedName("first")
+  private Boolean first = null;
 
-    /**
-     * This is called when the API downlond processing.
-     *
-     * @param bytesRead bytes Read
-     * @param contentLength content lenngth of the response
-     * @param done Read end
-     */
-    void onDownloadProgress(long bytesRead, long contentLength, boolean done);
+  @SerializedName("last")
+  private Boolean last = null;
+
+  @SerializedName("numberOfElements")
+  private Integer numberOfElements = null;
+
+  @SerializedName("size")
+  private Integer size = null;
+
+  @SerializedName("number")
+  private Integer number = null;
+
+  public SignatureRequests content(List<SignatureRequest> content) {
+    this.content = content;
+    return this;
+  }
+
+  public SignatureRequests addContentItem(SignatureRequest contentItem) {
+    if (this.content == null) {
+      this.content = new ArrayList<SignatureRequest>();
+    }
+    this.content.add(contentItem);
+    return this;
+  }
+
+   /**
+   * Array of signature requests matching the search criteria.
+   * @return content
+  **/
+  @ApiModelProperty(value = "Array of signature requests matching the search criteria.")
+  public List<SignatureRequest> getContent() {
+    return content;
+  }
+
+  public void setContent(List<SignatureRequest> content) {
+    this.content = content;
+  }
+
+  public SignatureRequests first(Boolean first) {
+    this.first = first;
+    return this;
+  }
+
+   /**
+   * &#x60;true&#x60; if this is the first page. 
+   * @return first
+  **/
+  @ApiModelProperty(value = "`true` if this is the first page. ")
+  public Boolean getFirst() {
+    return first;
+  }
+
+  public void setFirst(Boolean first) {
+    this.first = first;
+  }
+
+  public SignatureRequests last(Boolean last) {
+    this.last = last;
+    return this;
+  }
+
+   /**
+   * &#x60;true&#x60; if this is the last page. 
+   * @return last
+  **/
+  @ApiModelProperty(value = "`true` if this is the last page. ")
+  public Boolean getLast() {
+    return last;
+  }
+
+  public void setLast(Boolean last) {
+    this.last = last;
+  }
+
+  public SignatureRequests numberOfElements(Integer numberOfElements) {
+    this.numberOfElements = numberOfElements;
+    return this;
+  }
+
+   /**
+   * Number of requests in the retrieved page.
+   * @return numberOfElements
+  **/
+  @ApiModelProperty(value = "Number of requests in the retrieved page.")
+  public Integer getNumberOfElements() {
+    return numberOfElements;
+  }
+
+  public void setNumberOfElements(Integer numberOfElements) {
+    this.numberOfElements = numberOfElements;
+  }
+
+  public SignatureRequests size(Integer size) {
+    this.size = size;
+    return this;
+  }
+
+   /**
+   * Number of requests per page.
+   * @return size
+  **/
+  @ApiModelProperty(value = "Number of requests per page.")
+  public Integer getSize() {
+    return size;
+  }
+
+  public void setSize(Integer size) {
+    this.size = size;
+  }
+
+  public SignatureRequests number(Integer number) {
+    this.number = number;
+    return this;
+  }
+
+   /**
+   * Index of the retrieved page (from 0).
+   * @return number
+  **/
+  @ApiModelProperty(value = "Index of the retrieved page (from 0).")
+  public Integer getNumber() {
+    return number;
+  }
+
+  public void setNumber(Integer number) {
+    this.number = number;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    SignatureRequests signatureRequests = (SignatureRequests) o;
+    return Objects.equals(this.content, signatureRequests.content) &&
+        Objects.equals(this.first, signatureRequests.first) &&
+        Objects.equals(this.last, signatureRequests.last) &&
+        Objects.equals(this.numberOfElements, signatureRequests.numberOfElements) &&
+        Objects.equals(this.size, signatureRequests.size) &&
+        Objects.equals(this.number, signatureRequests.number);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(content, first, last, numberOfElements, size, number);
+  }
+
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class SignatureRequests {\n");
+    
+    sb.append("    content: ").append(toIndentedString(content)).append("\n");
+    sb.append("    first: ").append(toIndentedString(first)).append("\n");
+    sb.append("    last: ").append(toIndentedString(last)).append("\n");
+    sb.append("    numberOfElements: ").append(toIndentedString(numberOfElements)).append("\n");
+    sb.append("    size: ").append(toIndentedString(size)).append("\n");
+    sb.append("    number: ").append(toIndentedString(number)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+  
 }
+

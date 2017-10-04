@@ -11,52 +11,83 @@
  */
 
 
-package io.woleet.api;
+package io.woleet.api.client.model;
 
+import java.util.Objects;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
-import java.util.Map;
-import java.util.List;
-
 /**
- * Callback for asynchronous API call.
- *
- * @param <T> The return type
+ * SignatureRequestSignResult
  */
-public interface ApiCallback<T> {
-    /**
-     * This is called when the API call fails.
-     *
-     * @param e The exception causing the failure
-     * @param statusCode Status code of the response if available, otherwise it would be 0
-     * @param responseHeaders Headers of the response if available, otherwise it would be null
-     */
-    void onFailure(ApiException e, int statusCode, Map<String, List<String>> responseHeaders);
 
-    /**
-     * This is called when the API call succeeded.
-     *
-     * @param result The result deserialized from response
-     * @param statusCode Status code of the response
-     * @param responseHeaders Headers of the response
-     */
-    void onSuccess(T result, int statusCode, Map<String, List<String>> responseHeaders);
+public class SignatureRequestSignResult {
+  @SerializedName("anchorid")
+  private String anchorid = null;
 
-    /**
-     * This is called when the API upload processing.
-     *
-     * @param bytesWritten bytes Written
-     * @param contentLength content length of request body
-     * @param done write end
-     */
-    void onUploadProgress(long bytesWritten, long contentLength, boolean done);
+  public SignatureRequestSignResult anchorid(String anchorid) {
+    this.anchorid = anchorid;
+    return this;
+  }
 
-    /**
-     * This is called when the API downlond processing.
-     *
-     * @param bytesRead bytes Read
-     * @param contentLength content lenngth of the response
-     * @param done Read end
-     */
-    void onDownloadProgress(long bytesRead, long contentLength, boolean done);
+   /**
+   * Identifier of the signature anchor created. 
+   * @return anchorid
+  **/
+  @ApiModelProperty(value = "Identifier of the signature anchor created. ")
+  public String getAnchorid() {
+    return anchorid;
+  }
+
+  public void setAnchorid(String anchorid) {
+    this.anchorid = anchorid;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    SignatureRequestSignResult signatureRequestSignResult = (SignatureRequestSignResult) o;
+    return Objects.equals(this.anchorid, signatureRequestSignResult.anchorid);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(anchorid);
+  }
+
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class SignatureRequestSignResult {\n");
+    
+    sb.append("    anchorid: ").append(toIndentedString(anchorid)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+  
 }
+

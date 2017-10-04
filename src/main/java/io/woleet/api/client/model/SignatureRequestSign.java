@@ -11,52 +11,106 @@
  */
 
 
-package io.woleet.api;
+package io.woleet.api.client.model;
 
+import java.util.Objects;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
-import java.util.Map;
-import java.util.List;
-
 /**
- * Callback for asynchronous API call.
- *
- * @param <T> The return type
+ * SignatureRequestSign
  */
-public interface ApiCallback<T> {
-    /**
-     * This is called when the API call fails.
-     *
-     * @param e The exception causing the failure
-     * @param statusCode Status code of the response if available, otherwise it would be 0
-     * @param responseHeaders Headers of the response if available, otherwise it would be null
-     */
-    void onFailure(ApiException e, int statusCode, Map<String, List<String>> responseHeaders);
 
-    /**
-     * This is called when the API call succeeded.
-     *
-     * @param result The result deserialized from response
-     * @param statusCode Status code of the response
-     * @param responseHeaders Headers of the response
-     */
-    void onSuccess(T result, int statusCode, Map<String, List<String>> responseHeaders);
+public class SignatureRequestSign {
+  @SerializedName("signature")
+  private String signature = null;
 
-    /**
-     * This is called when the API upload processing.
-     *
-     * @param bytesWritten bytes Written
-     * @param contentLength content length of request body
-     * @param done write end
-     */
-    void onUploadProgress(long bytesWritten, long contentLength, boolean done);
+  @SerializedName("pubKey")
+  private String pubKey = null;
 
-    /**
-     * This is called when the API downlond processing.
-     *
-     * @param bytesRead bytes Read
-     * @param contentLength content lenngth of the response
-     * @param done Read end
-     */
-    void onDownloadProgress(long bytesRead, long contentLength, boolean done);
+  public SignatureRequestSign signature(String signature) {
+    this.signature = signature;
+    return this;
+  }
+
+   /**
+   * Signature of the &#x60;hashToSign&#x60; property of the signature request using the public key stored in the &#x60;pubKey&#x60; property. 
+   * @return signature
+  **/
+  @ApiModelProperty(value = "Signature of the `hashToSign` property of the signature request using the public key stored in the `pubKey` property. ")
+  public String getSignature() {
+    return signature;
+  }
+
+  public void setSignature(String signature) {
+    this.signature = signature;
+  }
+
+  public SignatureRequestSign pubKey(String pubKey) {
+    this.pubKey = pubKey;
+    return this;
+  }
+
+   /**
+   * Public key of the signee. 
+   * @return pubKey
+  **/
+  @ApiModelProperty(value = "Public key of the signee. ")
+  public String getPubKey() {
+    return pubKey;
+  }
+
+  public void setPubKey(String pubKey) {
+    this.pubKey = pubKey;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    SignatureRequestSign signatureRequestSign = (SignatureRequestSign) o;
+    return Objects.equals(this.signature, signatureRequestSign.signature) &&
+        Objects.equals(this.pubKey, signatureRequestSign.pubKey);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(signature, pubKey);
+  }
+
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class SignatureRequestSign {\n");
+    
+    sb.append("    signature: ").append(toIndentedString(signature)).append("\n");
+    sb.append("    pubKey: ").append(toIndentedString(pubKey)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+  
 }
+

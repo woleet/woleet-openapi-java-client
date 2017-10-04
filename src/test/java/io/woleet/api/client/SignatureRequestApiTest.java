@@ -11,52 +11,131 @@
  */
 
 
-package io.woleet.api;
+package io.woleet.api.client;
 
-import java.io.IOException;
+import io.woleet.api.ApiException;
+import io.woleet.api.client.model.SignatureRequest;
+import io.woleet.api.client.model.SignatureRequestSign;
+import io.woleet.api.client.model.SignatureRequestSignResult;
+import io.woleet.api.client.model.SignatureRequests;
+import org.junit.Test;
+import org.junit.Ignore;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Callback for asynchronous API call.
- *
- * @param <T> The return type
+ * API tests for SignatureRequestApi
  */
-public interface ApiCallback<T> {
-    /**
-     * This is called when the API call fails.
-     *
-     * @param e The exception causing the failure
-     * @param statusCode Status code of the response if available, otherwise it would be 0
-     * @param responseHeaders Headers of the response if available, otherwise it would be null
-     */
-    void onFailure(ApiException e, int statusCode, Map<String, List<String>> responseHeaders);
+@Ignore
+public class SignatureRequestApiTest {
 
-    /**
-     * This is called when the API call succeeded.
-     *
-     * @param result The result deserialized from response
-     * @param statusCode Status code of the response
-     * @param responseHeaders Headers of the response
-     */
-    void onSuccess(T result, int statusCode, Map<String, List<String>> responseHeaders);
+    private final SignatureRequestApi api = new SignatureRequestApi();
 
+    
     /**
-     * This is called when the API upload processing.
+     * Create a new signature request.
      *
-     * @param bytesWritten bytes Written
-     * @param contentLength content length of request body
-     * @param done write end
+     * Use this operation to create a new signature request.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60; and &#x60;lastModified&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned request.&lt;br&gt; Only the properties &#x60;name&#x60; and &#x60;hashToSign&#x60; are required: the &#x60;hashToSign&#x60; property must be the SHA256 hash of the data to sign. This allows not to leak the original data and to keep the actual signed data small (signing the digest is equivalent to signing the original data).&lt;br&gt; Be sure to have enough anchoring credits on your account to fulfill the signature request (each signature registered will cost you 1 anchoring credit).&lt;br&gt; 
+     *
+     * @throws ApiException
+     *          if the Api call fails
      */
-    void onUploadProgress(long bytesWritten, long contentLength, boolean done);
+    @Test
+    public void createSignatureRequestTest() throws ApiException {
+        SignatureRequest signatureRequest = null;
+        SignatureRequest response = api.createSignatureRequest(signatureRequest);
 
+        // TODO: test validations
+    }
+    
     /**
-     * This is called when the API downlond processing.
+     * Delete a signature request.
      *
-     * @param bytesRead bytes Read
-     * @param contentLength content lenngth of the response
-     * @param done Read end
+     * Use this operation to delete a signature request.&lt;br&gt; 
+     *
+     * @throws ApiException
+     *          if the Api call fails
      */
-    void onDownloadProgress(long bytesRead, long contentLength, boolean done);
+    @Test
+    public void deleteSignatureRequestTest() throws ApiException {
+        String requestId = null;
+        api.deleteSignatureRequest(requestId);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Get a signature request by its identifier.
+     *
+     * Use this operation to retrieve a signature request by its identifier.
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void getSignatureRequestTest() throws ApiException {
+        String requestId = null;
+        SignatureRequest response = api.getSignatureRequest(requestId);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Search for signature requests.
+     *
+     * Use this operation to retrieve all signature requests having a given &#x60;name&#x60; and/or &#x60;hashToSign&#x60; property.&lt;br&gt; Only requests belonging to the authenticated user are returned.&lt;br&gt; Paging and sorting is supported. 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void searchSignatureRequestsTest() throws ApiException {
+        Integer page = null;
+        Integer size = null;
+        String direction = null;
+        String sort = null;
+        String name = null;
+        String hashToSign = null;
+        SignatureRequests response = api.searchSignatureRequests(page, size, direction, sort, name, hashToSign);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Sign a signature request.
+     *
+     * Use this operation to register a signature for a signature request.&lt;br&gt; The signature is automatically anchored (on behalf of the owner of the signature request). The signature anchor created is added to the list of signature anchors of the signature request. This is a publicly accessible endpoint: authentication is not required to register a signature. 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void signSignatureRequestTest() throws ApiException {
+        String requestId = null;
+        SignatureRequestSign signature = null;
+        SignatureRequestSignResult response = api.signSignatureRequest(requestId, signature);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Update a signature request.
+     *
+     * Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;suspended&#x60;, &#x60;deadline&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified.&lt;br&gt; 
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void updateSignatureRequestTest() throws ApiException {
+        String requestId = null;
+        SignatureRequest request = null;
+        SignatureRequest response = api.updateSignatureRequest(requestId, request);
+
+        // TODO: test validations
+    }
+    
 }

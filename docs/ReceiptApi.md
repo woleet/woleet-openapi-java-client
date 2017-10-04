@@ -32,6 +32,12 @@ HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("Basic
 BasicAuth.setUsername("YOUR USERNAME");
 BasicAuth.setPassword("YOUR PASSWORD");
 
+// Configure API key authorization: JWTAuth
+ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+JWTAuth.setApiKey("YOUR API KEY");
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//JWTAuth.setApiKeyPrefix("Token");
+
 ReceiptApi apiInstance = new ReceiptApi();
 String anchorid = "anchorid_example"; // String | Identifier of the anchor for which to build the proof receipt.
 try {
@@ -55,11 +61,11 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth)
+[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="verifyReceipt"></a>

@@ -27,9 +27,10 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
-import io.woleet.api.client.model.Anchor;
-import io.woleet.api.client.model.AnchorIds;
-import io.woleet.api.client.model.Anchors;
+import io.woleet.api.client.model.SignatureRequest;
+import io.woleet.api.client.model.SignatureRequestSign;
+import io.woleet.api.client.model.SignatureRequestSignResult;
+import io.woleet.api.client.model.SignatureRequests;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -37,14 +38,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AnchorApi {
+public class SignatureRequestApi {
     private ApiClient apiClient;
 
-    public AnchorApi() {
+    public SignatureRequestApi() {
         this(Configuration.getDefaultApiClient());
     }
 
-    public AnchorApi(ApiClient apiClient) {
+    public SignatureRequestApi(ApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -57,18 +58,18 @@ public class AnchorApi {
     }
 
     /**
-     * Build call for createAnchor
-     * @param anchor Anchor object to create. (required)
+     * Build call for createSignatureRequest
+     * @param signatureRequest SignatureRequest object to create. (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call createAnchorCall(Anchor anchor, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = anchor;
+    public com.squareup.okhttp.Call createSignatureRequestCall(SignatureRequest signatureRequest, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = signatureRequest;
         
         // create path and map variables
-        String localVarPath = "/anchor";
+        String localVarPath = "/signatureRequest";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
 
@@ -105,15 +106,15 @@ public class AnchorApi {
     }
     
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call createAnchorValidateBeforeCall(Anchor anchor, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call createSignatureRequestValidateBeforeCall(SignatureRequest signatureRequest, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
-        // verify the required parameter 'anchor' is set
-        if (anchor == null) {
-            throw new ApiException("Missing the required parameter 'anchor' when calling createAnchor(Async)");
+        // verify the required parameter 'signatureRequest' is set
+        if (signatureRequest == null) {
+            throw new ApiException("Missing the required parameter 'signatureRequest' when calling createSignatureRequest(Async)");
         }
         
         
-        com.squareup.okhttp.Call call = createAnchorCall(anchor, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = createSignatureRequestCall(signatureRequest, progressListener, progressRequestListener);
         return call;
 
         
@@ -123,39 +124,39 @@ public class AnchorApi {
     }
 
     /**
-     * Create a new anchor.
-     * Use this operation to create a new anchor.&lt;br&gt; An anchor can be:&lt;br&gt; - a data anchor (generating a proof of existence receipt) allows to prove the existence of some data at some point in time.&lt;br&gt; - a signature anchor (generating a proof of signature receipt) allows to prove the existence of the signature of some data at some point in time, the validity of the signature and the signee&#39;s identity.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;status&#x60;, &#x60;timestamp&#x60; and &#x60;confirmations&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor.&lt;br&gt; For data anchors, only the properties &#x60;name&#x60; and &#x60;hash&#x60; are required: the &#x60;hash&#x60; property must be the SHA256 hash of the data to anchor, and must be computed caller side. This allows not to leak the original data.&lt;br&gt; For signature anchors, only the properties &#x60;name&#x60;, &#x60;signedHash&#x60;, &#x60;signature&#x60; and &#x60;pubKey&#x60; are required (though the property &#x60;identityURL&#x60; is highly recommended): the &#x60;signedHash&#x60; property must be the SHA256 hash of the data to sign. This allows not to leak the original data and to keep the actual signed data small (signing the digest is equivalent to signing the original data).&lt;br&gt; Be sure to have at least 1 anchoring credit on your account. The &#x60;signature&#x60; property must contains a valid signature of the &#x60;data&#x60; property using the private key paired with the &#x60;pubKey&#x60; public key. 
-     * @param anchor Anchor object to create. (required)
-     * @return Anchor
+     * Create a new signature request.
+     * Use this operation to create a new signature request.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60; and &#x60;lastModified&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned request.&lt;br&gt; Only the properties &#x60;name&#x60; and &#x60;hashToSign&#x60; are required: the &#x60;hashToSign&#x60; property must be the SHA256 hash of the data to sign. This allows not to leak the original data and to keep the actual signed data small (signing the digest is equivalent to signing the original data).&lt;br&gt; Be sure to have enough anchoring credits on your account to fulfill the signature request (each signature registered will cost you 1 anchoring credit).&lt;br&gt; 
+     * @param signatureRequest SignatureRequest object to create. (required)
+     * @return SignatureRequest
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Anchor createAnchor(Anchor anchor) throws ApiException {
-        ApiResponse<Anchor> resp = createAnchorWithHttpInfo(anchor);
+    public SignatureRequest createSignatureRequest(SignatureRequest signatureRequest) throws ApiException {
+        ApiResponse<SignatureRequest> resp = createSignatureRequestWithHttpInfo(signatureRequest);
         return resp.getData();
     }
 
     /**
-     * Create a new anchor.
-     * Use this operation to create a new anchor.&lt;br&gt; An anchor can be:&lt;br&gt; - a data anchor (generating a proof of existence receipt) allows to prove the existence of some data at some point in time.&lt;br&gt; - a signature anchor (generating a proof of signature receipt) allows to prove the existence of the signature of some data at some point in time, the validity of the signature and the signee&#39;s identity.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;status&#x60;, &#x60;timestamp&#x60; and &#x60;confirmations&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor.&lt;br&gt; For data anchors, only the properties &#x60;name&#x60; and &#x60;hash&#x60; are required: the &#x60;hash&#x60; property must be the SHA256 hash of the data to anchor, and must be computed caller side. This allows not to leak the original data.&lt;br&gt; For signature anchors, only the properties &#x60;name&#x60;, &#x60;signedHash&#x60;, &#x60;signature&#x60; and &#x60;pubKey&#x60; are required (though the property &#x60;identityURL&#x60; is highly recommended): the &#x60;signedHash&#x60; property must be the SHA256 hash of the data to sign. This allows not to leak the original data and to keep the actual signed data small (signing the digest is equivalent to signing the original data).&lt;br&gt; Be sure to have at least 1 anchoring credit on your account. The &#x60;signature&#x60; property must contains a valid signature of the &#x60;data&#x60; property using the private key paired with the &#x60;pubKey&#x60; public key. 
-     * @param anchor Anchor object to create. (required)
-     * @return ApiResponse&lt;Anchor&gt;
+     * Create a new signature request.
+     * Use this operation to create a new signature request.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60; and &#x60;lastModified&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned request.&lt;br&gt; Only the properties &#x60;name&#x60; and &#x60;hashToSign&#x60; are required: the &#x60;hashToSign&#x60; property must be the SHA256 hash of the data to sign. This allows not to leak the original data and to keep the actual signed data small (signing the digest is equivalent to signing the original data).&lt;br&gt; Be sure to have enough anchoring credits on your account to fulfill the signature request (each signature registered will cost you 1 anchoring credit).&lt;br&gt; 
+     * @param signatureRequest SignatureRequest object to create. (required)
+     * @return ApiResponse&lt;SignatureRequest&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Anchor> createAnchorWithHttpInfo(Anchor anchor) throws ApiException {
-        com.squareup.okhttp.Call call = createAnchorValidateBeforeCall(anchor, null, null);
-        Type localVarReturnType = new TypeToken<Anchor>(){}.getType();
+    public ApiResponse<SignatureRequest> createSignatureRequestWithHttpInfo(SignatureRequest signatureRequest) throws ApiException {
+        com.squareup.okhttp.Call call = createSignatureRequestValidateBeforeCall(signatureRequest, null, null);
+        Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * Create a new anchor. (asynchronously)
-     * Use this operation to create a new anchor.&lt;br&gt; An anchor can be:&lt;br&gt; - a data anchor (generating a proof of existence receipt) allows to prove the existence of some data at some point in time.&lt;br&gt; - a signature anchor (generating a proof of signature receipt) allows to prove the existence of the signature of some data at some point in time, the validity of the signature and the signee&#39;s identity.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;status&#x60;, &#x60;timestamp&#x60; and &#x60;confirmations&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor.&lt;br&gt; For data anchors, only the properties &#x60;name&#x60; and &#x60;hash&#x60; are required: the &#x60;hash&#x60; property must be the SHA256 hash of the data to anchor, and must be computed caller side. This allows not to leak the original data.&lt;br&gt; For signature anchors, only the properties &#x60;name&#x60;, &#x60;signedHash&#x60;, &#x60;signature&#x60; and &#x60;pubKey&#x60; are required (though the property &#x60;identityURL&#x60; is highly recommended): the &#x60;signedHash&#x60; property must be the SHA256 hash of the data to sign. This allows not to leak the original data and to keep the actual signed data small (signing the digest is equivalent to signing the original data).&lt;br&gt; Be sure to have at least 1 anchoring credit on your account. The &#x60;signature&#x60; property must contains a valid signature of the &#x60;data&#x60; property using the private key paired with the &#x60;pubKey&#x60; public key. 
-     * @param anchor Anchor object to create. (required)
+     * Create a new signature request. (asynchronously)
+     * Use this operation to create a new signature request.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60; and &#x60;lastModified&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned request.&lt;br&gt; Only the properties &#x60;name&#x60; and &#x60;hashToSign&#x60; are required: the &#x60;hashToSign&#x60; property must be the SHA256 hash of the data to sign. This allows not to leak the original data and to keep the actual signed data small (signing the digest is equivalent to signing the original data).&lt;br&gt; Be sure to have enough anchoring credits on your account to fulfill the signature request (each signature registered will cost you 1 anchoring credit).&lt;br&gt; 
+     * @param signatureRequest SignatureRequest object to create. (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call createAnchorAsync(Anchor anchor, final ApiCallback<Anchor> callback) throws ApiException {
+    public com.squareup.okhttp.Call createSignatureRequestAsync(SignatureRequest signatureRequest, final ApiCallback<SignatureRequest> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -176,25 +177,25 @@ public class AnchorApi {
             };
         }
 
-        com.squareup.okhttp.Call call = createAnchorValidateBeforeCall(anchor, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Anchor>(){}.getType();
+        com.squareup.okhttp.Call call = createSignatureRequestValidateBeforeCall(signatureRequest, progressListener, progressRequestListener);
+        Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
     /**
-     * Build call for deleteAnchor
-     * @param anchorid Identifier of the anchor to delete. (required)
+     * Build call for deleteSignatureRequest
+     * @param requestId Identifier of the signature request to delete. (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call deleteAnchorCall(String anchorid, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call deleteSignatureRequestCall(String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/anchor/{anchorid}"
-            .replaceAll("\\{" + "anchorid" + "\\}", apiClient.escapeString(anchorid.toString()));
+        String localVarPath = "/signatureRequest/{requestId}"
+            .replaceAll("\\{" + "requestId" + "\\}", apiClient.escapeString(requestId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
 
@@ -231,15 +232,15 @@ public class AnchorApi {
     }
     
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call deleteAnchorValidateBeforeCall(String anchorid, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call deleteSignatureRequestValidateBeforeCall(String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
-        // verify the required parameter 'anchorid' is set
-        if (anchorid == null) {
-            throw new ApiException("Missing the required parameter 'anchorid' when calling deleteAnchor(Async)");
+        // verify the required parameter 'requestId' is set
+        if (requestId == null) {
+            throw new ApiException("Missing the required parameter 'requestId' when calling deleteSignatureRequest(Async)");
         }
         
         
-        com.squareup.okhttp.Call call = deleteAnchorCall(anchorid, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = deleteSignatureRequestCall(requestId, progressListener, progressRequestListener);
         return call;
 
         
@@ -249,36 +250,36 @@ public class AnchorApi {
     }
 
     /**
-     * Delete an anchor.
-     * Use this operation to delete an anchor.&lt;br&gt; **WARNING: You should never delete an anchor, otherwise you will no longer be able to download its proof receipt.&lt;br&gt; Use this for test purpose only.** 
-     * @param anchorid Identifier of the anchor to delete. (required)
+     * Delete a signature request.
+     * Use this operation to delete a signature request.&lt;br&gt; 
+     * @param requestId Identifier of the signature request to delete. (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public void deleteAnchor(String anchorid) throws ApiException {
-        deleteAnchorWithHttpInfo(anchorid);
+    public void deleteSignatureRequest(String requestId) throws ApiException {
+        deleteSignatureRequestWithHttpInfo(requestId);
     }
 
     /**
-     * Delete an anchor.
-     * Use this operation to delete an anchor.&lt;br&gt; **WARNING: You should never delete an anchor, otherwise you will no longer be able to download its proof receipt.&lt;br&gt; Use this for test purpose only.** 
-     * @param anchorid Identifier of the anchor to delete. (required)
+     * Delete a signature request.
+     * Use this operation to delete a signature request.&lt;br&gt; 
+     * @param requestId Identifier of the signature request to delete. (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Void> deleteAnchorWithHttpInfo(String anchorid) throws ApiException {
-        com.squareup.okhttp.Call call = deleteAnchorValidateBeforeCall(anchorid, null, null);
+    public ApiResponse<Void> deleteSignatureRequestWithHttpInfo(String requestId) throws ApiException {
+        com.squareup.okhttp.Call call = deleteSignatureRequestValidateBeforeCall(requestId, null, null);
         return apiClient.execute(call);
     }
 
     /**
-     * Delete an anchor. (asynchronously)
-     * Use this operation to delete an anchor.&lt;br&gt; **WARNING: You should never delete an anchor, otherwise you will no longer be able to download its proof receipt.&lt;br&gt; Use this for test purpose only.** 
-     * @param anchorid Identifier of the anchor to delete. (required)
+     * Delete a signature request. (asynchronously)
+     * Use this operation to delete a signature request.&lt;br&gt; 
+     * @param requestId Identifier of the signature request to delete. (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call deleteAnchorAsync(String anchorid, final ApiCallback<Void> callback) throws ApiException {
+    public com.squareup.okhttp.Call deleteSignatureRequestAsync(String requestId, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -299,24 +300,24 @@ public class AnchorApi {
             };
         }
 
-        com.squareup.okhttp.Call call = deleteAnchorValidateBeforeCall(anchorid, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = deleteSignatureRequestValidateBeforeCall(requestId, progressListener, progressRequestListener);
         apiClient.executeAsync(call, callback);
         return call;
     }
     /**
-     * Build call for getAnchor
-     * @param anchorid Identifier of the anchor to retrieve. (required)
+     * Build call for getSignatureRequest
+     * @param requestId Identifier of the signature request to retrieve. (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getAnchorCall(String anchorid, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call getSignatureRequestCall(String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/anchor/{anchorid}"
-            .replaceAll("\\{" + "anchorid" + "\\}", apiClient.escapeString(anchorid.toString()));
+        String localVarPath = "/signatureRequest/{requestId}"
+            .replaceAll("\\{" + "requestId" + "\\}", apiClient.escapeString(requestId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
 
@@ -353,15 +354,15 @@ public class AnchorApi {
     }
     
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call getAnchorValidateBeforeCall(String anchorid, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call getSignatureRequestValidateBeforeCall(String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
-        // verify the required parameter 'anchorid' is set
-        if (anchorid == null) {
-            throw new ApiException("Missing the required parameter 'anchorid' when calling getAnchor(Async)");
+        // verify the required parameter 'requestId' is set
+        if (requestId == null) {
+            throw new ApiException("Missing the required parameter 'requestId' when calling getSignatureRequest(Async)");
         }
         
         
-        com.squareup.okhttp.Call call = getAnchorCall(anchorid, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = getSignatureRequestCall(requestId, progressListener, progressRequestListener);
         return call;
 
         
@@ -371,39 +372,39 @@ public class AnchorApi {
     }
 
     /**
-     * Get an anchor by its identifier.
-     * Use this operation to retrieve an anchor by its identifier.
-     * @param anchorid Identifier of the anchor to retrieve. (required)
-     * @return Anchor
+     * Get a signature request by its identifier.
+     * Use this operation to retrieve a signature request by its identifier.
+     * @param requestId Identifier of the signature request to retrieve. (required)
+     * @return SignatureRequest
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Anchor getAnchor(String anchorid) throws ApiException {
-        ApiResponse<Anchor> resp = getAnchorWithHttpInfo(anchorid);
+    public SignatureRequest getSignatureRequest(String requestId) throws ApiException {
+        ApiResponse<SignatureRequest> resp = getSignatureRequestWithHttpInfo(requestId);
         return resp.getData();
     }
 
     /**
-     * Get an anchor by its identifier.
-     * Use this operation to retrieve an anchor by its identifier.
-     * @param anchorid Identifier of the anchor to retrieve. (required)
-     * @return ApiResponse&lt;Anchor&gt;
+     * Get a signature request by its identifier.
+     * Use this operation to retrieve a signature request by its identifier.
+     * @param requestId Identifier of the signature request to retrieve. (required)
+     * @return ApiResponse&lt;SignatureRequest&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Anchor> getAnchorWithHttpInfo(String anchorid) throws ApiException {
-        com.squareup.okhttp.Call call = getAnchorValidateBeforeCall(anchorid, null, null);
-        Type localVarReturnType = new TypeToken<Anchor>(){}.getType();
+    public ApiResponse<SignatureRequest> getSignatureRequestWithHttpInfo(String requestId) throws ApiException {
+        com.squareup.okhttp.Call call = getSignatureRequestValidateBeforeCall(requestId, null, null);
+        Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * Get an anchor by its identifier. (asynchronously)
-     * Use this operation to retrieve an anchor by its identifier.
-     * @param anchorid Identifier of the anchor to retrieve. (required)
+     * Get a signature request by its identifier. (asynchronously)
+     * Use this operation to retrieve a signature request by its identifier.
+     * @param requestId Identifier of the signature request to retrieve. (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call getAnchorAsync(String anchorid, final ApiCallback<Anchor> callback) throws ApiException {
+    public com.squareup.okhttp.Call getSignatureRequestAsync(String requestId, final ApiCallback<SignatureRequest> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -424,37 +425,180 @@ public class AnchorApi {
             };
         }
 
-        com.squareup.okhttp.Call call = getAnchorValidateBeforeCall(anchorid, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Anchor>(){}.getType();
+        com.squareup.okhttp.Call call = getSignatureRequestValidateBeforeCall(requestId, progressListener, progressRequestListener);
+        Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
     /**
-     * Build call for searchAnchorIds
+     * Build call for searchSignatureRequests
      * @param page Index of the page to retrieve (from 0). (optional, default to 0)
      * @param size Number of anchors per page. (optional, default to 20)
-     * @param hash &#x60;hash&#x60; to search for: all public anchors whose &#x60;hash&#x60; property is equal are returned.  (optional)
-     * @param signedHash &#x60;signedHash&#x60; to search for: all public anchors whose &#x60;signedHash&#x60; property is equal are returned.  (optional)
+     * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
+     * @param sort Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60; and &#x60;hashToSign&#x60;.  (optional, default to created)
+     * @param name &#x60;name&#x60; to search for: all signature requests whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: searching by name is not optimized and so is not recommended on a large request set.**  (optional)
+     * @param hashToSign &#x60;hashToSign&#x60; to search for: all signature requests whose &#x60;hashToSign&#x60; property is equal are returned.  (optional)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call searchAnchorIdsCall(Integer page, Integer size, String hash, String signedHash, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call searchSignatureRequestsCall(Integer page, Integer size, String direction, String sort, String name, String hashToSign, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
         
         // create path and map variables
-        String localVarPath = "/anchorids";
+        String localVarPath = "/signatureRequests";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         if (page != null)
         localVarQueryParams.addAll(apiClient.parameterToPairs("", "page", page));
         if (size != null)
         localVarQueryParams.addAll(apiClient.parameterToPairs("", "size", size));
-        if (hash != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "hash", hash));
-        if (signedHash != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "signedHash", signedHash));
+        if (direction != null)
+        localVarQueryParams.addAll(apiClient.parameterToPairs("", "direction", direction));
+        if (sort != null)
+        localVarQueryParams.addAll(apiClient.parameterToPairs("", "sort", sort));
+        if (name != null)
+        localVarQueryParams.addAll(apiClient.parameterToPairs("", "name", name));
+        if (hashToSign != null)
+        localVarQueryParams.addAll(apiClient.parameterToPairs("", "hashToSign", hashToSign));
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                    .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] { "BasicAuth", "JWTAuth" };
+        return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+    
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call searchSignatureRequestsValidateBeforeCall(Integer page, Integer size, String direction, String sort, String name, String hashToSign, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        
+        
+        com.squareup.okhttp.Call call = searchSignatureRequestsCall(page, size, direction, sort, name, hashToSign, progressListener, progressRequestListener);
+        return call;
+
+        
+        
+        
+        
+    }
+
+    /**
+     * Search for signature requests.
+     * Use this operation to retrieve all signature requests having a given &#x60;name&#x60; and/or &#x60;hashToSign&#x60; property.&lt;br&gt; Only requests belonging to the authenticated user are returned.&lt;br&gt; Paging and sorting is supported. 
+     * @param page Index of the page to retrieve (from 0). (optional, default to 0)
+     * @param size Number of anchors per page. (optional, default to 20)
+     * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
+     * @param sort Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60; and &#x60;hashToSign&#x60;.  (optional, default to created)
+     * @param name &#x60;name&#x60; to search for: all signature requests whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: searching by name is not optimized and so is not recommended on a large request set.**  (optional)
+     * @param hashToSign &#x60;hashToSign&#x60; to search for: all signature requests whose &#x60;hashToSign&#x60; property is equal are returned.  (optional)
+     * @return SignatureRequests
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public SignatureRequests searchSignatureRequests(Integer page, Integer size, String direction, String sort, String name, String hashToSign) throws ApiException {
+        ApiResponse<SignatureRequests> resp = searchSignatureRequestsWithHttpInfo(page, size, direction, sort, name, hashToSign);
+        return resp.getData();
+    }
+
+    /**
+     * Search for signature requests.
+     * Use this operation to retrieve all signature requests having a given &#x60;name&#x60; and/or &#x60;hashToSign&#x60; property.&lt;br&gt; Only requests belonging to the authenticated user are returned.&lt;br&gt; Paging and sorting is supported. 
+     * @param page Index of the page to retrieve (from 0). (optional, default to 0)
+     * @param size Number of anchors per page. (optional, default to 20)
+     * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
+     * @param sort Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60; and &#x60;hashToSign&#x60;.  (optional, default to created)
+     * @param name &#x60;name&#x60; to search for: all signature requests whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: searching by name is not optimized and so is not recommended on a large request set.**  (optional)
+     * @param hashToSign &#x60;hashToSign&#x60; to search for: all signature requests whose &#x60;hashToSign&#x60; property is equal are returned.  (optional)
+     * @return ApiResponse&lt;SignatureRequests&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public ApiResponse<SignatureRequests> searchSignatureRequestsWithHttpInfo(Integer page, Integer size, String direction, String sort, String name, String hashToSign) throws ApiException {
+        com.squareup.okhttp.Call call = searchSignatureRequestsValidateBeforeCall(page, size, direction, sort, name, hashToSign, null, null);
+        Type localVarReturnType = new TypeToken<SignatureRequests>(){}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
+
+    /**
+     * Search for signature requests. (asynchronously)
+     * Use this operation to retrieve all signature requests having a given &#x60;name&#x60; and/or &#x60;hashToSign&#x60; property.&lt;br&gt; Only requests belonging to the authenticated user are returned.&lt;br&gt; Paging and sorting is supported. 
+     * @param page Index of the page to retrieve (from 0). (optional, default to 0)
+     * @param size Number of anchors per page. (optional, default to 20)
+     * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
+     * @param sort Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60; and &#x60;hashToSign&#x60;.  (optional, default to created)
+     * @param name &#x60;name&#x60; to search for: all signature requests whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: searching by name is not optimized and so is not recommended on a large request set.**  (optional)
+     * @param hashToSign &#x60;hashToSign&#x60; to search for: all signature requests whose &#x60;hashToSign&#x60; property is equal are returned.  (optional)
+     * @param callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     */
+    public com.squareup.okhttp.Call searchSignatureRequestsAsync(Integer page, Integer size, String direction, String sort, String name, String hashToSign, final ApiCallback<SignatureRequests> callback) throws ApiException {
+
+        ProgressResponseBody.ProgressListener progressListener = null;
+        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
+
+        if (callback != null) {
+            progressListener = new ProgressResponseBody.ProgressListener() {
+                @Override
+                public void update(long bytesRead, long contentLength, boolean done) {
+                    callback.onDownloadProgress(bytesRead, contentLength, done);
+                }
+            };
+
+            progressRequestListener = new ProgressRequestBody.ProgressRequestListener() {
+                @Override
+                public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
+                    callback.onUploadProgress(bytesWritten, contentLength, done);
+                }
+            };
+        }
+
+        com.squareup.okhttp.Call call = searchSignatureRequestsValidateBeforeCall(page, size, direction, sort, name, hashToSign, progressListener, progressRequestListener);
+        Type localVarReturnType = new TypeToken<SignatureRequests>(){}.getType();
+        apiClient.executeAsync(call, localVarReturnType, callback);
+        return call;
+    }
+    /**
+     * Build call for signSignatureRequest
+     * @param requestId Identifier of the signature request. (required)
+     * @param signature Signature to register. (required)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    public com.squareup.okhttp.Call signSignatureRequestCall(String requestId, SignatureRequestSign signature, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = signature;
+        
+        // create path and map variables
+        String localVarPath = "/signatureRequest/{requestId}/sign"
+            .replaceAll("\\{" + "requestId" + "\\}", apiClient.escapeString(requestId.toString()));
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
 
@@ -485,14 +629,24 @@ public class AnchorApi {
         }
 
         String[] localVarAuthNames = new String[] {  };
-        return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+        return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
     }
     
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call searchAnchorIdsValidateBeforeCall(Integer page, Integer size, String hash, String signedHash, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call signSignatureRequestValidateBeforeCall(String requestId, SignatureRequestSign signature, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        
+        // verify the required parameter 'requestId' is set
+        if (requestId == null) {
+            throw new ApiException("Missing the required parameter 'requestId' when calling signSignatureRequest(Async)");
+        }
+        
+        // verify the required parameter 'signature' is set
+        if (signature == null) {
+            throw new ApiException("Missing the required parameter 'signature' when calling signSignatureRequest(Async)");
+        }
         
         
-        com.squareup.okhttp.Call call = searchAnchorIdsCall(page, size, hash, signedHash, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = signSignatureRequestCall(requestId, signature, progressListener, progressRequestListener);
         return call;
 
         
@@ -502,48 +656,42 @@ public class AnchorApi {
     }
 
     /**
-     * Search for public anchors&#39; identifiers.
-     * Use this operation to retrieve the identifiers of all public anchors having a given &#x60;hash&#x60; and/or &#x60;signedHash&#x60; property.&lt;br&gt; Only public anchors&#39; identifiers are returned.&lt;br&gt; Paging is supported. 
-     * @param page Index of the page to retrieve (from 0). (optional, default to 0)
-     * @param size Number of anchors per page. (optional, default to 20)
-     * @param hash &#x60;hash&#x60; to search for: all public anchors whose &#x60;hash&#x60; property is equal are returned.  (optional)
-     * @param signedHash &#x60;signedHash&#x60; to search for: all public anchors whose &#x60;signedHash&#x60; property is equal are returned.  (optional)
-     * @return AnchorIds
+     * Sign a signature request.
+     * Use this operation to register a signature for a signature request.&lt;br&gt; The signature is automatically anchored (on behalf of the owner of the signature request). The signature anchor created is added to the list of signature anchors of the signature request. This is a publicly accessible endpoint: authentication is not required to register a signature. 
+     * @param requestId Identifier of the signature request. (required)
+     * @param signature Signature to register. (required)
+     * @return SignatureRequestSignResult
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public AnchorIds searchAnchorIds(Integer page, Integer size, String hash, String signedHash) throws ApiException {
-        ApiResponse<AnchorIds> resp = searchAnchorIdsWithHttpInfo(page, size, hash, signedHash);
+    public SignatureRequestSignResult signSignatureRequest(String requestId, SignatureRequestSign signature) throws ApiException {
+        ApiResponse<SignatureRequestSignResult> resp = signSignatureRequestWithHttpInfo(requestId, signature);
         return resp.getData();
     }
 
     /**
-     * Search for public anchors&#39; identifiers.
-     * Use this operation to retrieve the identifiers of all public anchors having a given &#x60;hash&#x60; and/or &#x60;signedHash&#x60; property.&lt;br&gt; Only public anchors&#39; identifiers are returned.&lt;br&gt; Paging is supported. 
-     * @param page Index of the page to retrieve (from 0). (optional, default to 0)
-     * @param size Number of anchors per page. (optional, default to 20)
-     * @param hash &#x60;hash&#x60; to search for: all public anchors whose &#x60;hash&#x60; property is equal are returned.  (optional)
-     * @param signedHash &#x60;signedHash&#x60; to search for: all public anchors whose &#x60;signedHash&#x60; property is equal are returned.  (optional)
-     * @return ApiResponse&lt;AnchorIds&gt;
+     * Sign a signature request.
+     * Use this operation to register a signature for a signature request.&lt;br&gt; The signature is automatically anchored (on behalf of the owner of the signature request). The signature anchor created is added to the list of signature anchors of the signature request. This is a publicly accessible endpoint: authentication is not required to register a signature. 
+     * @param requestId Identifier of the signature request. (required)
+     * @param signature Signature to register. (required)
+     * @return ApiResponse&lt;SignatureRequestSignResult&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<AnchorIds> searchAnchorIdsWithHttpInfo(Integer page, Integer size, String hash, String signedHash) throws ApiException {
-        com.squareup.okhttp.Call call = searchAnchorIdsValidateBeforeCall(page, size, hash, signedHash, null, null);
-        Type localVarReturnType = new TypeToken<AnchorIds>(){}.getType();
+    public ApiResponse<SignatureRequestSignResult> signSignatureRequestWithHttpInfo(String requestId, SignatureRequestSign signature) throws ApiException {
+        com.squareup.okhttp.Call call = signSignatureRequestValidateBeforeCall(requestId, signature, null, null);
+        Type localVarReturnType = new TypeToken<SignatureRequestSignResult>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * Search for public anchors&#39; identifiers. (asynchronously)
-     * Use this operation to retrieve the identifiers of all public anchors having a given &#x60;hash&#x60; and/or &#x60;signedHash&#x60; property.&lt;br&gt; Only public anchors&#39; identifiers are returned.&lt;br&gt; Paging is supported. 
-     * @param page Index of the page to retrieve (from 0). (optional, default to 0)
-     * @param size Number of anchors per page. (optional, default to 20)
-     * @param hash &#x60;hash&#x60; to search for: all public anchors whose &#x60;hash&#x60; property is equal are returned.  (optional)
-     * @param signedHash &#x60;signedHash&#x60; to search for: all public anchors whose &#x60;signedHash&#x60; property is equal are returned.  (optional)
+     * Sign a signature request. (asynchronously)
+     * Use this operation to register a signature for a signature request.&lt;br&gt; The signature is automatically anchored (on behalf of the owner of the signature request). The signature anchor created is added to the list of signature anchors of the signature request. This is a publicly accessible endpoint: authentication is not required to register a signature. 
+     * @param requestId Identifier of the signature request. (required)
+     * @param signature Signature to register. (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call searchAnchorIdsAsync(Integer page, Integer size, String hash, String signedHash, final ApiCallback<AnchorIds> callback) throws ApiException {
+    public com.squareup.okhttp.Call signSignatureRequestAsync(String requestId, SignatureRequestSign signature, final ApiCallback<SignatureRequestSignResult> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -564,190 +712,26 @@ public class AnchorApi {
             };
         }
 
-        com.squareup.okhttp.Call call = searchAnchorIdsValidateBeforeCall(page, size, hash, signedHash, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<AnchorIds>(){}.getType();
+        com.squareup.okhttp.Call call = signSignatureRequestValidateBeforeCall(requestId, signature, progressListener, progressRequestListener);
+        Type localVarReturnType = new TypeToken<SignatureRequestSignResult>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
     /**
-     * Build call for searchAnchors
-     * @param page Index of the page to retrieve (from 0). (optional, default to 0)
-     * @param size Number of anchors per page. (optional, default to 20)
-     * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
-     * @param sort Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60;, &#x60;hash&#x60; and &#x60;signedHash&#x60;.  (optional, default to created)
-     * @param name &#x60;name&#x60; to search for: all anchors whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: searching by name is not optimized and so is not recommended on a large anchor set.**  (optional)
-     * @param hash &#x60;hash&#x60; to search for: all anchors whose &#x60;hash&#x60; property is equal are returned.  (optional)
-     * @param signedHash &#x60;signedHash&#x60; to search for: all anchors whose &#x60;signedHash&#x60; property is equal are returned.  (optional)
-     * @param tags &#x60;tags&#x60; to search for: all anchors having all of these tags sets are returned.  (optional)
+     * Build call for updateSignatureRequest
+     * @param requestId Identifier of signature request to update. (required)
+     * @param request SignatureRequest object to update. (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call searchAnchorsCall(Integer page, Integer size, String direction, String sort, String name, String hash, String signedHash, List<String> tags, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = null;
+    public com.squareup.okhttp.Call updateSignatureRequestCall(String requestId, SignatureRequest request, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = request;
         
         // create path and map variables
-        String localVarPath = "/anchors";
-
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        if (page != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "page", page));
-        if (size != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "size", size));
-        if (direction != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "direction", direction));
-        if (sort != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "sort", sort));
-        if (name != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "name", name));
-        if (hash != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "hash", hash));
-        if (signedHash != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("", "signedHash", signedHash));
-        if (tags != null)
-        localVarQueryParams.addAll(apiClient.parameterToPairs("csv", "tags", tags));
-
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-        final String[] localVarAccepts = {
-            "application/json"
-        };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {
-            "application/json"
-        };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
-                @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                    return originalResponse.newBuilder()
-                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                    .build();
-                }
-            });
-        }
-
-        String[] localVarAuthNames = new String[] { "BasicAuth", "JWTAuth" };
-        return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
-    }
-    
-    @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call searchAnchorsValidateBeforeCall(Integer page, Integer size, String direction, String sort, String name, String hash, String signedHash, List<String> tags, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        
-        
-        com.squareup.okhttp.Call call = searchAnchorsCall(page, size, direction, sort, name, hash, signedHash, tags, progressListener, progressRequestListener);
-        return call;
-
-        
-        
-        
-        
-    }
-
-    /**
-     * Search for anchors.
-     * Use this operation to retrieve all anchors having a given &#x60;name&#x60;, &#x60;hash&#x60;, &#x60;signedHash&#x60; and/or &#x60;tags&#x60; property.&lt;br&gt; Only anchors belonging to the authenticated user are returned.&lt;br&gt; Paging and sorting is supported. 
-     * @param page Index of the page to retrieve (from 0). (optional, default to 0)
-     * @param size Number of anchors per page. (optional, default to 20)
-     * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
-     * @param sort Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60;, &#x60;hash&#x60; and &#x60;signedHash&#x60;.  (optional, default to created)
-     * @param name &#x60;name&#x60; to search for: all anchors whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: searching by name is not optimized and so is not recommended on a large anchor set.**  (optional)
-     * @param hash &#x60;hash&#x60; to search for: all anchors whose &#x60;hash&#x60; property is equal are returned.  (optional)
-     * @param signedHash &#x60;signedHash&#x60; to search for: all anchors whose &#x60;signedHash&#x60; property is equal are returned.  (optional)
-     * @param tags &#x60;tags&#x60; to search for: all anchors having all of these tags sets are returned.  (optional)
-     * @return Anchors
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    public Anchors searchAnchors(Integer page, Integer size, String direction, String sort, String name, String hash, String signedHash, List<String> tags) throws ApiException {
-        ApiResponse<Anchors> resp = searchAnchorsWithHttpInfo(page, size, direction, sort, name, hash, signedHash, tags);
-        return resp.getData();
-    }
-
-    /**
-     * Search for anchors.
-     * Use this operation to retrieve all anchors having a given &#x60;name&#x60;, &#x60;hash&#x60;, &#x60;signedHash&#x60; and/or &#x60;tags&#x60; property.&lt;br&gt; Only anchors belonging to the authenticated user are returned.&lt;br&gt; Paging and sorting is supported. 
-     * @param page Index of the page to retrieve (from 0). (optional, default to 0)
-     * @param size Number of anchors per page. (optional, default to 20)
-     * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
-     * @param sort Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60;, &#x60;hash&#x60; and &#x60;signedHash&#x60;.  (optional, default to created)
-     * @param name &#x60;name&#x60; to search for: all anchors whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: searching by name is not optimized and so is not recommended on a large anchor set.**  (optional)
-     * @param hash &#x60;hash&#x60; to search for: all anchors whose &#x60;hash&#x60; property is equal are returned.  (optional)
-     * @param signedHash &#x60;signedHash&#x60; to search for: all anchors whose &#x60;signedHash&#x60; property is equal are returned.  (optional)
-     * @param tags &#x60;tags&#x60; to search for: all anchors having all of these tags sets are returned.  (optional)
-     * @return ApiResponse&lt;Anchors&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    public ApiResponse<Anchors> searchAnchorsWithHttpInfo(Integer page, Integer size, String direction, String sort, String name, String hash, String signedHash, List<String> tags) throws ApiException {
-        com.squareup.okhttp.Call call = searchAnchorsValidateBeforeCall(page, size, direction, sort, name, hash, signedHash, tags, null, null);
-        Type localVarReturnType = new TypeToken<Anchors>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
-    }
-
-    /**
-     * Search for anchors. (asynchronously)
-     * Use this operation to retrieve all anchors having a given &#x60;name&#x60;, &#x60;hash&#x60;, &#x60;signedHash&#x60; and/or &#x60;tags&#x60; property.&lt;br&gt; Only anchors belonging to the authenticated user are returned.&lt;br&gt; Paging and sorting is supported. 
-     * @param page Index of the page to retrieve (from 0). (optional, default to 0)
-     * @param size Number of anchors per page. (optional, default to 20)
-     * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
-     * @param sort Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60;, &#x60;hash&#x60; and &#x60;signedHash&#x60;.  (optional, default to created)
-     * @param name &#x60;name&#x60; to search for: all anchors whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: searching by name is not optimized and so is not recommended on a large anchor set.**  (optional)
-     * @param hash &#x60;hash&#x60; to search for: all anchors whose &#x60;hash&#x60; property is equal are returned.  (optional)
-     * @param signedHash &#x60;signedHash&#x60; to search for: all anchors whose &#x60;signedHash&#x60; property is equal are returned.  (optional)
-     * @param tags &#x60;tags&#x60; to search for: all anchors having all of these tags sets are returned.  (optional)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
-     */
-    public com.squareup.okhttp.Call searchAnchorsAsync(Integer page, Integer size, String direction, String sort, String name, String hash, String signedHash, List<String> tags, final ApiCallback<Anchors> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener = new ProgressResponseBody.ProgressListener() {
-                @Override
-                public void update(long bytesRead, long contentLength, boolean done) {
-                    callback.onDownloadProgress(bytesRead, contentLength, done);
-                }
-            };
-
-            progressRequestListener = new ProgressRequestBody.ProgressRequestListener() {
-                @Override
-                public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
-                    callback.onUploadProgress(bytesWritten, contentLength, done);
-                }
-            };
-        }
-
-        com.squareup.okhttp.Call call = searchAnchorsValidateBeforeCall(page, size, direction, sort, name, hash, signedHash, tags, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Anchors>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
-     * Build call for updateAnchor
-     * @param anchorid Identifier of anchor to update. (required)
-     * @param anchor Anchor object to update. (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
-    public com.squareup.okhttp.Call updateAnchorCall(String anchorid, Anchor anchor, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = anchor;
-        
-        // create path and map variables
-        String localVarPath = "/anchor/{anchorid}"
-            .replaceAll("\\{" + "anchorid" + "\\}", apiClient.escapeString(anchorid.toString()));
+        String localVarPath = "/signatureRequest/{requestId}"
+            .replaceAll("\\{" + "requestId" + "\\}", apiClient.escapeString(requestId.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
 
@@ -784,20 +768,20 @@ public class AnchorApi {
     }
     
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call updateAnchorValidateBeforeCall(String anchorid, Anchor anchor, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call updateSignatureRequestValidateBeforeCall(String requestId, SignatureRequest request, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
-        // verify the required parameter 'anchorid' is set
-        if (anchorid == null) {
-            throw new ApiException("Missing the required parameter 'anchorid' when calling updateAnchor(Async)");
+        // verify the required parameter 'requestId' is set
+        if (requestId == null) {
+            throw new ApiException("Missing the required parameter 'requestId' when calling updateSignatureRequest(Async)");
         }
         
-        // verify the required parameter 'anchor' is set
-        if (anchor == null) {
-            throw new ApiException("Missing the required parameter 'anchor' when calling updateAnchor(Async)");
+        // verify the required parameter 'request' is set
+        if (request == null) {
+            throw new ApiException("Missing the required parameter 'request' when calling updateSignatureRequest(Async)");
         }
         
         
-        com.squareup.okhttp.Call call = updateAnchorCall(anchorid, anchor, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = updateSignatureRequestCall(requestId, request, progressListener, progressRequestListener);
         return call;
 
         
@@ -807,42 +791,42 @@ public class AnchorApi {
     }
 
     /**
-     * Update an anchor.
-     * Use this operation to update an anchor.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;public&#x60;, &#x60;tags&#x60;, &#x60;metadata&#x60; and &#x60;callbackURL&#x60; can be modified. 
-     * @param anchorid Identifier of anchor to update. (required)
-     * @param anchor Anchor object to update. (required)
-     * @return Anchor
+     * Update a signature request.
+     * Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;suspended&#x60;, &#x60;deadline&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified.&lt;br&gt; 
+     * @param requestId Identifier of signature request to update. (required)
+     * @param request SignatureRequest object to update. (required)
+     * @return SignatureRequest
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public Anchor updateAnchor(String anchorid, Anchor anchor) throws ApiException {
-        ApiResponse<Anchor> resp = updateAnchorWithHttpInfo(anchorid, anchor);
+    public SignatureRequest updateSignatureRequest(String requestId, SignatureRequest request) throws ApiException {
+        ApiResponse<SignatureRequest> resp = updateSignatureRequestWithHttpInfo(requestId, request);
         return resp.getData();
     }
 
     /**
-     * Update an anchor.
-     * Use this operation to update an anchor.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;public&#x60;, &#x60;tags&#x60;, &#x60;metadata&#x60; and &#x60;callbackURL&#x60; can be modified. 
-     * @param anchorid Identifier of anchor to update. (required)
-     * @param anchor Anchor object to update. (required)
-     * @return ApiResponse&lt;Anchor&gt;
+     * Update a signature request.
+     * Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;suspended&#x60;, &#x60;deadline&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified.&lt;br&gt; 
+     * @param requestId Identifier of signature request to update. (required)
+     * @param request SignatureRequest object to update. (required)
+     * @return ApiResponse&lt;SignatureRequest&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Anchor> updateAnchorWithHttpInfo(String anchorid, Anchor anchor) throws ApiException {
-        com.squareup.okhttp.Call call = updateAnchorValidateBeforeCall(anchorid, anchor, null, null);
-        Type localVarReturnType = new TypeToken<Anchor>(){}.getType();
+    public ApiResponse<SignatureRequest> updateSignatureRequestWithHttpInfo(String requestId, SignatureRequest request) throws ApiException {
+        com.squareup.okhttp.Call call = updateSignatureRequestValidateBeforeCall(requestId, request, null, null);
+        Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * Update an anchor. (asynchronously)
-     * Use this operation to update an anchor.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;public&#x60;, &#x60;tags&#x60;, &#x60;metadata&#x60; and &#x60;callbackURL&#x60; can be modified. 
-     * @param anchorid Identifier of anchor to update. (required)
-     * @param anchor Anchor object to update. (required)
+     * Update a signature request. (asynchronously)
+     * Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;suspended&#x60;, &#x60;deadline&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified.&lt;br&gt; 
+     * @param requestId Identifier of signature request to update. (required)
+     * @param request SignatureRequest object to update. (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call updateAnchorAsync(String anchorid, Anchor anchor, final ApiCallback<Anchor> callback) throws ApiException {
+    public com.squareup.okhttp.Call updateSignatureRequestAsync(String requestId, SignatureRequest request, final ApiCallback<SignatureRequest> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -863,8 +847,8 @@ public class AnchorApi {
             };
         }
 
-        com.squareup.okhttp.Call call = updateAnchorValidateBeforeCall(anchorid, anchor, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<Anchor>(){}.getType();
+        com.squareup.okhttp.Call call = updateSignatureRequestValidateBeforeCall(requestId, request, progressListener, progressRequestListener);
+        Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }

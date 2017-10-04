@@ -22,147 +22,213 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.woleet.api.client.model.Anchor;
+import io.woleet.api.client.model.AuthorizedSignee;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Anchors
+ * SignatureRequest
  */
 
-public class Anchors {
-  @SerializedName("content")
-  private List<Anchor> content = null;
+public class SignatureRequest {
+  @SerializedName("id")
+  private String id = null;
 
-  @SerializedName("first")
-  private Boolean first = null;
+  @SerializedName("created")
+  private Long created = null;
 
-  @SerializedName("last")
-  private Boolean last = null;
+  @SerializedName("lastModified")
+  private Long lastModified = null;
 
-  @SerializedName("numberOfElements")
-  private Integer numberOfElements = null;
+  @SerializedName("name")
+  private String name = null;
 
-  @SerializedName("size")
-  private Integer size = null;
+  @SerializedName("suspended")
+  private Boolean suspended = null;
 
-  @SerializedName("number")
-  private Integer number = null;
+  @SerializedName("hashToSign")
+  private String hashToSign = null;
 
-  public Anchors content(List<Anchor> content) {
-    this.content = content;
+  @SerializedName("anchors")
+  private List<Anchor> anchors = null;
+
+  @SerializedName("deadline")
+  private Long deadline = null;
+
+  @SerializedName("maxSignatures")
+  private Integer maxSignatures = null;
+
+  @SerializedName("authorizedSignees")
+  private List<AuthorizedSignee> authorizedSignees = null;
+
+   /**
+   * Signature request identifier.&lt;br&gt; **This property is a read-only property managed by the platform: it must not be provided at creation time or modified.** 
+   * @return id
+  **/
+  @ApiModelProperty(value = "Signature request identifier.<br> **This property is a read-only property managed by the platform: it must not be provided at creation time or modified.** ")
+  public String getId() {
+    return id;
+  }
+
+   /**
+   * Date of creation (in milliseconds since Unix epoch).&lt;br&gt; **This property is a read-only property managed by the platform: it must not be provided at creation time or modified.** 
+   * @return created
+  **/
+  @ApiModelProperty(value = "Date of creation (in milliseconds since Unix epoch).<br> **This property is a read-only property managed by the platform: it must not be provided at creation time or modified.** ")
+  public Long getCreated() {
+    return created;
+  }
+
+   /**
+   * Date of last modification (in milliseconds since Unix epoch).&lt;br&gt; **This property is a read-only property managed by the platform: it must not be provided at creation time or modified.** 
+   * @return lastModified
+  **/
+  @ApiModelProperty(value = "Date of last modification (in milliseconds since Unix epoch).<br> **This property is a read-only property managed by the platform: it must not be provided at creation time or modified.** ")
+  public Long getLastModified() {
+    return lastModified;
+  }
+
+  public SignatureRequest name(String name) {
+    this.name = name;
     return this;
   }
 
-  public Anchors addContentItem(Anchor contentItem) {
-    if (this.content == null) {
-      this.content = new ArrayList<Anchor>();
+   /**
+   * Name of the signature request (doesn&#39;t need to be unique). 
+   * @return name
+  **/
+  @ApiModelProperty(required = true, value = "Name of the signature request (doesn't need to be unique). ")
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public SignatureRequest suspended(Boolean suspended) {
+    this.suspended = suspended;
+    return this;
+  }
+
+   /**
+   * &#x60;true&#x60; if the signature request is suspended, or &#x60;false&#x60; (or unset) if not.&lt;br&gt; When suspended, no more signature can be registered before the request is resumed. 
+   * @return suspended
+  **/
+  @ApiModelProperty(value = "`true` if the signature request is suspended, or `false` (or unset) if not.<br> When suspended, no more signature can be registered before the request is resumed. ")
+  public Boolean getSuspended() {
+    return suspended;
+  }
+
+  public void setSuspended(Boolean suspended) {
+    this.suspended = suspended;
+  }
+
+  public SignatureRequest hashToSign(String hashToSign) {
+    this.hashToSign = hashToSign;
+    return this;
+  }
+
+   /**
+   * SHA256 hash (ie. the fingerprint) of the original data to sign. 
+   * @return hashToSign
+  **/
+  @ApiModelProperty(required = true, value = "SHA256 hash (ie. the fingerprint) of the original data to sign. ")
+  public String getHashToSign() {
+    return hashToSign;
+  }
+
+  public void setHashToSign(String hashToSign) {
+    this.hashToSign = hashToSign;
+  }
+
+  public SignatureRequest anchors(List<Anchor> anchors) {
+    this.anchors = anchors;
+    return this;
+  }
+
+  public SignatureRequest addAnchorsItem(Anchor anchorsItem) {
+    if (this.anchors == null) {
+      this.anchors = new ArrayList<Anchor>();
     }
-    this.content.add(contentItem);
+    this.anchors.add(anchorsItem);
     return this;
   }
 
    /**
-   * Array of anchors matching the search criteria.
-   * @return content
+   * List of signature anchors created for this signature request.&lt;br&gt; This property is only available to the owner of the signature request.&lt;br&gt; **This property is a read-only property managed by the platform: it must not be provided at creation time or modified.** 
+   * @return anchors
   **/
-  @ApiModelProperty(value = "Array of anchors matching the search criteria.")
-  public List<Anchor> getContent() {
-    return content;
+  @ApiModelProperty(value = "List of signature anchors created for this signature request.<br> This property is only available to the owner of the signature request.<br> **This property is a read-only property managed by the platform: it must not be provided at creation time or modified.** ")
+  public List<Anchor> getAnchors() {
+    return anchors;
   }
 
-  public void setContent(List<Anchor> content) {
-    this.content = content;
+  public void setAnchors(List<Anchor> anchors) {
+    this.anchors = anchors;
   }
 
-  public Anchors first(Boolean first) {
-    this.first = first;
+  public SignatureRequest deadline(Long deadline) {
+    this.deadline = deadline;
     return this;
   }
 
    /**
-   * &#x60;true&#x60; if this is the first page. 
-   * @return first
+   * Deadline of the signature request (in milliseconds since Unix epoch).&lt;br&gt; When not set, null or 0, no deadline is applied.&lt;br&gt; If set, signatures registered after the deadline are refused. 
+   * @return deadline
   **/
-  @ApiModelProperty(value = "`true` if this is the first page. ")
-  public Boolean getFirst() {
-    return first;
+  @ApiModelProperty(value = "Deadline of the signature request (in milliseconds since Unix epoch).<br> When not set, null or 0, no deadline is applied.<br> If set, signatures registered after the deadline are refused. ")
+  public Long getDeadline() {
+    return deadline;
   }
 
-  public void setFirst(Boolean first) {
-    this.first = first;
+  public void setDeadline(Long deadline) {
+    this.deadline = deadline;
   }
 
-  public Anchors last(Boolean last) {
-    this.last = last;
+  public SignatureRequest maxSignatures(Integer maxSignatures) {
+    this.maxSignatures = maxSignatures;
     return this;
   }
 
    /**
-   * &#x60;true&#x60; if this is the last page. 
-   * @return last
+   * Maximum number of signatures to accept for this signature request.&lt;br&gt; When not set, null or 0, no maximum is applied.&lt;br&gt; If set, signatures coming from signees not in this list are refused.&lt;br&gt; This property and the &#x60;authorizedSignees&#x60; property are mutually exclusive.&lt;br&gt; This property is only available to the owner of the signature request. 
+   * @return maxSignatures
   **/
-  @ApiModelProperty(value = "`true` if this is the last page. ")
-  public Boolean getLast() {
-    return last;
+  @ApiModelProperty(value = "Maximum number of signatures to accept for this signature request.<br> When not set, null or 0, no maximum is applied.<br> If set, signatures coming from signees not in this list are refused.<br> This property and the `authorizedSignees` property are mutually exclusive.<br> This property is only available to the owner of the signature request. ")
+  public Integer getMaxSignatures() {
+    return maxSignatures;
   }
 
-  public void setLast(Boolean last) {
-    this.last = last;
+  public void setMaxSignatures(Integer maxSignatures) {
+    this.maxSignatures = maxSignatures;
   }
 
-  public Anchors numberOfElements(Integer numberOfElements) {
-    this.numberOfElements = numberOfElements;
+  public SignatureRequest authorizedSignees(List<AuthorizedSignee> authorizedSignees) {
+    this.authorizedSignees = authorizedSignees;
+    return this;
+  }
+
+  public SignatureRequest addAuthorizedSigneesItem(AuthorizedSignee authorizedSigneesItem) {
+    if (this.authorizedSignees == null) {
+      this.authorizedSignees = new ArrayList<AuthorizedSignee>();
+    }
+    this.authorizedSignees.add(authorizedSigneesItem);
     return this;
   }
 
    /**
-   * Number of anchors in the retrieved page.
-   * @return numberOfElements
+   * List of signees authorized to register their signature for this signature request (no duplicate is authorized).&lt;br&gt; When not set or null, anybody can sign the signature request.&lt;br&gt; If set, signatures from signees not in this list are refused.&lt;br&gt; This property and the &#x60;maxSignatures&#x60; property are mutually exclusive.&lt;br&gt; This property is only available to the owner of the signature request. 
+   * @return authorizedSignees
   **/
-  @ApiModelProperty(value = "Number of anchors in the retrieved page.")
-  public Integer getNumberOfElements() {
-    return numberOfElements;
+  @ApiModelProperty(value = "List of signees authorized to register their signature for this signature request (no duplicate is authorized).<br> When not set or null, anybody can sign the signature request.<br> If set, signatures from signees not in this list are refused.<br> This property and the `maxSignatures` property are mutually exclusive.<br> This property is only available to the owner of the signature request. ")
+  public List<AuthorizedSignee> getAuthorizedSignees() {
+    return authorizedSignees;
   }
 
-  public void setNumberOfElements(Integer numberOfElements) {
-    this.numberOfElements = numberOfElements;
-  }
-
-  public Anchors size(Integer size) {
-    this.size = size;
-    return this;
-  }
-
-   /**
-   * Number of anchors per page.
-   * @return size
-  **/
-  @ApiModelProperty(value = "Number of anchors per page.")
-  public Integer getSize() {
-    return size;
-  }
-
-  public void setSize(Integer size) {
-    this.size = size;
-  }
-
-  public Anchors number(Integer number) {
-    this.number = number;
-    return this;
-  }
-
-   /**
-   * Index of the retrieved page (from 0).
-   * @return number
-  **/
-  @ApiModelProperty(value = "Index of the retrieved page (from 0).")
-  public Integer getNumber() {
-    return number;
-  }
-
-  public void setNumber(Integer number) {
-    this.number = number;
+  public void setAuthorizedSignees(List<AuthorizedSignee> authorizedSignees) {
+    this.authorizedSignees = authorizedSignees;
   }
 
 
@@ -174,32 +240,40 @@ public class Anchors {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Anchors anchors = (Anchors) o;
-    return Objects.equals(this.content, anchors.content) &&
-        Objects.equals(this.first, anchors.first) &&
-        Objects.equals(this.last, anchors.last) &&
-        Objects.equals(this.numberOfElements, anchors.numberOfElements) &&
-        Objects.equals(this.size, anchors.size) &&
-        Objects.equals(this.number, anchors.number);
+    SignatureRequest signatureRequest = (SignatureRequest) o;
+    return Objects.equals(this.id, signatureRequest.id) &&
+        Objects.equals(this.created, signatureRequest.created) &&
+        Objects.equals(this.lastModified, signatureRequest.lastModified) &&
+        Objects.equals(this.name, signatureRequest.name) &&
+        Objects.equals(this.suspended, signatureRequest.suspended) &&
+        Objects.equals(this.hashToSign, signatureRequest.hashToSign) &&
+        Objects.equals(this.anchors, signatureRequest.anchors) &&
+        Objects.equals(this.deadline, signatureRequest.deadline) &&
+        Objects.equals(this.maxSignatures, signatureRequest.maxSignatures) &&
+        Objects.equals(this.authorizedSignees, signatureRequest.authorizedSignees);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(content, first, last, numberOfElements, size, number);
+    return Objects.hash(id, created, lastModified, name, suspended, hashToSign, anchors, deadline, maxSignatures, authorizedSignees);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Anchors {\n");
+    sb.append("class SignatureRequest {\n");
     
-    sb.append("    content: ").append(toIndentedString(content)).append("\n");
-    sb.append("    first: ").append(toIndentedString(first)).append("\n");
-    sb.append("    last: ").append(toIndentedString(last)).append("\n");
-    sb.append("    numberOfElements: ").append(toIndentedString(numberOfElements)).append("\n");
-    sb.append("    size: ").append(toIndentedString(size)).append("\n");
-    sb.append("    number: ").append(toIndentedString(number)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    created: ").append(toIndentedString(created)).append("\n");
+    sb.append("    lastModified: ").append(toIndentedString(lastModified)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    suspended: ").append(toIndentedString(suspended)).append("\n");
+    sb.append("    hashToSign: ").append(toIndentedString(hashToSign)).append("\n");
+    sb.append("    anchors: ").append(toIndentedString(anchors)).append("\n");
+    sb.append("    deadline: ").append(toIndentedString(deadline)).append("\n");
+    sb.append("    maxSignatures: ").append(toIndentedString(maxSignatures)).append("\n");
+    sb.append("    authorizedSignees: ").append(toIndentedString(authorizedSignees)).append("\n");
     sb.append("}");
     return sb.toString();
   }
