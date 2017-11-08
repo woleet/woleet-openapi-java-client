@@ -14,29 +14,14 @@ Method | HTTP request | Description
 
 Get the proof receipt of an anchor.
 
-Use this operation to retrieve the ChainPoint standard receipt associated to a given anchor. This endpoint can be accessed publicly: authentication is required only to retrieve private anchors&#39; receipts. Public anchors&#39; receipts can be retrieved with or without authentication. 
+Use this operation to retrieve the Chainpoint proof receipt associated to a given anchor. This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier need to be known). 
 
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
 //import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
 //import io.woleet.api.client.ReceiptApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
-
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
 
 ReceiptApi apiInstance = new ReceiptApi();
 String anchorid = "anchorid_example"; // String | Identifier of the anchor for which to build the proof receipt.
@@ -61,7 +46,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -74,7 +59,7 @@ Name | Type | Description  | Notes
 
 Verify a proof receipt.
 
-Use this operation to verify a ChainPoint standard receipt.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to verify a proof receipt. 
+Use this operation to verify a Chainpoint proof receipt.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to verify a proof receipt. 
 
 ### Example
 ```java
@@ -84,7 +69,7 @@ Use this operation to verify a ChainPoint standard receipt.&lt;br&gt; This is a 
 
 
 ReceiptApi apiInstance = new ReceiptApi();
-Receipt receipt = new Receipt(); // Receipt | Chainpoint standard receipt to verify.
+Receipt receipt = new Receipt(); // Receipt | Chainpoint proof receipt to verify.
 try {
     ReceiptVerificationStatus result = apiInstance.verifyReceipt(receipt);
     System.out.println(result);
@@ -98,7 +83,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **receipt** | [**Receipt**](Receipt.md)| Chainpoint standard receipt to verify. |
+ **receipt** | [**Receipt**](Receipt.md)| Chainpoint proof receipt to verify. |
 
 ### Return type
 

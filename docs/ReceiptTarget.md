@@ -4,8 +4,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**targetHash** | **String** |  | 
-**targetProof** | [**List&lt;ReceiptTargetProofNode&gt;**](ReceiptTargetProofNode.md) |  | 
+**targetHash** | **String** |  |  [optional]
+**targetProof** | [**List&lt;ReceiptTargetProofNode&gt;**](ReceiptTargetProofNode.md) |  |  [optional]
 
 
 
