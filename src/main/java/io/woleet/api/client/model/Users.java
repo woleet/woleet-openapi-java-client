@@ -21,53 +21,148 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.woleet.api.client.model.User;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * ReceiptAnchorsNode
+ * Users
  */
 
-public class ReceiptAnchorsNode {
-  @SerializedName("type")
-  private String type = null;
+public class Users {
+  @SerializedName("content")
+  private List<User> content = null;
 
-  @SerializedName("sourceId")
-  private String sourceId = null;
+  @SerializedName("first")
+  private Boolean first = null;
 
-  public ReceiptAnchorsNode type(String type) {
-    this.type = type;
+  @SerializedName("last")
+  private Boolean last = null;
+
+  @SerializedName("numberOfElements")
+  private Integer numberOfElements = null;
+
+  @SerializedName("size")
+  private Integer size = null;
+
+  @SerializedName("number")
+  private Integer number = null;
+
+  public Users content(List<User> content) {
+    this.content = content;
+    return this;
+  }
+
+  public Users addContentItem(User contentItem) {
+    if (this.content == null) {
+      this.content = new ArrayList<User>();
+    }
+    this.content.add(contentItem);
     return this;
   }
 
    /**
-   * Get type
-   * @return type
+   * Array of users matching the search criteria.
+   * @return content
   **/
-  @ApiModelProperty(required = true, value = "")
-  public String getType() {
-    return type;
+  @ApiModelProperty(value = "Array of users matching the search criteria.")
+  public List<User> getContent() {
+    return content;
   }
 
-  public void setType(String type) {
-    this.type = type;
+  public void setContent(List<User> content) {
+    this.content = content;
   }
 
-  public ReceiptAnchorsNode sourceId(String sourceId) {
-    this.sourceId = sourceId;
+  public Users first(Boolean first) {
+    this.first = first;
     return this;
   }
 
    /**
-   * Get sourceId
-   * @return sourceId
+   * &#x60;true&#x60; if this is the first page. 
+   * @return first
   **/
-  @ApiModelProperty(required = true, value = "")
-  public String getSourceId() {
-    return sourceId;
+  @ApiModelProperty(value = "`true` if this is the first page. ")
+  public Boolean isFirst() {
+    return first;
   }
 
-  public void setSourceId(String sourceId) {
-    this.sourceId = sourceId;
+  public void setFirst(Boolean first) {
+    this.first = first;
+  }
+
+  public Users last(Boolean last) {
+    this.last = last;
+    return this;
+  }
+
+   /**
+   * &#x60;true&#x60; if this is the last page. 
+   * @return last
+  **/
+  @ApiModelProperty(value = "`true` if this is the last page. ")
+  public Boolean isLast() {
+    return last;
+  }
+
+  public void setLast(Boolean last) {
+    this.last = last;
+  }
+
+  public Users numberOfElements(Integer numberOfElements) {
+    this.numberOfElements = numberOfElements;
+    return this;
+  }
+
+   /**
+   * Number of users in the retrieved page.
+   * @return numberOfElements
+  **/
+  @ApiModelProperty(value = "Number of users in the retrieved page.")
+  public Integer getNumberOfElements() {
+    return numberOfElements;
+  }
+
+  public void setNumberOfElements(Integer numberOfElements) {
+    this.numberOfElements = numberOfElements;
+  }
+
+  public Users size(Integer size) {
+    this.size = size;
+    return this;
+  }
+
+   /**
+   * Number of users per page.
+   * @return size
+  **/
+  @ApiModelProperty(value = "Number of users per page.")
+  public Integer getSize() {
+    return size;
+  }
+
+  public void setSize(Integer size) {
+    this.size = size;
+  }
+
+  public Users number(Integer number) {
+    this.number = number;
+    return this;
+  }
+
+   /**
+   * Index of the retrieved page (from 0).
+   * @return number
+  **/
+  @ApiModelProperty(value = "Index of the retrieved page (from 0).")
+  public Integer getNumber() {
+    return number;
+  }
+
+  public void setNumber(Integer number) {
+    this.number = number;
   }
 
 
@@ -79,24 +174,32 @@ public class ReceiptAnchorsNode {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ReceiptAnchorsNode receiptAnchorsNode = (ReceiptAnchorsNode) o;
-    return Objects.equals(this.type, receiptAnchorsNode.type) &&
-        Objects.equals(this.sourceId, receiptAnchorsNode.sourceId);
+    Users users = (Users) o;
+    return Objects.equals(this.content, users.content) &&
+        Objects.equals(this.first, users.first) &&
+        Objects.equals(this.last, users.last) &&
+        Objects.equals(this.numberOfElements, users.numberOfElements) &&
+        Objects.equals(this.size, users.size) &&
+        Objects.equals(this.number, users.number);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, sourceId);
+    return Objects.hash(content, first, last, numberOfElements, size, number);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ReceiptAnchorsNode {\n");
+    sb.append("class Users {\n");
     
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    sourceId: ").append(toIndentedString(sourceId)).append("\n");
+    sb.append("    content: ").append(toIndentedString(content)).append("\n");
+    sb.append("    first: ").append(toIndentedString(first)).append("\n");
+    sb.append("    last: ").append(toIndentedString(last)).append("\n");
+    sb.append("    numberOfElements: ").append(toIndentedString(numberOfElements)).append("\n");
+    sb.append("    size: ").append(toIndentedString(size)).append("\n");
+    sb.append("    number: ").append(toIndentedString(number)).append("\n");
     sb.append("}");
     return sb.toString();
   }

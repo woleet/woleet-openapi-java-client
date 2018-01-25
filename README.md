@@ -108,6 +108,11 @@ Class | Method | HTTP request | Description
 *AnchorApi* | [**searchAnchorIds**](docs/AnchorApi.md#searchAnchorIds) | **GET** /anchorids | Search for public anchors&#39; identifiers.
 *AnchorApi* | [**searchAnchors**](docs/AnchorApi.md#searchAnchors) | **GET** /anchors | Search for anchors.
 *AnchorApi* | [**updateAnchor**](docs/AnchorApi.md#updateAnchor) | **PUT** /anchor/{anchorid} | Update an anchor.
+*DomainApi* | [**createDomainUser**](docs/DomainApi.md#createDomainUser) | **POST** /domain/admin/user | Create a new domain user.
+*DomainApi* | [**deleteDomainUser**](docs/DomainApi.md#deleteDomainUser) | **DELETE** /domain/admin/user/{userid} | Delete a user.
+*DomainApi* | [**getDomainUser**](docs/DomainApi.md#getDomainUser) | **GET** /domain/admin/user/{userid} | Get a user by its identifier.
+*DomainApi* | [**getDomainUsers**](docs/DomainApi.md#getDomainUsers) | **GET** /domain/admin/users | Search for users.
+*DomainApi* | [**updateDomainUser**](docs/DomainApi.md#updateDomainUser) | **PUT** /domain/admin/user/{userid} | Update a user.
 *ReceiptApi* | [**getReceipt**](docs/ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorid} | Get the proof receipt of an anchor.
 *ReceiptApi* | [**verifyReceipt**](docs/ReceiptApi.md#verifyReceipt) | **POST** /receipt/verify | Verify a proof receipt.
 *SignatureRequestApi* | [**createSignatureRequest**](docs/SignatureRequestApi.md#createSignatureRequest) | **POST** /signatureRequest | Create a new signature request.
@@ -142,6 +147,8 @@ Class | Method | HTTP request | Description
  - [SignatureRequestSignResult](docs/SignatureRequestSignResult.md)
  - [SignatureRequests](docs/SignatureRequests.md)
  - [Token](docs/Token.md)
+ - [User](docs/User.md)
+ - [Users](docs/Users.md)
  - [X500Name](docs/X500Name.md)
  - [X509SubjectIssuer](docs/X509SubjectIssuer.md)
 

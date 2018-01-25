@@ -27,10 +27,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
-import io.woleet.api.client.model.SignatureRequest;
-import io.woleet.api.client.model.SignatureRequestSign;
-import io.woleet.api.client.model.SignatureRequestSignResult;
-import io.woleet.api.client.model.SignatureRequests;
+import io.woleet.api.client.model.User;
+import io.woleet.api.client.model.Users;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -38,14 +36,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SignatureRequestApi {
+public class DomainApi {
     private ApiClient apiClient;
 
-    public SignatureRequestApi() {
+    public DomainApi() {
         this(Configuration.getDefaultApiClient());
     }
 
-    public SignatureRequestApi(ApiClient apiClient) {
+    public DomainApi(ApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -58,18 +56,18 @@ public class SignatureRequestApi {
     }
 
     /**
-     * Build call for createSignatureRequest
-     * @param signatureRequest SignatureRequest object to create. (required)
+     * Build call for createDomainUser
+     * @param user User object to create (password must be provided). (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call createSignatureRequestCall(SignatureRequest signatureRequest, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = signatureRequest;
+    public com.squareup.okhttp.Call createDomainUserCall(User user, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = user;
 
         // create path and map variables
-        String localVarPath = "/signatureRequest";
+        String localVarPath = "/domain/admin/user";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -107,53 +105,53 @@ public class SignatureRequestApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call createSignatureRequestValidateBeforeCall(SignatureRequest signatureRequest, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call createDomainUserValidateBeforeCall(User user, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
-        // verify the required parameter 'signatureRequest' is set
-        if (signatureRequest == null) {
-            throw new ApiException("Missing the required parameter 'signatureRequest' when calling createSignatureRequest(Async)");
+        // verify the required parameter 'user' is set
+        if (user == null) {
+            throw new ApiException("Missing the required parameter 'user' when calling createDomainUser(Async)");
         }
         
 
-        com.squareup.okhttp.Call call = createSignatureRequestCall(signatureRequest, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = createDomainUserCall(user, progressListener, progressRequestListener);
         return call;
 
     }
 
     /**
-     * Create a new signature request.
-     * Use this operation to create a new signature request.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60; and &#x60;lastModified&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned request.&lt;br&gt; Only the properties &#x60;name&#x60; and &#x60;hashToSign&#x60; are required: the &#x60;hashToSign&#x60; property must be the SHA256 hash of the data to sign. This allows not to leak the original data and to keep the actual signed data small (signing the digest is equivalent to signing the original data).&lt;br&gt; Be sure to have enough anchoring credits on your account to fulfill the signature request (each signature registered will cost you 1 anchoring credit).&lt;br&gt; 
-     * @param signatureRequest SignatureRequest object to create. (required)
-     * @return SignatureRequest
+     * Create a new domain user.
+     * Use this operation to create a new user for a domain.
+     * @param user User object to create (password must be provided). (required)
+     * @return User
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public SignatureRequest createSignatureRequest(SignatureRequest signatureRequest) throws ApiException {
-        ApiResponse<SignatureRequest> resp = createSignatureRequestWithHttpInfo(signatureRequest);
+    public User createDomainUser(User user) throws ApiException {
+        ApiResponse<User> resp = createDomainUserWithHttpInfo(user);
         return resp.getData();
     }
 
     /**
-     * Create a new signature request.
-     * Use this operation to create a new signature request.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60; and &#x60;lastModified&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned request.&lt;br&gt; Only the properties &#x60;name&#x60; and &#x60;hashToSign&#x60; are required: the &#x60;hashToSign&#x60; property must be the SHA256 hash of the data to sign. This allows not to leak the original data and to keep the actual signed data small (signing the digest is equivalent to signing the original data).&lt;br&gt; Be sure to have enough anchoring credits on your account to fulfill the signature request (each signature registered will cost you 1 anchoring credit).&lt;br&gt; 
-     * @param signatureRequest SignatureRequest object to create. (required)
-     * @return ApiResponse&lt;SignatureRequest&gt;
+     * Create a new domain user.
+     * Use this operation to create a new user for a domain.
+     * @param user User object to create (password must be provided). (required)
+     * @return ApiResponse&lt;User&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<SignatureRequest> createSignatureRequestWithHttpInfo(SignatureRequest signatureRequest) throws ApiException {
-        com.squareup.okhttp.Call call = createSignatureRequestValidateBeforeCall(signatureRequest, null, null);
-        Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
+    public ApiResponse<User> createDomainUserWithHttpInfo(User user) throws ApiException {
+        com.squareup.okhttp.Call call = createDomainUserValidateBeforeCall(user, null, null);
+        Type localVarReturnType = new TypeToken<User>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * Create a new signature request. (asynchronously)
-     * Use this operation to create a new signature request.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60; and &#x60;lastModified&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned request.&lt;br&gt; Only the properties &#x60;name&#x60; and &#x60;hashToSign&#x60; are required: the &#x60;hashToSign&#x60; property must be the SHA256 hash of the data to sign. This allows not to leak the original data and to keep the actual signed data small (signing the digest is equivalent to signing the original data).&lt;br&gt; Be sure to have enough anchoring credits on your account to fulfill the signature request (each signature registered will cost you 1 anchoring credit).&lt;br&gt; 
-     * @param signatureRequest SignatureRequest object to create. (required)
+     * Create a new domain user. (asynchronously)
+     * Use this operation to create a new user for a domain.
+     * @param user User object to create (password must be provided). (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call createSignatureRequestAsync(SignatureRequest signatureRequest, final ApiCallback<SignatureRequest> callback) throws ApiException {
+    public com.squareup.okhttp.Call createDomainUserAsync(User user, final ApiCallback<User> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -174,25 +172,25 @@ public class SignatureRequestApi {
             };
         }
 
-        com.squareup.okhttp.Call call = createSignatureRequestValidateBeforeCall(signatureRequest, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
+        com.squareup.okhttp.Call call = createDomainUserValidateBeforeCall(user, progressListener, progressRequestListener);
+        Type localVarReturnType = new TypeToken<User>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
     /**
-     * Build call for deleteSignatureRequest
-     * @param requestId Identifier of the signature request to delete. (required)
+     * Build call for deleteDomainUser
+     * @param userid Identifier of the user to delete. (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call deleteSignatureRequestCall(String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call deleteDomainUserCall(String userid, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/signatureRequest/{requestId}"
-            .replaceAll("\\{" + "requestId" + "\\}", apiClient.escapeString(requestId.toString()));
+        String localVarPath = "/domain/admin/user/{userid}"
+            .replaceAll("\\{" + "userid" + "\\}", apiClient.escapeString(userid.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -230,50 +228,50 @@ public class SignatureRequestApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call deleteSignatureRequestValidateBeforeCall(String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call deleteDomainUserValidateBeforeCall(String userid, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
-        // verify the required parameter 'requestId' is set
-        if (requestId == null) {
-            throw new ApiException("Missing the required parameter 'requestId' when calling deleteSignatureRequest(Async)");
+        // verify the required parameter 'userid' is set
+        if (userid == null) {
+            throw new ApiException("Missing the required parameter 'userid' when calling deleteDomainUser(Async)");
         }
         
 
-        com.squareup.okhttp.Call call = deleteSignatureRequestCall(requestId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = deleteDomainUserCall(userid, progressListener, progressRequestListener);
         return call;
 
     }
 
     /**
-     * Delete a signature request.
-     * Use this operation to delete a signature request.&lt;br&gt; 
-     * @param requestId Identifier of the signature request to delete. (required)
+     * Delete a user.
+     * Use this operation to delete a user.
+     * @param userid Identifier of the user to delete. (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public void deleteSignatureRequest(String requestId) throws ApiException {
-        deleteSignatureRequestWithHttpInfo(requestId);
+    public void deleteDomainUser(String userid) throws ApiException {
+        deleteDomainUserWithHttpInfo(userid);
     }
 
     /**
-     * Delete a signature request.
-     * Use this operation to delete a signature request.&lt;br&gt; 
-     * @param requestId Identifier of the signature request to delete. (required)
+     * Delete a user.
+     * Use this operation to delete a user.
+     * @param userid Identifier of the user to delete. (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Void> deleteSignatureRequestWithHttpInfo(String requestId) throws ApiException {
-        com.squareup.okhttp.Call call = deleteSignatureRequestValidateBeforeCall(requestId, null, null);
+    public ApiResponse<Void> deleteDomainUserWithHttpInfo(String userid) throws ApiException {
+        com.squareup.okhttp.Call call = deleteDomainUserValidateBeforeCall(userid, null, null);
         return apiClient.execute(call);
     }
 
     /**
-     * Delete a signature request. (asynchronously)
-     * Use this operation to delete a signature request.&lt;br&gt; 
-     * @param requestId Identifier of the signature request to delete. (required)
+     * Delete a user. (asynchronously)
+     * Use this operation to delete a user.
+     * @param userid Identifier of the user to delete. (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call deleteSignatureRequestAsync(String requestId, final ApiCallback<Void> callback) throws ApiException {
+    public com.squareup.okhttp.Call deleteDomainUserAsync(String userid, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -294,24 +292,24 @@ public class SignatureRequestApi {
             };
         }
 
-        com.squareup.okhttp.Call call = deleteSignatureRequestValidateBeforeCall(requestId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = deleteDomainUserValidateBeforeCall(userid, progressListener, progressRequestListener);
         apiClient.executeAsync(call, callback);
         return call;
     }
     /**
-     * Build call for getSignatureRequest
-     * @param requestId Identifier of the signature request to retrieve. (required)
+     * Build call for getDomainUser
+     * @param userid Identifier of the user to retrieve. (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getSignatureRequestCall(String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call getDomainUserCall(String userid, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/signatureRequest/{requestId}"
-            .replaceAll("\\{" + "requestId" + "\\}", apiClient.escapeString(requestId.toString()));
+        String localVarPath = "/domain/admin/user/{userid}"
+            .replaceAll("\\{" + "userid" + "\\}", apiClient.escapeString(userid.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -349,53 +347,53 @@ public class SignatureRequestApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call getSignatureRequestValidateBeforeCall(String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call getDomainUserValidateBeforeCall(String userid, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
-        // verify the required parameter 'requestId' is set
-        if (requestId == null) {
-            throw new ApiException("Missing the required parameter 'requestId' when calling getSignatureRequest(Async)");
+        // verify the required parameter 'userid' is set
+        if (userid == null) {
+            throw new ApiException("Missing the required parameter 'userid' when calling getDomainUser(Async)");
         }
         
 
-        com.squareup.okhttp.Call call = getSignatureRequestCall(requestId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = getDomainUserCall(userid, progressListener, progressRequestListener);
         return call;
 
     }
 
     /**
-     * Get a signature request by its identifier.
-     * Use this operation to retrieve a signature request by its identifier.&lt;br&gt; When accessed with no authentication, only public attributes of the signature request are returned. 
-     * @param requestId Identifier of the signature request to retrieve. (required)
-     * @return SignatureRequest
+     * Get a user by its identifier.
+     * Use this operation to retrieve a user by its identifier.
+     * @param userid Identifier of the user to retrieve. (required)
+     * @return User
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public SignatureRequest getSignatureRequest(String requestId) throws ApiException {
-        ApiResponse<SignatureRequest> resp = getSignatureRequestWithHttpInfo(requestId);
+    public User getDomainUser(String userid) throws ApiException {
+        ApiResponse<User> resp = getDomainUserWithHttpInfo(userid);
         return resp.getData();
     }
 
     /**
-     * Get a signature request by its identifier.
-     * Use this operation to retrieve a signature request by its identifier.&lt;br&gt; When accessed with no authentication, only public attributes of the signature request are returned. 
-     * @param requestId Identifier of the signature request to retrieve. (required)
-     * @return ApiResponse&lt;SignatureRequest&gt;
+     * Get a user by its identifier.
+     * Use this operation to retrieve a user by its identifier.
+     * @param userid Identifier of the user to retrieve. (required)
+     * @return ApiResponse&lt;User&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<SignatureRequest> getSignatureRequestWithHttpInfo(String requestId) throws ApiException {
-        com.squareup.okhttp.Call call = getSignatureRequestValidateBeforeCall(requestId, null, null);
-        Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
+    public ApiResponse<User> getDomainUserWithHttpInfo(String userid) throws ApiException {
+        com.squareup.okhttp.Call call = getDomainUserValidateBeforeCall(userid, null, null);
+        Type localVarReturnType = new TypeToken<User>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * Get a signature request by its identifier. (asynchronously)
-     * Use this operation to retrieve a signature request by its identifier.&lt;br&gt; When accessed with no authentication, only public attributes of the signature request are returned. 
-     * @param requestId Identifier of the signature request to retrieve. (required)
+     * Get a user by its identifier. (asynchronously)
+     * Use this operation to retrieve a user by its identifier.
+     * @param userid Identifier of the user to retrieve. (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call getSignatureRequestAsync(String requestId, final ApiCallback<SignatureRequest> callback) throws ApiException {
+    public com.squareup.okhttp.Call getDomainUserAsync(String userid, final ApiCallback<User> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -416,29 +414,28 @@ public class SignatureRequestApi {
             };
         }
 
-        com.squareup.okhttp.Call call = getSignatureRequestValidateBeforeCall(requestId, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
+        com.squareup.okhttp.Call call = getDomainUserValidateBeforeCall(userid, progressListener, progressRequestListener);
+        Type localVarReturnType = new TypeToken<User>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
     /**
-     * Build call for searchSignatureRequests
+     * Build call for getDomainUsers
      * @param page Index of the page to retrieve (from 0). (optional, default to 0)
-     * @param size Number of anchors per page. (optional, default to 20)
+     * @param size Number of users per page. (optional, default to 20)
      * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
-     * @param sort Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60; and &#x60;hashToSign&#x60;.  (optional, default to created)
-     * @param name &#x60;name&#x60; to search for: all signature requests whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: searching by name can timeout on a large signature request set.**  (optional)
-     * @param hashToSign &#x60;hashToSign&#x60; to search for: all signature requests whose &#x60;hashToSign&#x60; property is equal are returned.  (optional)
+     * @param sort Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;status&#x60; and &#x60;roles&#x60;.  (optional, default to created)
+     * @param email email to search for: a sub-string or regex of the email.  (optional)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call searchSignatureRequestsCall(Integer page, Integer size, String direction, String sort, String name, String hashToSign, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call getDomainUsersCall(Integer page, Integer size, String direction, String sort, String email, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/signatureRequests";
+        String localVarPath = "/domain/admin/users";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -450,10 +447,8 @@ public class SignatureRequestApi {
         localVarQueryParams.addAll(apiClient.parameterToPair("direction", direction));
         if (sort != null)
         localVarQueryParams.addAll(apiClient.parameterToPair("sort", sort));
-        if (name != null)
-        localVarQueryParams.addAll(apiClient.parameterToPair("name", name));
-        if (hashToSign != null)
-        localVarQueryParams.addAll(apiClient.parameterToPair("hashToSign", hashToSign));
+        if (email != null)
+        localVarQueryParams.addAll(apiClient.parameterToPair("email", email));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
 
@@ -488,63 +483,60 @@ public class SignatureRequestApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call searchSignatureRequestsValidateBeforeCall(Integer page, Integer size, String direction, String sort, String name, String hashToSign, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call getDomainUsersValidateBeforeCall(Integer page, Integer size, String direction, String sort, String email, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
 
-        com.squareup.okhttp.Call call = searchSignatureRequestsCall(page, size, direction, sort, name, hashToSign, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = getDomainUsersCall(page, size, direction, sort, email, progressListener, progressRequestListener);
         return call;
 
     }
 
     /**
-     * Search for signature requests.
-     * Use this operation to retrieve all signature requests having a given &#x60;name&#x60; and/or &#x60;hashToSign&#x60; property.&lt;br&gt; Only requests belonging to the authenticated user are returned.&lt;br&gt; Paging and sorting is supported. 
+     * Search for users.
+     * Use this operation to retrieve all users having a given &#x60;email&#x60; property.&lt;br&gt; Paging and sorting is supported. 
      * @param page Index of the page to retrieve (from 0). (optional, default to 0)
-     * @param size Number of anchors per page. (optional, default to 20)
+     * @param size Number of users per page. (optional, default to 20)
      * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
-     * @param sort Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60; and &#x60;hashToSign&#x60;.  (optional, default to created)
-     * @param name &#x60;name&#x60; to search for: all signature requests whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: searching by name can timeout on a large signature request set.**  (optional)
-     * @param hashToSign &#x60;hashToSign&#x60; to search for: all signature requests whose &#x60;hashToSign&#x60; property is equal are returned.  (optional)
-     * @return SignatureRequests
+     * @param sort Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;status&#x60; and &#x60;roles&#x60;.  (optional, default to created)
+     * @param email email to search for: a sub-string or regex of the email.  (optional)
+     * @return Users
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public SignatureRequests searchSignatureRequests(Integer page, Integer size, String direction, String sort, String name, String hashToSign) throws ApiException {
-        ApiResponse<SignatureRequests> resp = searchSignatureRequestsWithHttpInfo(page, size, direction, sort, name, hashToSign);
+    public Users getDomainUsers(Integer page, Integer size, String direction, String sort, String email) throws ApiException {
+        ApiResponse<Users> resp = getDomainUsersWithHttpInfo(page, size, direction, sort, email);
         return resp.getData();
     }
 
     /**
-     * Search for signature requests.
-     * Use this operation to retrieve all signature requests having a given &#x60;name&#x60; and/or &#x60;hashToSign&#x60; property.&lt;br&gt; Only requests belonging to the authenticated user are returned.&lt;br&gt; Paging and sorting is supported. 
+     * Search for users.
+     * Use this operation to retrieve all users having a given &#x60;email&#x60; property.&lt;br&gt; Paging and sorting is supported. 
      * @param page Index of the page to retrieve (from 0). (optional, default to 0)
-     * @param size Number of anchors per page. (optional, default to 20)
+     * @param size Number of users per page. (optional, default to 20)
      * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
-     * @param sort Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60; and &#x60;hashToSign&#x60;.  (optional, default to created)
-     * @param name &#x60;name&#x60; to search for: all signature requests whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: searching by name can timeout on a large signature request set.**  (optional)
-     * @param hashToSign &#x60;hashToSign&#x60; to search for: all signature requests whose &#x60;hashToSign&#x60; property is equal are returned.  (optional)
-     * @return ApiResponse&lt;SignatureRequests&gt;
+     * @param sort Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;status&#x60; and &#x60;roles&#x60;.  (optional, default to created)
+     * @param email email to search for: a sub-string or regex of the email.  (optional)
+     * @return ApiResponse&lt;Users&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<SignatureRequests> searchSignatureRequestsWithHttpInfo(Integer page, Integer size, String direction, String sort, String name, String hashToSign) throws ApiException {
-        com.squareup.okhttp.Call call = searchSignatureRequestsValidateBeforeCall(page, size, direction, sort, name, hashToSign, null, null);
-        Type localVarReturnType = new TypeToken<SignatureRequests>(){}.getType();
+    public ApiResponse<Users> getDomainUsersWithHttpInfo(Integer page, Integer size, String direction, String sort, String email) throws ApiException {
+        com.squareup.okhttp.Call call = getDomainUsersValidateBeforeCall(page, size, direction, sort, email, null, null);
+        Type localVarReturnType = new TypeToken<Users>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * Search for signature requests. (asynchronously)
-     * Use this operation to retrieve all signature requests having a given &#x60;name&#x60; and/or &#x60;hashToSign&#x60; property.&lt;br&gt; Only requests belonging to the authenticated user are returned.&lt;br&gt; Paging and sorting is supported. 
+     * Search for users. (asynchronously)
+     * Use this operation to retrieve all users having a given &#x60;email&#x60; property.&lt;br&gt; Paging and sorting is supported. 
      * @param page Index of the page to retrieve (from 0). (optional, default to 0)
-     * @param size Number of anchors per page. (optional, default to 20)
+     * @param size Number of users per page. (optional, default to 20)
      * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
-     * @param sort Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60; and &#x60;hashToSign&#x60;.  (optional, default to created)
-     * @param name &#x60;name&#x60; to search for: all signature requests whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: searching by name can timeout on a large signature request set.**  (optional)
-     * @param hashToSign &#x60;hashToSign&#x60; to search for: all signature requests whose &#x60;hashToSign&#x60; property is equal are returned.  (optional)
+     * @param sort Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;status&#x60; and &#x60;roles&#x60;.  (optional, default to created)
+     * @param email email to search for: a sub-string or regex of the email.  (optional)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call searchSignatureRequestsAsync(Integer page, Integer size, String direction, String sort, String name, String hashToSign, final ApiCallback<SignatureRequests> callback) throws ApiException {
+    public com.squareup.okhttp.Call getDomainUsersAsync(Integer page, Integer size, String direction, String sort, String email, final ApiCallback<Users> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -565,158 +557,26 @@ public class SignatureRequestApi {
             };
         }
 
-        com.squareup.okhttp.Call call = searchSignatureRequestsValidateBeforeCall(page, size, direction, sort, name, hashToSign, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<SignatureRequests>(){}.getType();
+        com.squareup.okhttp.Call call = getDomainUsersValidateBeforeCall(page, size, direction, sort, email, progressListener, progressRequestListener);
+        Type localVarReturnType = new TypeToken<Users>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
     /**
-     * Build call for signSignatureRequest
-     * @param requestId Identifier of the signature request. (required)
-     * @param signature Signature to register. (required)
+     * Build call for updateDomainUser
+     * @param userid Identifier of the user to update. (required)
+     * @param user User object to update. (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call signSignatureRequestCall(String requestId, SignatureRequestSign signature, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = signature;
+    public com.squareup.okhttp.Call updateDomainUserCall(String userid, User user, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = user;
 
         // create path and map variables
-        String localVarPath = "/signatureRequest/{requestId}/sign"
-            .replaceAll("\\{" + "requestId" + "\\}", apiClient.escapeString(requestId.toString()));
-
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-        final String[] localVarAccepts = {
-            "application/json"
-        };
-        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
-
-        final String[] localVarContentTypes = {
-            "application/json"
-        };
-        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
-        localVarHeaderParams.put("Content-Type", localVarContentType);
-
-        if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
-                @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
-                    return originalResponse.newBuilder()
-                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                    .build();
-                }
-            });
-        }
-
-        String[] localVarAuthNames = new String[] {  };
-        return apiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call signSignatureRequestValidateBeforeCall(String requestId, SignatureRequestSign signature, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        
-        // verify the required parameter 'requestId' is set
-        if (requestId == null) {
-            throw new ApiException("Missing the required parameter 'requestId' when calling signSignatureRequest(Async)");
-        }
-        
-        // verify the required parameter 'signature' is set
-        if (signature == null) {
-            throw new ApiException("Missing the required parameter 'signature' when calling signSignatureRequest(Async)");
-        }
-        
-
-        com.squareup.okhttp.Call call = signSignatureRequestCall(requestId, signature, progressListener, progressRequestListener);
-        return call;
-
-    }
-
-    /**
-     * Sign a signature request.
-     * Use this operation to register a signature for a signature request.&lt;br&gt; The signature is automatically anchored (on behalf of the owner of the signature request). The signature anchor created is added to the list of signature anchors of the signature request. This is a publicly accessible endpoint: authentication is not required to register a signature. 
-     * @param requestId Identifier of the signature request. (required)
-     * @param signature Signature to register. (required)
-     * @return SignatureRequestSignResult
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    public SignatureRequestSignResult signSignatureRequest(String requestId, SignatureRequestSign signature) throws ApiException {
-        ApiResponse<SignatureRequestSignResult> resp = signSignatureRequestWithHttpInfo(requestId, signature);
-        return resp.getData();
-    }
-
-    /**
-     * Sign a signature request.
-     * Use this operation to register a signature for a signature request.&lt;br&gt; The signature is automatically anchored (on behalf of the owner of the signature request). The signature anchor created is added to the list of signature anchors of the signature request. This is a publicly accessible endpoint: authentication is not required to register a signature. 
-     * @param requestId Identifier of the signature request. (required)
-     * @param signature Signature to register. (required)
-     * @return ApiResponse&lt;SignatureRequestSignResult&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     */
-    public ApiResponse<SignatureRequestSignResult> signSignatureRequestWithHttpInfo(String requestId, SignatureRequestSign signature) throws ApiException {
-        com.squareup.okhttp.Call call = signSignatureRequestValidateBeforeCall(requestId, signature, null, null);
-        Type localVarReturnType = new TypeToken<SignatureRequestSignResult>(){}.getType();
-        return apiClient.execute(call, localVarReturnType);
-    }
-
-    /**
-     * Sign a signature request. (asynchronously)
-     * Use this operation to register a signature for a signature request.&lt;br&gt; The signature is automatically anchored (on behalf of the owner of the signature request). The signature anchor created is added to the list of signature anchors of the signature request. This is a publicly accessible endpoint: authentication is not required to register a signature. 
-     * @param requestId Identifier of the signature request. (required)
-     * @param signature Signature to register. (required)
-     * @param callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
-     */
-    public com.squareup.okhttp.Call signSignatureRequestAsync(String requestId, SignatureRequestSign signature, final ApiCallback<SignatureRequestSignResult> callback) throws ApiException {
-
-        ProgressResponseBody.ProgressListener progressListener = null;
-        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
-
-        if (callback != null) {
-            progressListener = new ProgressResponseBody.ProgressListener() {
-                @Override
-                public void update(long bytesRead, long contentLength, boolean done) {
-                    callback.onDownloadProgress(bytesRead, contentLength, done);
-                }
-            };
-
-            progressRequestListener = new ProgressRequestBody.ProgressRequestListener() {
-                @Override
-                public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
-                    callback.onUploadProgress(bytesWritten, contentLength, done);
-                }
-            };
-        }
-
-        com.squareup.okhttp.Call call = signSignatureRequestValidateBeforeCall(requestId, signature, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<SignatureRequestSignResult>(){}.getType();
-        apiClient.executeAsync(call, localVarReturnType, callback);
-        return call;
-    }
-    /**
-     * Build call for updateSignatureRequest
-     * @param requestId Identifier of signature request to update. (required)
-     * @param request SignatureRequest object to update. (required)
-     * @param progressListener Progress listener
-     * @param progressRequestListener Progress request listener
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     */
-    public com.squareup.okhttp.Call updateSignatureRequestCall(String requestId, SignatureRequest request, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
-        Object localVarPostBody = request;
-
-        // create path and map variables
-        String localVarPath = "/signatureRequest/{requestId}"
-            .replaceAll("\\{" + "requestId" + "\\}", apiClient.escapeString(requestId.toString()));
+        String localVarPath = "/domain/admin/user/{userid}"
+            .replaceAll("\\{" + "userid" + "\\}", apiClient.escapeString(userid.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -754,61 +614,61 @@ public class SignatureRequestApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call updateSignatureRequestValidateBeforeCall(String requestId, SignatureRequest request, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call updateDomainUserValidateBeforeCall(String userid, User user, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
-        // verify the required parameter 'requestId' is set
-        if (requestId == null) {
-            throw new ApiException("Missing the required parameter 'requestId' when calling updateSignatureRequest(Async)");
+        // verify the required parameter 'userid' is set
+        if (userid == null) {
+            throw new ApiException("Missing the required parameter 'userid' when calling updateDomainUser(Async)");
         }
         
-        // verify the required parameter 'request' is set
-        if (request == null) {
-            throw new ApiException("Missing the required parameter 'request' when calling updateSignatureRequest(Async)");
+        // verify the required parameter 'user' is set
+        if (user == null) {
+            throw new ApiException("Missing the required parameter 'user' when calling updateDomainUser(Async)");
         }
         
 
-        com.squareup.okhttp.Call call = updateSignatureRequestCall(requestId, request, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = updateDomainUserCall(userid, user, progressListener, progressRequestListener);
         return call;
 
     }
 
     /**
-     * Update a signature request.
-     * Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;suspended&#x60;, &#x60;deadline&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified.&lt;br&gt; 
-     * @param requestId Identifier of signature request to update. (required)
-     * @param request SignatureRequest object to update. (required)
-     * @return SignatureRequest
+     * Update a user.
+     * Use this operation to update a user.
+     * @param userid Identifier of the user to update. (required)
+     * @param user User object to update. (required)
+     * @return User
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public SignatureRequest updateSignatureRequest(String requestId, SignatureRequest request) throws ApiException {
-        ApiResponse<SignatureRequest> resp = updateSignatureRequestWithHttpInfo(requestId, request);
+    public User updateDomainUser(String userid, User user) throws ApiException {
+        ApiResponse<User> resp = updateDomainUserWithHttpInfo(userid, user);
         return resp.getData();
     }
 
     /**
-     * Update a signature request.
-     * Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;suspended&#x60;, &#x60;deadline&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified.&lt;br&gt; 
-     * @param requestId Identifier of signature request to update. (required)
-     * @param request SignatureRequest object to update. (required)
-     * @return ApiResponse&lt;SignatureRequest&gt;
+     * Update a user.
+     * Use this operation to update a user.
+     * @param userid Identifier of the user to update. (required)
+     * @param user User object to update. (required)
+     * @return ApiResponse&lt;User&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<SignatureRequest> updateSignatureRequestWithHttpInfo(String requestId, SignatureRequest request) throws ApiException {
-        com.squareup.okhttp.Call call = updateSignatureRequestValidateBeforeCall(requestId, request, null, null);
-        Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
+    public ApiResponse<User> updateDomainUserWithHttpInfo(String userid, User user) throws ApiException {
+        com.squareup.okhttp.Call call = updateDomainUserValidateBeforeCall(userid, user, null, null);
+        Type localVarReturnType = new TypeToken<User>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
 
     /**
-     * Update a signature request. (asynchronously)
-     * Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;suspended&#x60;, &#x60;deadline&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified.&lt;br&gt; 
-     * @param requestId Identifier of signature request to update. (required)
-     * @param request SignatureRequest object to update. (required)
+     * Update a user. (asynchronously)
+     * Use this operation to update a user.
+     * @param userid Identifier of the user to update. (required)
+     * @param user User object to update. (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call updateSignatureRequestAsync(String requestId, SignatureRequest request, final ApiCallback<SignatureRequest> callback) throws ApiException {
+    public com.squareup.okhttp.Call updateDomainUserAsync(String userid, User user, final ApiCallback<User> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -829,8 +689,8 @@ public class SignatureRequestApi {
             };
         }
 
-        com.squareup.okhttp.Call call = updateSignatureRequestValidateBeforeCall(requestId, request, progressListener, progressRequestListener);
-        Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
+        com.squareup.okhttp.Call call = updateDomainUserValidateBeforeCall(userid, user, progressListener, progressRequestListener);
+        Type localVarReturnType = new TypeToken<User>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
