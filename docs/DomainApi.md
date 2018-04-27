@@ -5,10 +5,10 @@ All URIs are relative to *https://api.woleet.io/v1*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**createDomainUser**](DomainApi.md#createDomainUser) | **POST** /domain/admin/user | Create a new domain user.
-[**deleteDomainUser**](DomainApi.md#deleteDomainUser) | **DELETE** /domain/admin/user/{userid} | Delete a user.
-[**getDomainUser**](DomainApi.md#getDomainUser) | **GET** /domain/admin/user/{userid} | Get a user by its identifier.
-[**getDomainUsers**](DomainApi.md#getDomainUsers) | **GET** /domain/admin/users | Search for users.
-[**updateDomainUser**](DomainApi.md#updateDomainUser) | **PUT** /domain/admin/user/{userid} | Update a user.
+[**deleteDomainUser**](DomainApi.md#deleteDomainUser) | **DELETE** /domain/admin/user/{userid} | Delete a domain user.
+[**getDomainUser**](DomainApi.md#getDomainUser) | **GET** /domain/admin/user/{userid} | Get a domain user by its identifier.
+[**searchDomainUsers**](DomainApi.md#searchDomainUsers) | **GET** /domain/admin/users | Search for domain users.
+[**updateDomainUser**](DomainApi.md#updateDomainUser) | **PUT** /domain/admin/user/{userid} | Update a domain user.
 
 
 <a name="createDomainUser"></a>
@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 Create a new domain user.
 
-Use this operation to create a new user for a domain.
+Use this operation to create a new domain user.&lt;br&gt;  The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;status&#x60;, &#x60;timestamp&#x60; and &#x60;confirmations&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor. 
 
 ### Example
 ```java
@@ -75,9 +75,9 @@ Name | Type | Description  | Notes
 # **deleteDomainUser**
 > deleteDomainUser(userid)
 
-Delete a user.
+Delete a domain user.
 
-Use this operation to delete a user.
+Use this operation to delete a domain user.
 
 ### Example
 ```java
@@ -102,7 +102,7 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 DomainApi apiInstance = new DomainApi();
-String userid = "userid_example"; // String | Identifier of the user to delete.
+String userid = "userid_example"; // String | Identifier of the domain user to delete.
 try {
     apiInstance.deleteDomainUser(userid);
 } catch (ApiException e) {
@@ -115,7 +115,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **userid** | **String**| Identifier of the user to delete. |
+ **userid** | **String**| Identifier of the domain user to delete. |
 
 ### Return type
 
@@ -134,9 +134,9 @@ null (empty response body)
 # **getDomainUser**
 > User getDomainUser(userid)
 
-Get a user by its identifier.
+Get a domain user by its identifier.
 
-Use this operation to retrieve a user by its identifier.
+Use this operation to retrieve a domain user by its identifier.
 
 ### Example
 ```java
@@ -161,7 +161,7 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 DomainApi apiInstance = new DomainApi();
-String userid = "userid_example"; // String | Identifier of the user to retrieve.
+String userid = "userid_example"; // String | Identifier of the domain user to retrieve.
 try {
     User result = apiInstance.getDomainUser(userid);
     System.out.println(result);
@@ -175,7 +175,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **userid** | **String**| Identifier of the user to retrieve. |
+ **userid** | **String**| Identifier of the domain user to retrieve. |
 
 ### Return type
 
@@ -190,13 +190,13 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
-<a name="getDomainUsers"></a>
-# **getDomainUsers**
-> Users getDomainUsers(page, size, direction, sort, email)
+<a name="searchDomainUsers"></a>
+# **searchDomainUsers**
+> Users searchDomainUsers(page, size, direction, sort, email)
 
-Search for users.
+Search for domain users.
 
-Use this operation to retrieve all users having a given &#x60;email&#x60; property.&lt;br&gt; Paging and sorting is supported. 
+Use this operation to retrieve all domain users having a given &#x60;email&#x60; property.&lt;br&gt; Paging and sorting is supported. 
 
 ### Example
 ```java
@@ -227,10 +227,10 @@ String direction = "ASC"; // String | Sorting direction: ASC for ascending DESC 
 String sort = "created"; // String | Sorting property: possible values are limited to `created`, `email`, `status` and `roles`. 
 String email = "email_example"; // String | email to search for: a sub-string or regex of the email. 
 try {
-    Users result = apiInstance.getDomainUsers(page, size, direction, sort, email);
+    Users result = apiInstance.searchDomainUsers(page, size, direction, sort, email);
     System.out.println(result);
 } catch (ApiException e) {
-    System.err.println("Exception when calling DomainApi#getDomainUsers");
+    System.err.println("Exception when calling DomainApi#searchDomainUsers");
     e.printStackTrace();
 }
 ```
@@ -262,9 +262,9 @@ Name | Type | Description  | Notes
 # **updateDomainUser**
 > User updateDomainUser(userid, user)
 
-Update a user.
+Update a domain user.
 
-Use this operation to update a user.
+Use this operation to update a domain user.
 
 ### Example
 ```java
@@ -289,7 +289,7 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 DomainApi apiInstance = new DomainApi();
-String userid = "userid_example"; // String | Identifier of the user to update.
+String userid = "userid_example"; // String | Identifier of the domain user to update.
 User user = new User(); // User | User object to update.
 try {
     User result = apiInstance.updateDomainUser(userid, user);
@@ -304,7 +304,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **userid** | **String**| Identifier of the user to update. |
+ **userid** | **String**| Identifier of the domain user to update. |
  **user** | [**User**](User.md)| User object to update. |
 
 ### Return type

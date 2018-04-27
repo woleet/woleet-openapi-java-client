@@ -5,11 +5,11 @@ All URIs are relative to *https://api.woleet.io/v1*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**createSignatureRequest**](SignatureRequestApi.md#createSignatureRequest) | **POST** /signatureRequest | Create a new signature request.
-[**deleteSignatureRequest**](SignatureRequestApi.md#deleteSignatureRequest) | **DELETE** /signatureRequest/{requestId} | Delete a signature request.
-[**getSignatureRequest**](SignatureRequestApi.md#getSignatureRequest) | **GET** /signatureRequest/{requestId} | Get a signature request by its identifier.
+[**deleteSignatureRequest**](SignatureRequestApi.md#deleteSignatureRequest) | **DELETE** /signatureRequest/{requestid} | Delete a signature request.
+[**getSignatureRequest**](SignatureRequestApi.md#getSignatureRequest) | **GET** /signatureRequest/{requestid} | Get a signature request by its identifier.
 [**searchSignatureRequests**](SignatureRequestApi.md#searchSignatureRequests) | **GET** /signatureRequests | Search for signature requests.
-[**signSignatureRequest**](SignatureRequestApi.md#signSignatureRequest) | **POST** /signatureRequest/{requestId}/sign | Sign a signature request.
-[**updateSignatureRequest**](SignatureRequestApi.md#updateSignatureRequest) | **PUT** /signatureRequest/{requestId} | Update a signature request.
+[**signSignatureRequest**](SignatureRequestApi.md#signSignatureRequest) | **POST** /signatureRequest/{requestid}/sign | Sign a signature request.
+[**updateSignatureRequest**](SignatureRequestApi.md#updateSignatureRequest) | **PUT** /signatureRequest/{requestid} | Update a signature request.
 
 
 <a name="createSignatureRequest"></a>
@@ -74,7 +74,7 @@ Name | Type | Description  | Notes
 
 <a name="deleteSignatureRequest"></a>
 # **deleteSignatureRequest**
-> deleteSignatureRequest(requestId)
+> deleteSignatureRequest(requestid)
 
 Delete a signature request.
 
@@ -103,9 +103,9 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 SignatureRequestApi apiInstance = new SignatureRequestApi();
-String requestId = "requestId_example"; // String | Identifier of the signature request to delete.
+String requestid = "requestid_example"; // String | Identifier of the signature request to delete.
 try {
-    apiInstance.deleteSignatureRequest(requestId);
+    apiInstance.deleteSignatureRequest(requestid);
 } catch (ApiException e) {
     System.err.println("Exception when calling SignatureRequestApi#deleteSignatureRequest");
     e.printStackTrace();
@@ -116,7 +116,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **requestId** | **String**| Identifier of the signature request to delete. |
+ **requestid** | **String**| Identifier of the signature request to delete. |
 
 ### Return type
 
@@ -133,7 +133,7 @@ null (empty response body)
 
 <a name="getSignatureRequest"></a>
 # **getSignatureRequest**
-> SignatureRequest getSignatureRequest(requestId)
+> SignatureRequest getSignatureRequest(requestid)
 
 Get a signature request by its identifier.
 
@@ -162,9 +162,9 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 SignatureRequestApi apiInstance = new SignatureRequestApi();
-String requestId = "requestId_example"; // String | Identifier of the signature request to retrieve.
+String requestid = "requestid_example"; // String | Identifier of the signature request to retrieve.
 try {
-    SignatureRequest result = apiInstance.getSignatureRequest(requestId);
+    SignatureRequest result = apiInstance.getSignatureRequest(requestid);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling SignatureRequestApi#getSignatureRequest");
@@ -176,7 +176,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **requestId** | **String**| Identifier of the signature request to retrieve. |
+ **requestid** | **String**| Identifier of the signature request to retrieve. |
 
 ### Return type
 
@@ -263,7 +263,7 @@ Name | Type | Description  | Notes
 
 <a name="signSignatureRequest"></a>
 # **signSignatureRequest**
-> SignatureRequestSignResult signSignatureRequest(requestId, signature)
+> SignatureRequestSignResult signSignatureRequest(requestid, signature)
 
 Sign a signature request.
 
@@ -277,10 +277,10 @@ Use this operation to register a signature for a signature request.&lt;br&gt; Th
 
 
 SignatureRequestApi apiInstance = new SignatureRequestApi();
-String requestId = "requestId_example"; // String | Identifier of the signature request.
+String requestid = "requestid_example"; // String | Identifier of the signature request.
 SignatureRequestSign signature = new SignatureRequestSign(); // SignatureRequestSign | Signature to register.
 try {
-    SignatureRequestSignResult result = apiInstance.signSignatureRequest(requestId, signature);
+    SignatureRequestSignResult result = apiInstance.signSignatureRequest(requestid, signature);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling SignatureRequestApi#signSignatureRequest");
@@ -292,7 +292,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **requestId** | **String**| Identifier of the signature request. |
+ **requestid** | **String**| Identifier of the signature request. |
  **signature** | [**SignatureRequestSign**](SignatureRequestSign.md)| Signature to register. |
 
 ### Return type
@@ -310,7 +310,7 @@ No authorization required
 
 <a name="updateSignatureRequest"></a>
 # **updateSignatureRequest**
-> SignatureRequest updateSignatureRequest(requestId, request)
+> SignatureRequest updateSignatureRequest(requestid, request)
 
 Update a signature request.
 
@@ -339,10 +339,10 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 SignatureRequestApi apiInstance = new SignatureRequestApi();
-String requestId = "requestId_example"; // String | Identifier of signature request to update.
+String requestid = "requestid_example"; // String | Identifier of signature request to update.
 SignatureRequest request = new SignatureRequest(); // SignatureRequest | SignatureRequest object to update.
 try {
-    SignatureRequest result = apiInstance.updateSignatureRequest(requestId, request);
+    SignatureRequest result = apiInstance.updateSignatureRequest(requestid, request);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling SignatureRequestApi#updateSignatureRequest");
@@ -354,7 +354,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **requestId** | **String**| Identifier of signature request to update. |
+ **requestid** | **String**| Identifier of signature request to update. |
  **request** | [**SignatureRequest**](SignatureRequest.md)| SignatureRequest object to update. |
 
 ### Return type

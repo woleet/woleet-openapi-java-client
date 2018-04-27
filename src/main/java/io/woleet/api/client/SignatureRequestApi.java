@@ -1,8 +1,8 @@
 /*
  * Woleet API
- * # Basics  The Woleet API is an **HTTP REST API**. It supports **CORS** and provides **Basic authentication** and **JWT authentication**, allowing an easy and secure interaction with both web clients and backend applications.   The Woleet API is specified following the [Swagger/OpenAPI](https://openapis.org/) standard. You can get the specification file at https://api.woleet.io/swagger.yaml) and, from it, **generate client code for most languages using the [Swagger Editor](http://editor.swagger.io/?import=https://api.woleet.io/v1/swagger.json) or [Swagger Codegen](http://swagger.io/swagger-codegen/)**.   Ready to use versions of the client code are provided as open source code for [JavaScript/NodeJS](https://github.com/woleet/woleet-openapi-js-client) and [Java](https://github.com/woleet/woleet-openapi-java-client).   The API base URL is **https://api.woleet.io/v1**.  # Authentication  The Woleet API provides **[Basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication)** over HTTPS: use your email and password to authenticate.   The Woleet API also provides **[JWT authentication](https://jwt.io/)**: generate a JWT token by doing a `GET` call on the `/token` endpoint (using Basic authentication) and then provide this token to subsequent API calls in the `Authorization` header using the `Bearer` scheme.  # Purpose  The Woleet API provides an easy and cheap way to create **timestamped proofs of existence** and **timestamped proofs of signature** for your data (which can be of any type). Proofs created are **stored in the Bitcoin blockchain** and so are independent from Woleet (an access to the Bitcoin blockchain and some client side open source code is enough to verify proofs). Using the Woleet API, you can create durable and unfalsifiable cryptographic proofs usable to prove your data existed in a given state at a given date, and optionally was signed by a given signee.   The Woleet API creates **proofs of existence** conform to the open source standard [Chainpoint](https://www.chainpoint.org/). Consequently, they can be verified using any tool compatible with this standard, without any interaction with Woleet, and so remain **verifiable forever** even if Woleet stops its operations.   The Woleet API creates **proofs of signature** that are an extension of the same standard proposed by Woleet (we are actively involved in the standardization process). Thus, the existence and timestamp of a signature is verifiable using the same tools used to verify proofs of existence. When it comes to verifying the validity of the signature and the signee's identity, some additional processing is performed: since this processing can be fully performed client side with no additional data, proofs of signature remain **verifiable forever** even if Woleet stops its operations.  # Creating proofs  To create a **proof of existence** for a file, you need to create what we call an **'anchor'**. An anchor is basically a proof of existence creation request. To do so, you only need to compute the SHA256 hash of the file client side and choose a name for the anchor. Since the platform doesn't need the actual file, there is no limitation on the size or on the type of the file, and the file is not even leaked to Woleet.   To create a **proof of signature** for a file, you also need to create an anchor, and so to compute the SHA256 hash of the file and choose a name for the anchor, but some additional data is required: your public key (the one associated with the private key used to sign the SHA256 hash of the file) and your signature itself. Optionally, you can provide a URL allowing to verify your identity by ensuring you own the public key and the TLS certificate of the URL.   Newly created **anchors are automatically collected** by the platform and **recorded in the Bitcoin blockchain**: this can take from 10 mn to a few hours, depending on the load the the Bitcoin network and the level of priority of your user account. To check the state of your anchors, you can pull them using the Woleet API, or you can associate a URL to an anchor that the platform will call whenever the anchor status changes.   Once an anchor is recorded in the Bitcoin blockchain, you can retrieve its associated **proof receipt** using the Woleet API. Proof receipts **conform to the [Chainpoint 1 or 2](https://www.chainpoint.org/) proof receipt format** (with some Woleet extensions when it comes to proofs of signature). The proof receipt is the only piece of data required to prove the existence/signature of a file at a given date (obviously the file itself is also required, since it is not included in the proof receipt). Thus, it is highly recommended you keep your proof receipts (and your files) in your own data store, so that you don't depend on the Woleet API to generate the proof receipt on-demand whenever you want to verify a file.  # Verifying proofs  Verifying a **proof of existence** using the Woleet API is straightforward: the API takes care of verifying that the proof receipt is valid and correctly anchored in a Bitcoin transaction, so you just need to check that the SHA256 hash of the file matches the proof receipt's `hash` property.   Verifying a **proof of signature** using the Woleet API is also straightforward: the API takes care of verifying that the proof receipt is valid and correctly anchored in a Bitcoin transaction, then verifies the signature, and optionally verifies that the signee owns the public key and the TLS certificate, so you just need to check that the SHA256 hash of the file matches the proof receipt's `signedHash` property.   The Woleet API can also be used to verify any Chainpoint 1 or 2 proof receipt, including those created by other providers.   Woleet also provides an open source [JavaScript library for web clients](https://github.com/woleet/woleet-weblibs) implementing the full verification process without the help of the Woleet API.  # About public and private anchors  An anchor can be public (which is the default) or private.   A **private anchor** is only discoverable by its owner (see the `/anchors` endpoint). Thus, the owner needs to provide the proof receipt *and* the data to anyone wanting to verify the proof.   A **public anchor** is discoverable by anyone knowing the hash of the data (including people with no Woleet account, see the `/anchorids` endpoint). This allows anyone to retrieve the proof receipt using only the data hash as input, and then to verify it using the Woleet API or any other mean:  - use the `/anchorids` endpoint to retrieve the anchor identifier by its hash  - use the `/receipt/{anchorid}` endpoint to retrieve the proof receipt.  - use the `/receipt/verify` endpoint (or any other Chainpoint compatible tool) to verify the proof receipt and get the data or signature timestamp.  # About the verification process  For your understanding, here is a formal description of the verification process of a **proof of existence**:  - compute the SHA256 hash of the file  - check that the `targetHash` property of the proof receipt matches the hash of the file  - check that the `proof` property of the proof receipt is a valid Merkle proof (see the [Chainpoint](https://www.chainpoint.org/) standard for this step)  - retrieve the Bitcoin transaction from the `anchors` property of the proof receipt  - check that the `OP_RETURN` field of the Bitcoin transaction matches the `merkleRoot` property of the proof receipt   For **proof of signature**, an additional verification process is performed:  - check that the SHA256 hash of the `signature` property matches its `targetHash` property  - check that the `signature` property is a valid signature of the `signedHash` property for the public key stored in the `pubKey` property  - additionally, if an `identityURL` property is available:   - call `identityURL` to make the callee sign some random data using the public key `pubKey`    - check that the returned signature is valid    - get the TLS certificates of the URL (it must be an HTTPS URL) to get insight about the signee's identity  # Using domains  If you want to use the Woleet API for a given domain (eg. the \"acme\" domain, that would be accessible at **https://`acme`.woleet.io/_**) you still have to use the base URL **https://api.woleet.io/v1**, but you need to specify the domain to use by adding a `Domain` header to your calls. Obviously, you need to authenticate using the credentials of one of the domain's users. 
+ * Welcome to **Woleet API reference documentation**.<br> It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/v1.5.1/reference)** before reading this documentation. 
  *
- * OpenAPI spec version: 1.5.0
+ * OpenAPI spec version: 1.5.1
  * Contact: contact@woleet.com
  *
  * NOTE: This class is auto generated by the swagger code generator program.
@@ -181,18 +181,18 @@ public class SignatureRequestApi {
     }
     /**
      * Build call for deleteSignatureRequest
-     * @param requestId Identifier of the signature request to delete. (required)
+     * @param requestid Identifier of the signature request to delete. (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call deleteSignatureRequestCall(String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call deleteSignatureRequestCall(String requestid, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/signatureRequest/{requestId}"
-            .replaceAll("\\{" + "requestId" + "\\}", apiClient.escapeString(requestId.toString()));
+        String localVarPath = "/signatureRequest/{requestid}"
+            .replaceAll("\\{" + "requestid" + "\\}", apiClient.escapeString(requestid.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -230,15 +230,15 @@ public class SignatureRequestApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call deleteSignatureRequestValidateBeforeCall(String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call deleteSignatureRequestValidateBeforeCall(String requestid, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
-        // verify the required parameter 'requestId' is set
-        if (requestId == null) {
-            throw new ApiException("Missing the required parameter 'requestId' when calling deleteSignatureRequest(Async)");
+        // verify the required parameter 'requestid' is set
+        if (requestid == null) {
+            throw new ApiException("Missing the required parameter 'requestid' when calling deleteSignatureRequest(Async)");
         }
         
 
-        com.squareup.okhttp.Call call = deleteSignatureRequestCall(requestId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = deleteSignatureRequestCall(requestid, progressListener, progressRequestListener);
         return call;
 
     }
@@ -246,34 +246,34 @@ public class SignatureRequestApi {
     /**
      * Delete a signature request.
      * Use this operation to delete a signature request.&lt;br&gt; 
-     * @param requestId Identifier of the signature request to delete. (required)
+     * @param requestid Identifier of the signature request to delete. (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public void deleteSignatureRequest(String requestId) throws ApiException {
-        deleteSignatureRequestWithHttpInfo(requestId);
+    public void deleteSignatureRequest(String requestid) throws ApiException {
+        deleteSignatureRequestWithHttpInfo(requestid);
     }
 
     /**
      * Delete a signature request.
      * Use this operation to delete a signature request.&lt;br&gt; 
-     * @param requestId Identifier of the signature request to delete. (required)
+     * @param requestid Identifier of the signature request to delete. (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<Void> deleteSignatureRequestWithHttpInfo(String requestId) throws ApiException {
-        com.squareup.okhttp.Call call = deleteSignatureRequestValidateBeforeCall(requestId, null, null);
+    public ApiResponse<Void> deleteSignatureRequestWithHttpInfo(String requestid) throws ApiException {
+        com.squareup.okhttp.Call call = deleteSignatureRequestValidateBeforeCall(requestid, null, null);
         return apiClient.execute(call);
     }
 
     /**
      * Delete a signature request. (asynchronously)
      * Use this operation to delete a signature request.&lt;br&gt; 
-     * @param requestId Identifier of the signature request to delete. (required)
+     * @param requestid Identifier of the signature request to delete. (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call deleteSignatureRequestAsync(String requestId, final ApiCallback<Void> callback) throws ApiException {
+    public com.squareup.okhttp.Call deleteSignatureRequestAsync(String requestid, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -294,24 +294,24 @@ public class SignatureRequestApi {
             };
         }
 
-        com.squareup.okhttp.Call call = deleteSignatureRequestValidateBeforeCall(requestId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = deleteSignatureRequestValidateBeforeCall(requestid, progressListener, progressRequestListener);
         apiClient.executeAsync(call, callback);
         return call;
     }
     /**
      * Build call for getSignatureRequest
-     * @param requestId Identifier of the signature request to retrieve. (required)
+     * @param requestid Identifier of the signature request to retrieve. (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getSignatureRequestCall(String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call getSignatureRequestCall(String requestid, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/signatureRequest/{requestId}"
-            .replaceAll("\\{" + "requestId" + "\\}", apiClient.escapeString(requestId.toString()));
+        String localVarPath = "/signatureRequest/{requestid}"
+            .replaceAll("\\{" + "requestid" + "\\}", apiClient.escapeString(requestid.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -349,15 +349,15 @@ public class SignatureRequestApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call getSignatureRequestValidateBeforeCall(String requestId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call getSignatureRequestValidateBeforeCall(String requestid, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
-        // verify the required parameter 'requestId' is set
-        if (requestId == null) {
-            throw new ApiException("Missing the required parameter 'requestId' when calling getSignatureRequest(Async)");
+        // verify the required parameter 'requestid' is set
+        if (requestid == null) {
+            throw new ApiException("Missing the required parameter 'requestid' when calling getSignatureRequest(Async)");
         }
         
 
-        com.squareup.okhttp.Call call = getSignatureRequestCall(requestId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = getSignatureRequestCall(requestid, progressListener, progressRequestListener);
         return call;
 
     }
@@ -365,24 +365,24 @@ public class SignatureRequestApi {
     /**
      * Get a signature request by its identifier.
      * Use this operation to retrieve a signature request by its identifier.&lt;br&gt; When accessed with no authentication, only public attributes of the signature request are returned. 
-     * @param requestId Identifier of the signature request to retrieve. (required)
+     * @param requestid Identifier of the signature request to retrieve. (required)
      * @return SignatureRequest
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public SignatureRequest getSignatureRequest(String requestId) throws ApiException {
-        ApiResponse<SignatureRequest> resp = getSignatureRequestWithHttpInfo(requestId);
+    public SignatureRequest getSignatureRequest(String requestid) throws ApiException {
+        ApiResponse<SignatureRequest> resp = getSignatureRequestWithHttpInfo(requestid);
         return resp.getData();
     }
 
     /**
      * Get a signature request by its identifier.
      * Use this operation to retrieve a signature request by its identifier.&lt;br&gt; When accessed with no authentication, only public attributes of the signature request are returned. 
-     * @param requestId Identifier of the signature request to retrieve. (required)
+     * @param requestid Identifier of the signature request to retrieve. (required)
      * @return ApiResponse&lt;SignatureRequest&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<SignatureRequest> getSignatureRequestWithHttpInfo(String requestId) throws ApiException {
-        com.squareup.okhttp.Call call = getSignatureRequestValidateBeforeCall(requestId, null, null);
+    public ApiResponse<SignatureRequest> getSignatureRequestWithHttpInfo(String requestid) throws ApiException {
+        com.squareup.okhttp.Call call = getSignatureRequestValidateBeforeCall(requestid, null, null);
         Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -390,12 +390,12 @@ public class SignatureRequestApi {
     /**
      * Get a signature request by its identifier. (asynchronously)
      * Use this operation to retrieve a signature request by its identifier.&lt;br&gt; When accessed with no authentication, only public attributes of the signature request are returned. 
-     * @param requestId Identifier of the signature request to retrieve. (required)
+     * @param requestid Identifier of the signature request to retrieve. (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call getSignatureRequestAsync(String requestId, final ApiCallback<SignatureRequest> callback) throws ApiException {
+    public com.squareup.okhttp.Call getSignatureRequestAsync(String requestid, final ApiCallback<SignatureRequest> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -416,7 +416,7 @@ public class SignatureRequestApi {
             };
         }
 
-        com.squareup.okhttp.Call call = getSignatureRequestValidateBeforeCall(requestId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = getSignatureRequestValidateBeforeCall(requestid, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -572,19 +572,19 @@ public class SignatureRequestApi {
     }
     /**
      * Build call for signSignatureRequest
-     * @param requestId Identifier of the signature request. (required)
+     * @param requestid Identifier of the signature request. (required)
      * @param signature Signature to register. (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call signSignatureRequestCall(String requestId, SignatureRequestSign signature, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call signSignatureRequestCall(String requestid, SignatureRequestSign signature, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = signature;
 
         // create path and map variables
-        String localVarPath = "/signatureRequest/{requestId}/sign"
-            .replaceAll("\\{" + "requestId" + "\\}", apiClient.escapeString(requestId.toString()));
+        String localVarPath = "/signatureRequest/{requestid}/sign"
+            .replaceAll("\\{" + "requestid" + "\\}", apiClient.escapeString(requestid.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -622,11 +622,11 @@ public class SignatureRequestApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call signSignatureRequestValidateBeforeCall(String requestId, SignatureRequestSign signature, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call signSignatureRequestValidateBeforeCall(String requestid, SignatureRequestSign signature, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
-        // verify the required parameter 'requestId' is set
-        if (requestId == null) {
-            throw new ApiException("Missing the required parameter 'requestId' when calling signSignatureRequest(Async)");
+        // verify the required parameter 'requestid' is set
+        if (requestid == null) {
+            throw new ApiException("Missing the required parameter 'requestid' when calling signSignatureRequest(Async)");
         }
         
         // verify the required parameter 'signature' is set
@@ -635,7 +635,7 @@ public class SignatureRequestApi {
         }
         
 
-        com.squareup.okhttp.Call call = signSignatureRequestCall(requestId, signature, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = signSignatureRequestCall(requestid, signature, progressListener, progressRequestListener);
         return call;
 
     }
@@ -643,26 +643,26 @@ public class SignatureRequestApi {
     /**
      * Sign a signature request.
      * Use this operation to register a signature for a signature request.&lt;br&gt; The signature is automatically anchored (on behalf of the owner of the signature request). The signature anchor created is added to the list of signature anchors of the signature request. This is a publicly accessible endpoint: authentication is not required to register a signature. 
-     * @param requestId Identifier of the signature request. (required)
+     * @param requestid Identifier of the signature request. (required)
      * @param signature Signature to register. (required)
      * @return SignatureRequestSignResult
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public SignatureRequestSignResult signSignatureRequest(String requestId, SignatureRequestSign signature) throws ApiException {
-        ApiResponse<SignatureRequestSignResult> resp = signSignatureRequestWithHttpInfo(requestId, signature);
+    public SignatureRequestSignResult signSignatureRequest(String requestid, SignatureRequestSign signature) throws ApiException {
+        ApiResponse<SignatureRequestSignResult> resp = signSignatureRequestWithHttpInfo(requestid, signature);
         return resp.getData();
     }
 
     /**
      * Sign a signature request.
      * Use this operation to register a signature for a signature request.&lt;br&gt; The signature is automatically anchored (on behalf of the owner of the signature request). The signature anchor created is added to the list of signature anchors of the signature request. This is a publicly accessible endpoint: authentication is not required to register a signature. 
-     * @param requestId Identifier of the signature request. (required)
+     * @param requestid Identifier of the signature request. (required)
      * @param signature Signature to register. (required)
      * @return ApiResponse&lt;SignatureRequestSignResult&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<SignatureRequestSignResult> signSignatureRequestWithHttpInfo(String requestId, SignatureRequestSign signature) throws ApiException {
-        com.squareup.okhttp.Call call = signSignatureRequestValidateBeforeCall(requestId, signature, null, null);
+    public ApiResponse<SignatureRequestSignResult> signSignatureRequestWithHttpInfo(String requestid, SignatureRequestSign signature) throws ApiException {
+        com.squareup.okhttp.Call call = signSignatureRequestValidateBeforeCall(requestid, signature, null, null);
         Type localVarReturnType = new TypeToken<SignatureRequestSignResult>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -670,13 +670,13 @@ public class SignatureRequestApi {
     /**
      * Sign a signature request. (asynchronously)
      * Use this operation to register a signature for a signature request.&lt;br&gt; The signature is automatically anchored (on behalf of the owner of the signature request). The signature anchor created is added to the list of signature anchors of the signature request. This is a publicly accessible endpoint: authentication is not required to register a signature. 
-     * @param requestId Identifier of the signature request. (required)
+     * @param requestid Identifier of the signature request. (required)
      * @param signature Signature to register. (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call signSignatureRequestAsync(String requestId, SignatureRequestSign signature, final ApiCallback<SignatureRequestSignResult> callback) throws ApiException {
+    public com.squareup.okhttp.Call signSignatureRequestAsync(String requestid, SignatureRequestSign signature, final ApiCallback<SignatureRequestSignResult> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -697,26 +697,26 @@ public class SignatureRequestApi {
             };
         }
 
-        com.squareup.okhttp.Call call = signSignatureRequestValidateBeforeCall(requestId, signature, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = signSignatureRequestValidateBeforeCall(requestid, signature, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<SignatureRequestSignResult>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }
     /**
      * Build call for updateSignatureRequest
-     * @param requestId Identifier of signature request to update. (required)
+     * @param requestid Identifier of signature request to update. (required)
      * @param request SignatureRequest object to update. (required)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call updateSignatureRequestCall(String requestId, SignatureRequest request, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call updateSignatureRequestCall(String requestid, SignatureRequest request, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = request;
 
         // create path and map variables
-        String localVarPath = "/signatureRequest/{requestId}"
-            .replaceAll("\\{" + "requestId" + "\\}", apiClient.escapeString(requestId.toString()));
+        String localVarPath = "/signatureRequest/{requestid}"
+            .replaceAll("\\{" + "requestid" + "\\}", apiClient.escapeString(requestid.toString()));
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -754,11 +754,11 @@ public class SignatureRequestApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call updateSignatureRequestValidateBeforeCall(String requestId, SignatureRequest request, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call updateSignatureRequestValidateBeforeCall(String requestid, SignatureRequest request, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
-        // verify the required parameter 'requestId' is set
-        if (requestId == null) {
-            throw new ApiException("Missing the required parameter 'requestId' when calling updateSignatureRequest(Async)");
+        // verify the required parameter 'requestid' is set
+        if (requestid == null) {
+            throw new ApiException("Missing the required parameter 'requestid' when calling updateSignatureRequest(Async)");
         }
         
         // verify the required parameter 'request' is set
@@ -767,7 +767,7 @@ public class SignatureRequestApi {
         }
         
 
-        com.squareup.okhttp.Call call = updateSignatureRequestCall(requestId, request, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = updateSignatureRequestCall(requestid, request, progressListener, progressRequestListener);
         return call;
 
     }
@@ -775,26 +775,26 @@ public class SignatureRequestApi {
     /**
      * Update a signature request.
      * Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;suspended&#x60;, &#x60;deadline&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified.&lt;br&gt; 
-     * @param requestId Identifier of signature request to update. (required)
+     * @param requestid Identifier of signature request to update. (required)
      * @param request SignatureRequest object to update. (required)
      * @return SignatureRequest
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public SignatureRequest updateSignatureRequest(String requestId, SignatureRequest request) throws ApiException {
-        ApiResponse<SignatureRequest> resp = updateSignatureRequestWithHttpInfo(requestId, request);
+    public SignatureRequest updateSignatureRequest(String requestid, SignatureRequest request) throws ApiException {
+        ApiResponse<SignatureRequest> resp = updateSignatureRequestWithHttpInfo(requestid, request);
         return resp.getData();
     }
 
     /**
      * Update a signature request.
      * Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;suspended&#x60;, &#x60;deadline&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified.&lt;br&gt; 
-     * @param requestId Identifier of signature request to update. (required)
+     * @param requestid Identifier of signature request to update. (required)
      * @param request SignatureRequest object to update. (required)
      * @return ApiResponse&lt;SignatureRequest&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<SignatureRequest> updateSignatureRequestWithHttpInfo(String requestId, SignatureRequest request) throws ApiException {
-        com.squareup.okhttp.Call call = updateSignatureRequestValidateBeforeCall(requestId, request, null, null);
+    public ApiResponse<SignatureRequest> updateSignatureRequestWithHttpInfo(String requestid, SignatureRequest request) throws ApiException {
+        com.squareup.okhttp.Call call = updateSignatureRequestValidateBeforeCall(requestid, request, null, null);
         Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -802,13 +802,13 @@ public class SignatureRequestApi {
     /**
      * Update a signature request. (asynchronously)
      * Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;suspended&#x60;, &#x60;deadline&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified.&lt;br&gt; 
-     * @param requestId Identifier of signature request to update. (required)
+     * @param requestid Identifier of signature request to update. (required)
      * @param request SignatureRequest object to update. (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call updateSignatureRequestAsync(String requestId, SignatureRequest request, final ApiCallback<SignatureRequest> callback) throws ApiException {
+    public com.squareup.okhttp.Call updateSignatureRequestAsync(String requestid, SignatureRequest request, final ApiCallback<SignatureRequest> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -829,7 +829,7 @@ public class SignatureRequestApi {
             };
         }
 
-        com.squareup.okhttp.Call call = updateSignatureRequestValidateBeforeCall(requestId, request, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = updateSignatureRequestValidateBeforeCall(requestid, request, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<SignatureRequest>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
