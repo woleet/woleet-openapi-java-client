@@ -73,7 +73,7 @@ public class Anchor {
   private String callbackURL = null;
 
   /**
-   * Status of the anchor:&lt;br&gt; - WAIT: waiting to be processed. The proof receipt is not yet available for download.&lt;br&gt; - NEW: to be sent to the blockchain. The proof receipt is not yet available for download.&lt;br&gt; - SENT: sent to the blockchain. The proof receipt is available for download.&lt;br&gt; - CONFIRMED: confirmed at least 6 times by the blockchain. The proof receipt is available for download.&lt;br&gt; 
+   * Status of the anchor:&lt;br&gt; - WAIT: waiting to be processed by the platform (the proof receipt is not yet available for download)&lt;br&gt; - NEW: waiting to be sent to the blockchain (the proof receipt is not yet available for download)&lt;br&gt; - SENT: sent to the blockchain (the proof receipt is available for download)&lt;br&gt; - CONFIRMED: confirmed at least 6 times by the blockchain (the proof receipt is available for download)&lt;br&gt; 
    */
   @JsonAdapter(StatusEnum.Adapter.class)
   public enum StatusEnum {
@@ -369,10 +369,10 @@ public class Anchor {
   }
 
    /**
-   * Status of the anchor:&lt;br&gt; - WAIT: waiting to be processed. The proof receipt is not yet available for download.&lt;br&gt; - NEW: to be sent to the blockchain. The proof receipt is not yet available for download.&lt;br&gt; - SENT: sent to the blockchain. The proof receipt is available for download.&lt;br&gt; - CONFIRMED: confirmed at least 6 times by the blockchain. The proof receipt is available for download.&lt;br&gt; 
+   * Status of the anchor:&lt;br&gt; - WAIT: waiting to be processed by the platform (the proof receipt is not yet available for download)&lt;br&gt; - NEW: waiting to be sent to the blockchain (the proof receipt is not yet available for download)&lt;br&gt; - SENT: sent to the blockchain (the proof receipt is available for download)&lt;br&gt; - CONFIRMED: confirmed at least 6 times by the blockchain (the proof receipt is available for download)&lt;br&gt; 
    * @return status
   **/
-  @ApiModelProperty(value = "Status of the anchor:<br> - WAIT: waiting to be processed. The proof receipt is not yet available for download.<br> - NEW: to be sent to the blockchain. The proof receipt is not yet available for download.<br> - SENT: sent to the blockchain. The proof receipt is available for download.<br> - CONFIRMED: confirmed at least 6 times by the blockchain. The proof receipt is available for download.<br> ")
+  @ApiModelProperty(value = "Status of the anchor:<br> - WAIT: waiting to be processed by the platform (the proof receipt is not yet available for download)<br> - NEW: waiting to be sent to the blockchain (the proof receipt is not yet available for download)<br> - SENT: sent to the blockchain (the proof receipt is available for download)<br> - CONFIRMED: confirmed at least 6 times by the blockchain (the proof receipt is available for download)<br> ")
   public StatusEnum getStatus() {
     return status;
   }

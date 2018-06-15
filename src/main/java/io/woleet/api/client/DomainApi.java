@@ -120,7 +120,7 @@ public class DomainApi {
 
     /**
      * Create a new domain user.
-     * Use this operation to create a new domain user.&lt;br&gt;  The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;status&#x60;, &#x60;timestamp&#x60; and &#x60;confirmations&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor. 
+     * Use this operation to create a new domain user.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;info&#x60; and &#x60;status&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor. 
      * @param user User object to create (password must be provided). (required)
      * @return User
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
@@ -132,7 +132,7 @@ public class DomainApi {
 
     /**
      * Create a new domain user.
-     * Use this operation to create a new domain user.&lt;br&gt;  The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;status&#x60;, &#x60;timestamp&#x60; and &#x60;confirmations&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor. 
+     * Use this operation to create a new domain user.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;info&#x60; and &#x60;status&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor. 
      * @param user User object to create (password must be provided). (required)
      * @return ApiResponse&lt;User&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
@@ -145,7 +145,7 @@ public class DomainApi {
 
     /**
      * Create a new domain user. (asynchronously)
-     * Use this operation to create a new domain user.&lt;br&gt;  The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;status&#x60;, &#x60;timestamp&#x60; and &#x60;confirmations&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor. 
+     * Use this operation to create a new domain user.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;info&#x60; and &#x60;status&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor. 
      * @param user User object to create (password must be provided). (required)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
@@ -424,7 +424,7 @@ public class DomainApi {
      * @param page Index of the page to retrieve (from 0). (optional, default to 0)
      * @param size Number of users per page. (optional, default to 20)
      * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
-     * @param sort Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;status&#x60; and &#x60;roles&#x60;.  (optional, default to created)
+     * @param sort Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;roles&#x60; and &#x60;status&#x60;.  (optional, default to created)
      * @param email email to search for: a sub-string or regex of the email.  (optional)
      * @param progressListener Progress listener
      * @param progressRequestListener Progress request listener
@@ -497,7 +497,7 @@ public class DomainApi {
      * @param page Index of the page to retrieve (from 0). (optional, default to 0)
      * @param size Number of users per page. (optional, default to 20)
      * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
-     * @param sort Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;status&#x60; and &#x60;roles&#x60;.  (optional, default to created)
+     * @param sort Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;roles&#x60; and &#x60;status&#x60;.  (optional, default to created)
      * @param email email to search for: a sub-string or regex of the email.  (optional)
      * @return Users
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
@@ -513,7 +513,7 @@ public class DomainApi {
      * @param page Index of the page to retrieve (from 0). (optional, default to 0)
      * @param size Number of users per page. (optional, default to 20)
      * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
-     * @param sort Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;status&#x60; and &#x60;roles&#x60;.  (optional, default to created)
+     * @param sort Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;roles&#x60; and &#x60;status&#x60;.  (optional, default to created)
      * @param email email to search for: a sub-string or regex of the email.  (optional)
      * @return ApiResponse&lt;Users&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
@@ -530,7 +530,7 @@ public class DomainApi {
      * @param page Index of the page to retrieve (from 0). (optional, default to 0)
      * @param size Number of users per page. (optional, default to 20)
      * @param direction Sorting direction: ASC for ascending DESC for descending.  (optional, default to ASC)
-     * @param sort Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;status&#x60; and &#x60;roles&#x60;.  (optional, default to created)
+     * @param sort Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;roles&#x60; and &#x60;status&#x60;.  (optional, default to created)
      * @param email email to search for: a sub-string or regex of the email.  (optional)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call

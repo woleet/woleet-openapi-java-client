@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 Create a new domain user.
 
-Use this operation to create a new domain user.&lt;br&gt;  The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;status&#x60;, &#x60;timestamp&#x60; and &#x60;confirmations&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor. 
+Use this operation to create a new domain user.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;info&#x60; and &#x60;status&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor. 
 
 ### Example
 ```java
@@ -224,7 +224,7 @@ DomainApi apiInstance = new DomainApi();
 Integer page = 0; // Integer | Index of the page to retrieve (from 0).
 Integer size = 20; // Integer | Number of users per page.
 String direction = "ASC"; // String | Sorting direction: ASC for ascending DESC for descending. 
-String sort = "created"; // String | Sorting property: possible values are limited to `created`, `email`, `status` and `roles`. 
+String sort = "created"; // String | Sorting property: possible values are limited to `created`, `email`, `roles` and `status`. 
 String email = "email_example"; // String | email to search for: a sub-string or regex of the email. 
 try {
     Users result = apiInstance.searchDomainUsers(page, size, direction, sort, email);
@@ -242,7 +242,7 @@ Name | Type | Description  | Notes
  **page** | **Integer**| Index of the page to retrieve (from 0). | [optional] [default to 0]
  **size** | **Integer**| Number of users per page. | [optional] [default to 20]
  **direction** | **String**| Sorting direction: ASC for ascending DESC for descending.  | [optional] [default to ASC] [enum: ASC, DESC]
- **sort** | **String**| Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;status&#x60; and &#x60;roles&#x60;.  | [optional] [default to created] [enum: email, created, roles, status]
+ **sort** | **String**| Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;roles&#x60; and &#x60;status&#x60;.  | [optional] [default to created] [enum: created, email, roles, status]
  **email** | **String**| email to search for: a sub-string or regex of the email.  | [optional]
 
 ### Return type
