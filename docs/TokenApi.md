@@ -32,6 +32,12 @@ HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("Basic
 BasicAuth.setUsername("YOUR USERNAME");
 BasicAuth.setPassword("YOUR PASSWORD");
 
+// Configure API key authorization: JWTAuth
+ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+JWTAuth.setApiKey("YOUR API KEY");
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//JWTAuth.setApiKeyPrefix("Token");
+
 TokenApi apiInstance = new TokenApi();
 String cdata = "cdata_example"; // String | Client data to inject into the generated JWT token (64 characters max).<br> This data is not processed by the platform, and can be easily retrieved from the token by BASE64 decoding its `payload`. 
 try {
@@ -55,7 +61,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth)
+[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
 
 ### HTTP request headers
 
@@ -93,7 +99,7 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 TokenApi apiInstance = new TokenApi();
-Token token = new Token(); // Token | Token to revoke.
+String token = "token_example"; // String | Token to revoke.
 try {
     apiInstance.revokeToken(token);
 } catch (ApiException e) {
@@ -106,7 +112,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **token** | [**Token**](Token.md)| Token to revoke. |
+ **token** | **String**| Token to revoke. |
 
 ### Return type
 

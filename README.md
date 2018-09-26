@@ -109,21 +109,24 @@ Class | Method | HTTP request | Description
 *AnchorApi* | [**searchAnchors**](docs/AnchorApi.md#searchAnchors) | **GET** /anchors | Search for anchors.
 *AnchorApi* | [**updateAnchor**](docs/AnchorApi.md#updateAnchor) | **PUT** /anchor/{anchorid} | Update an anchor.
 *DomainApi* | [**createDomainUser**](docs/DomainApi.md#createDomainUser) | **POST** /domain/admin/user | Create a new domain user.
-*DomainApi* | [**deleteDomainUser**](docs/DomainApi.md#deleteDomainUser) | **DELETE** /domain/admin/user/{userid} | Delete a user.
-*DomainApi* | [**getDomainUser**](docs/DomainApi.md#getDomainUser) | **GET** /domain/admin/user/{userid} | Get a user by its identifier.
-*DomainApi* | [**getDomainUsers**](docs/DomainApi.md#getDomainUsers) | **GET** /domain/admin/users | Search for users.
-*DomainApi* | [**updateDomainUser**](docs/DomainApi.md#updateDomainUser) | **PUT** /domain/admin/user/{userid} | Update a user.
-*ReceiptApi* | [**getReceipt**](docs/ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorid} | Get the proof receipt of an anchor.
+*DomainApi* | [**deleteDomainUser**](docs/DomainApi.md#deleteDomainUser) | **DELETE** /domain/admin/user/{userid} | Delete a domain user.
+*DomainApi* | [**getDomainUser**](docs/DomainApi.md#getDomainUser) | **GET** /domain/admin/user/{userid} | Get a domain user by its identifier.
+*DomainApi* | [**searchDomainUsers**](docs/DomainApi.md#searchDomainUsers) | **GET** /domain/admin/users | Search for domain users.
+*DomainApi* | [**updateDomainUser**](docs/DomainApi.md#updateDomainUser) | **PUT** /domain/admin/user/{userid} | Update a domain user.
+*ReceiptApi* | [**getOTSReceipt**](docs/ReceiptApi.md#getOTSReceipt) | **GET** /receipt/{anchorid}/ots | Get the proof receipt of an anchor (OpenTimestamps proof format).
+*ReceiptApi* | [**getReceipt**](docs/ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorid} | Get the proof receipt of an anchor (Chainpoint proof format).
 *ReceiptApi* | [**verifyReceipt**](docs/ReceiptApi.md#verifyReceipt) | **POST** /receipt/verify | Verify a proof receipt.
 *SignatureRequestApi* | [**createSignatureRequest**](docs/SignatureRequestApi.md#createSignatureRequest) | **POST** /signatureRequest | Create a new signature request.
-*SignatureRequestApi* | [**deleteSignatureRequest**](docs/SignatureRequestApi.md#deleteSignatureRequest) | **DELETE** /signatureRequest/{requestId} | Delete a signature request.
-*SignatureRequestApi* | [**getSignatureRequest**](docs/SignatureRequestApi.md#getSignatureRequest) | **GET** /signatureRequest/{requestId} | Get a signature request by its identifier.
+*SignatureRequestApi* | [**deleteSignatureRequest**](docs/SignatureRequestApi.md#deleteSignatureRequest) | **DELETE** /signatureRequest/{requestid} | Delete a signature request.
+*SignatureRequestApi* | [**getSignatureRequest**](docs/SignatureRequestApi.md#getSignatureRequest) | **GET** /signatureRequest/{requestid} | Get a signature request by its identifier.
 *SignatureRequestApi* | [**searchSignatureRequests**](docs/SignatureRequestApi.md#searchSignatureRequests) | **GET** /signatureRequests | Search for signature requests.
-*SignatureRequestApi* | [**signSignatureRequest**](docs/SignatureRequestApi.md#signSignatureRequest) | **POST** /signatureRequest/{requestId}/sign | Sign a signature request.
-*SignatureRequestApi* | [**updateSignatureRequest**](docs/SignatureRequestApi.md#updateSignatureRequest) | **PUT** /signatureRequest/{requestId} | Update a signature request.
+*SignatureRequestApi* | [**signSignatureRequest**](docs/SignatureRequestApi.md#signSignatureRequest) | **POST** /signatureRequest/{requestid}/sign | Sign a signature request.
+*SignatureRequestApi* | [**updateSignatureRequest**](docs/SignatureRequestApi.md#updateSignatureRequest) | **PUT** /signatureRequest/{requestid} | Update a signature request.
 *TokenApi* | [**generateToken**](docs/TokenApi.md#generateToken) | **GET** /token | Generate a JWT token.
 *TokenApi* | [**revokeToken**](docs/TokenApi.md#revokeToken) | **DELETE** /token | Revoke a JWT token.
-*UserApi* | [**getCredits**](docs/UserApi.md#getCredits) | **GET** /user/credits | Get remaining anchoring credits.
+*UserApi* | [**getCredits**](docs/UserApi.md#getCredits) | **GET** /user/credits | Get user&#39;s anchoriong credits.
+*UserApi* | [**getTokens**](docs/UserApi.md#getTokens) | **GET** /user/tokens | Get user&#39;s tokens.
+*UserApi* | [**putTokens**](docs/UserApi.md#putTokens) | **PUT** /user/tokens | Update user&#39;s tokens.
 
 
 ## Documentation for Models
@@ -147,6 +150,7 @@ Class | Method | HTTP request | Description
  - [SignatureRequestSignResult](docs/SignatureRequestSignResult.md)
  - [SignatureRequests](docs/SignatureRequests.md)
  - [Token](docs/Token.md)
+ - [Tokens](docs/Tokens.md)
  - [User](docs/User.md)
  - [Users](docs/Users.md)
  - [X500Name](docs/X500Name.md)

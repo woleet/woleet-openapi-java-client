@@ -22,52 +22,41 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * ReceiptProofNode
+ * Tokens
  */
 
-public class ReceiptProofNode {
-  @SerializedName("left")
-  private String left = null;
+public class Tokens {
+  @SerializedName("tokens")
+  private List<String> tokens = null;
 
-  @SerializedName("right")
-  private String right = null;
+  public Tokens tokens(List<String> tokens) {
+    this.tokens = tokens;
+    return this;
+  }
 
-  public ReceiptProofNode left(String left) {
-    this.left = left;
+  public Tokens addTokensItem(String tokensItem) {
+    if (this.tokens == null) {
+      this.tokens = new ArrayList<String>();
+    }
+    this.tokens.add(tokensItem);
     return this;
   }
 
    /**
-   * Get left
-   * @return left
+   * Get tokens
+   * @return tokens
   **/
   @ApiModelProperty(value = "")
-  public String getLeft() {
-    return left;
+  public List<String> getTokens() {
+    return tokens;
   }
 
-  public void setLeft(String left) {
-    this.left = left;
-  }
-
-  public ReceiptProofNode right(String right) {
-    this.right = right;
-    return this;
-  }
-
-   /**
-   * Get right
-   * @return right
-  **/
-  @ApiModelProperty(value = "")
-  public String getRight() {
-    return right;
-  }
-
-  public void setRight(String right) {
-    this.right = right;
+  public void setTokens(List<String> tokens) {
+    this.tokens = tokens;
   }
 
 
@@ -79,24 +68,22 @@ public class ReceiptProofNode {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ReceiptProofNode receiptProofNode = (ReceiptProofNode) o;
-    return Objects.equals(this.left, receiptProofNode.left) &&
-        Objects.equals(this.right, receiptProofNode.right);
+    Tokens tokens = (Tokens) o;
+    return Objects.equals(this.tokens, tokens.tokens);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(left, right);
+    return Objects.hash(tokens);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ReceiptProofNode {\n");
+    sb.append("class Tokens {\n");
     
-    sb.append("    left: ").append(toIndentedString(left)).append("\n");
-    sb.append("    right: ").append(toIndentedString(right)).append("\n");
+    sb.append("    tokens: ").append(toIndentedString(tokens)).append("\n");
     sb.append("}");
     return sb.toString();
   }

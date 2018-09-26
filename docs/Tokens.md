@@ -1,11 +1,10 @@
 
-# ReceiptProofNode
+# Tokens
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**left** | **String** |  |  [optional]
-**right** | **String** |  |  [optional]
+**tokens** | **List&lt;String&gt;** |  |  [optional]
 
 
 

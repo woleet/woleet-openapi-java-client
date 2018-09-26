@@ -4,15 +4,61 @@ All URIs are relative to *https://api.woleet.io/v1*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getReceipt**](ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorid} | Get the proof receipt of an anchor.
+[**getOTSReceipt**](ReceiptApi.md#getOTSReceipt) | **GET** /receipt/{anchorid}/ots | Get the proof receipt of an anchor (OpenTimestamps proof format).
+[**getReceipt**](ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorid} | Get the proof receipt of an anchor (Chainpoint proof format).
 [**verifyReceipt**](ReceiptApi.md#verifyReceipt) | **POST** /receipt/verify | Verify a proof receipt.
 
+
+<a name="getOTSReceipt"></a>
+# **getOTSReceipt**
+> String getOTSReceipt(anchorid)
+
+Get the proof receipt of an anchor (OpenTimestamps proof format).
+
+Use this operation to retrieve the OpenTimestamps proof receipt associated to a given anchor. This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier need to be known). 
+
+### Example
+```java
+// Import classes:
+//import io.woleet.api.ApiException;
+//import io.woleet.api.client.ReceiptApi;
+
+
+ReceiptApi apiInstance = new ReceiptApi();
+String anchorid = "anchorid_example"; // String | Identifier of the anchor for which to build the proof receipt.
+try {
+    String result = apiInstance.getOTSReceipt(anchorid);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling ReceiptApi#getOTSReceipt");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **anchorid** | **String**| Identifier of the anchor for which to build the proof receipt. |
+
+### Return type
+
+**String**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 <a name="getReceipt"></a>
 # **getReceipt**
 > Receipt getReceipt(anchorid)
 
-Get the proof receipt of an anchor.
+Get the proof receipt of an anchor (Chainpoint proof format).
 
 Use this operation to retrieve the Chainpoint proof receipt associated to a given anchor. This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier need to be known). 
 
@@ -59,7 +105,7 @@ No authorization required
 
 Verify a proof receipt.
 
-Use this operation to verify a Chainpoint proof receipt.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to verify a proof receipt. 
+Use this operation to verify a Chainpoint proof receipt and get the timestamp of the proof.&lt;br&gt; For proof of signature receipts including an identity URL, this operation also verify and returns information about the signee&#39;s identity.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to verify a proof receipt. 
 
 ### Example
 ```java
