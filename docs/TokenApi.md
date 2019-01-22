@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 Generate a JWT token.
 
-Use this operation to generate a new JWT token.&lt;br&gt; Then, use this token to authenticate using the &#x60;Bearer&#x60; scheme of the &#x60;Authorization&#x60; header, like:&lt;br&gt; &#x60;Authorization: Bearer {JWT token value}&#x60; 
+Use this operation to generate a new JWT token.&lt;br&gt; JWT tokens can be used to authenticate to the API, using the &#x60;Bearer&#x60; scheme of the &#x60;Authorization&#x60; header, like:&lt;br&gt; &#x60;Authorization: Bearer {JWT token}&#x60; 
 
 ### Example
 ```java
@@ -65,7 +65,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 <a name="revokeToken"></a>
@@ -99,7 +99,7 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 TokenApi apiInstance = new TokenApi();
-String token = "token_example"; // String | Token to revoke.
+String token = "token_example"; // String | JWT token to revoke.
 try {
     apiInstance.revokeToken(token);
 } catch (ApiException e) {
@@ -112,7 +112,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **token** | **String**| Token to revoke. |
+ **token** | **String**| JWT token to revoke. |
 
 ### Return type
 
@@ -124,6 +124,6 @@ null (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 

@@ -128,8 +128,8 @@ null (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
 <a name="getSignatureRequest"></a>
 # **getSignatureRequest**
@@ -188,7 +188,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 <a name="searchSignatureRequests"></a>
@@ -258,12 +258,12 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 <a name="signSignatureRequest"></a>
 # **signSignatureRequest**
-> SignatureRequestSignResult signSignatureRequest(requestid, signature)
+> SignatureRequestSignResult signSignatureRequest(requestid, signatureRequestSign)
 
 Sign a signature request.
 
@@ -272,15 +272,30 @@ Use this operation to register a signature for a signature request.&lt;br&gt; Th
 ### Example
 ```java
 // Import classes:
+//import io.woleet.api.ApiClient;
 //import io.woleet.api.ApiException;
+//import io.woleet.api.Configuration;
+//import io.woleet.api.auth.*;
 //import io.woleet.api.client.SignatureRequestApi;
 
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+// Configure HTTP basic authorization: BasicAuth
+HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+BasicAuth.setUsername("YOUR USERNAME");
+BasicAuth.setPassword("YOUR PASSWORD");
+
+// Configure API key authorization: JWTAuth
+ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+JWTAuth.setApiKey("YOUR API KEY");
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//JWTAuth.setApiKeyPrefix("Token");
 
 SignatureRequestApi apiInstance = new SignatureRequestApi();
 String requestid = "requestid_example"; // String | Identifier of the signature request.
-SignatureRequestSign signature = new SignatureRequestSign(); // SignatureRequestSign | Signature to register.
+SignatureRequestSign signatureRequestSign = new SignatureRequestSign(); // SignatureRequestSign | Signature to register.
 try {
-    SignatureRequestSignResult result = apiInstance.signSignatureRequest(requestid, signature);
+    SignatureRequestSignResult result = apiInstance.signSignatureRequest(requestid, signatureRequestSign);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling SignatureRequestApi#signSignatureRequest");
@@ -293,7 +308,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **requestid** | **String**| Identifier of the signature request. |
- **signature** | [**SignatureRequestSign**](SignatureRequestSign.md)| Signature to register. |
+ **signatureRequestSign** | [**SignatureRequestSign**](SignatureRequestSign.md)| Signature to register. |
 
 ### Return type
 
@@ -301,7 +316,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
 
 ### HTTP request headers
 
@@ -310,7 +325,7 @@ No authorization required
 
 <a name="updateSignatureRequest"></a>
 # **updateSignatureRequest**
-> SignatureRequest updateSignatureRequest(requestid, request)
+> SignatureRequest updateSignatureRequest(requestid, signatureRequest)
 
 Update a signature request.
 
@@ -340,9 +355,9 @@ JWTAuth.setApiKey("YOUR API KEY");
 
 SignatureRequestApi apiInstance = new SignatureRequestApi();
 String requestid = "requestid_example"; // String | Identifier of signature request to update.
-SignatureRequest request = new SignatureRequest(); // SignatureRequest | SignatureRequest object to update.
+SignatureRequest signatureRequest = new SignatureRequest(); // SignatureRequest | SignatureRequest object to update.
 try {
-    SignatureRequest result = apiInstance.updateSignatureRequest(requestid, request);
+    SignatureRequest result = apiInstance.updateSignatureRequest(requestid, signatureRequest);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling SignatureRequestApi#updateSignatureRequest");
@@ -355,7 +370,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **requestid** | **String**| Identifier of signature request to update. |
- **request** | [**SignatureRequest**](SignatureRequest.md)| SignatureRequest object to update. |
+ **signatureRequest** | [**SignatureRequest**](SignatureRequest.md)| SignatureRequest object to update. |
 
 ### Return type
 

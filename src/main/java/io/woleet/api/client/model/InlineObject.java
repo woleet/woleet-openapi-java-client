@@ -23,54 +23,42 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * ReceiptAnchorsNode
+ * InlineObject
  */
 
-public class ReceiptAnchorsNode {
-  public static final String SERIALIZED_NAME_TYPE = "type";
-  @SerializedName(SERIALIZED_NAME_TYPE)
-  private String type = "BTCOpReturn";
+public class InlineObject {
+  public static final String SERIALIZED_NAME_TOKENS = "tokens";
+  @SerializedName(SERIALIZED_NAME_TOKENS)
+  private List<String> tokens = null;
 
-  public static final String SERIALIZED_NAME_SOURCE_ID = "sourceId";
-  @SerializedName(SERIALIZED_NAME_SOURCE_ID)
-  private String sourceId;
+  public InlineObject tokens(List<String> tokens) {
+    this.tokens = tokens;
+    return this;
+  }
 
-  public ReceiptAnchorsNode type(String type) {
-    this.type = type;
+  public InlineObject addTokensItem(String tokensItem) {
+    if (this.tokens == null) {
+      this.tokens = new ArrayList<String>();
+    }
+    this.tokens.add(tokensItem);
     return this;
   }
 
    /**
-   * Get type
-   * @return type
+   * Get tokens
+   * @return tokens
   **/
   @ApiModelProperty(value = "")
-  public String getType() {
-    return type;
+  public List<String> getTokens() {
+    return tokens;
   }
 
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public ReceiptAnchorsNode sourceId(String sourceId) {
-    this.sourceId = sourceId;
-    return this;
-  }
-
-   /**
-   * Get sourceId
-   * @return sourceId
-  **/
-  @ApiModelProperty(value = "")
-  public String getSourceId() {
-    return sourceId;
-  }
-
-  public void setSourceId(String sourceId) {
-    this.sourceId = sourceId;
+  public void setTokens(List<String> tokens) {
+    this.tokens = tokens;
   }
 
 
@@ -82,24 +70,22 @@ public class ReceiptAnchorsNode {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ReceiptAnchorsNode receiptAnchorsNode = (ReceiptAnchorsNode) o;
-    return Objects.equals(this.type, receiptAnchorsNode.type) &&
-        Objects.equals(this.sourceId, receiptAnchorsNode.sourceId);
+    InlineObject inlineObject = (InlineObject) o;
+    return Objects.equals(this.tokens, inlineObject.tokens);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, sourceId);
+    return Objects.hash(tokens);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ReceiptAnchorsNode {\n");
+    sb.append("class InlineObject {\n");
     
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
-    sb.append("    sourceId: ").append(toIndentedString(sourceId)).append("\n");
+    sb.append("    tokens: ").append(toIndentedString(tokens)).append("\n");
     sb.append("}");
     return sb.toString();
   }

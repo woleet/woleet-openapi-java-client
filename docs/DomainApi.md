@@ -127,8 +127,8 @@ null (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
 <a name="getDomainUser"></a>
 # **getDomainUser**
@@ -187,7 +187,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 <a name="searchDomainUsers"></a>
@@ -196,7 +196,7 @@ Name | Type | Description  | Notes
 
 Search for domain users.
 
-Use this operation to retrieve all domain users having a given &#x60;email&#x60; property.&lt;br&gt; Paging and sorting is supported. 
+Use this operation to list all domain users or search for domain users given their email.&lt;br&gt; Paging and sorting is supported. 
 
 ### Example
 ```java
@@ -224,8 +224,8 @@ DomainApi apiInstance = new DomainApi();
 Integer page = 0; // Integer | Index of the page to retrieve (from 0).
 Integer size = 20; // Integer | Number of users per page.
 String direction = "ASC"; // String | Sorting direction: ASC for ascending DESC for descending. 
-String sort = "created"; // String | Sorting property: possible values are limited to `created`, `email`, `roles` and `status`. 
-String email = "email_example"; // String | email to search for: a sub-string or regex of the email. 
+String sort = "created"; // String | Sorting property: possible values are `email`, `created`, `roles`, `info.firstName`, `info.lastName`, `status`. 
+String email = "email_example"; // String | email to search for: a sub-string of the email. 
 try {
     Users result = apiInstance.searchDomainUsers(page, size, direction, sort, email);
     System.out.println(result);
@@ -242,8 +242,8 @@ Name | Type | Description  | Notes
  **page** | **Integer**| Index of the page to retrieve (from 0). | [optional] [default to 0]
  **size** | **Integer**| Number of users per page. | [optional] [default to 20]
  **direction** | **String**| Sorting direction: ASC for ascending DESC for descending.  | [optional] [default to ASC] [enum: ASC, DESC]
- **sort** | **String**| Sorting property: possible values are limited to &#x60;created&#x60;, &#x60;email&#x60;, &#x60;roles&#x60; and &#x60;status&#x60;.  | [optional] [default to created] [enum: created, email, roles, status]
- **email** | **String**| email to search for: a sub-string or regex of the email.  | [optional]
+ **sort** | **String**| Sorting property: possible values are &#x60;email&#x60;, &#x60;created&#x60;, &#x60;roles&#x60;, &#x60;info.firstName&#x60;, &#x60;info.lastName&#x60;, &#x60;status&#x60;.  | [optional] [default to created] [enum: email, created, roles, info.firstName, info.lastName, status]
+ **email** | **String**| email to search for: a sub-string of the email.  | [optional]
 
 ### Return type
 
@@ -255,7 +255,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 <a name="updateDomainUser"></a>

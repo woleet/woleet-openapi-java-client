@@ -1,5 +1,5 @@
 
-# Tokens
+# InlineObject
 
 ## Properties
 Name | Type | Description | Notes

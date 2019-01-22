@@ -128,8 +128,8 @@ null (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
 <a name="getAnchor"></a>
 # **getAnchor**
@@ -188,7 +188,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 <a name="searchAnchorIds"></a>
@@ -202,9 +202,24 @@ Use this operation to retrieve the identifiers of all public anchors having a gi
 ### Example
 ```java
 // Import classes:
+//import io.woleet.api.ApiClient;
 //import io.woleet.api.ApiException;
+//import io.woleet.api.Configuration;
+//import io.woleet.api.auth.*;
 //import io.woleet.api.client.AnchorApi;
 
+ApiClient defaultClient = Configuration.getDefaultApiClient();
+
+// Configure HTTP basic authorization: BasicAuth
+HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+BasicAuth.setUsername("YOUR USERNAME");
+BasicAuth.setPassword("YOUR PASSWORD");
+
+// Configure API key authorization: JWTAuth
+ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+JWTAuth.setApiKey("YOUR API KEY");
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//JWTAuth.setApiKeyPrefix("Token");
 
 AnchorApi apiInstance = new AnchorApi();
 Integer page = 0; // Integer | Index of the page to retrieve (from 0).
@@ -235,11 +250,11 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 <a name="searchAnchors"></a>
@@ -280,7 +295,7 @@ String sort = "created"; // String | Sorting property: possible values are limit
 String name = "name_example"; // String | `name` to search for: all anchors whose `name` property contains this sub-string are returned.<br> **WARNING: searching by name can timeout on a large anchor set.** 
 String hash = "hash_example"; // String | `hash` to search for: all anchors whose `hash` property is equal are returned. 
 String signedHash = "signedHash_example"; // String | `signedHash` to search for: all anchors whose `signedHash` property is equal are returned. 
-List<String> tags = Arrays.asList("tags_example"); // List<String> | `tags` to search for: all anchors having all of these tags sets are returned. 
+List<String> tags = Arrays.asList(); // List<String> | `tags` to search for: all anchors having all of these tags sets are returned. 
 try {
     Anchors result = apiInstance.searchAnchors(page, size, direction, sort, name, hash, signedHash, tags);
     System.out.println(result);
@@ -313,7 +328,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 <a name="updateAnchor"></a>
