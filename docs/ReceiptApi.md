@@ -4,14 +4,14 @@ All URIs are relative to *https://api.woleet.io/v1*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getOTSReceipt**](ReceiptApi.md#getOTSReceipt) | **GET** /receipt/{anchorid}/ots | Get the proof receipt of an anchor (OpenTimestamps proof format).
-[**getReceipt**](ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorid} | Get the proof receipt of an anchor (Chainpoint proof format).
+[**getOTSReceipt**](ReceiptApi.md#getOTSReceipt) | **GET** /receipt/{anchorId}/ots | Get the proof receipt of an anchor (OpenTimestamps proof format).
+[**getReceipt**](ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorId} | Get the proof receipt of an anchor (Chainpoint proof format).
 [**verifyReceipt**](ReceiptApi.md#verifyReceipt) | **POST** /receipt/verify | Verify a proof receipt.
 
 
 <a name="getOTSReceipt"></a>
 # **getOTSReceipt**
-> File getOTSReceipt(anchorid)
+> File getOTSReceipt(anchorId)
 
 Get the proof receipt of an anchor (OpenTimestamps proof format).
 
@@ -40,9 +40,9 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 ReceiptApi apiInstance = new ReceiptApi();
-String anchorid = "anchorid_example"; // String | Identifier of the anchor for which to build the proof receipt.
+String anchorId = "anchorId_example"; // String | Identifier of the anchor for which to build the proof receipt.
 try {
-    File result = apiInstance.getOTSReceipt(anchorid);
+    File result = apiInstance.getOTSReceipt(anchorId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ReceiptApi#getOTSReceipt");
@@ -54,7 +54,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **anchorid** | **String**| Identifier of the anchor for which to build the proof receipt. |
+ **anchorId** | **String**| Identifier of the anchor for which to build the proof receipt. |
 
 ### Return type
 
@@ -71,7 +71,7 @@ Name | Type | Description  | Notes
 
 <a name="getReceipt"></a>
 # **getReceipt**
-> Receipt getReceipt(anchorid)
+> Receipt getReceipt(anchorId)
 
 Get the proof receipt of an anchor (Chainpoint proof format).
 
@@ -100,9 +100,9 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 ReceiptApi apiInstance = new ReceiptApi();
-String anchorid = "anchorid_example"; // String | Identifier of the anchor for which to build the proof receipt.
+String anchorId = "anchorId_example"; // String | Identifier of the anchor for which to build the proof receipt.
 try {
-    Receipt result = apiInstance.getReceipt(anchorid);
+    Receipt result = apiInstance.getReceipt(anchorId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ReceiptApi#getReceipt");
@@ -114,7 +114,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **anchorid** | **String**| Identifier of the anchor for which to build the proof receipt. |
+ **anchorId** | **String**| Identifier of the anchor for which to build the proof receipt. |
 
 ### Return type
 

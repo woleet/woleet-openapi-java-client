@@ -5,10 +5,10 @@ All URIs are relative to *https://api.woleet.io/v1*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**createDomainUser**](DomainApi.md#createDomainUser) | **POST** /domain/admin/user | Create a new domain user.
-[**deleteDomainUser**](DomainApi.md#deleteDomainUser) | **DELETE** /domain/admin/user/{userid} | Delete a domain user.
-[**getDomainUser**](DomainApi.md#getDomainUser) | **GET** /domain/admin/user/{userid} | Get a domain user by its identifier.
+[**deleteDomainUser**](DomainApi.md#deleteDomainUser) | **DELETE** /domain/admin/user/{userId} | Delete a domain user.
+[**getDomainUser**](DomainApi.md#getDomainUser) | **GET** /domain/admin/user/{userId} | Get a domain user by its identifier.
 [**searchDomainUsers**](DomainApi.md#searchDomainUsers) | **GET** /domain/admin/users | Search for domain users.
-[**updateDomainUser**](DomainApi.md#updateDomainUser) | **PUT** /domain/admin/user/{userid} | Update a domain user.
+[**updateDomainUser**](DomainApi.md#updateDomainUser) | **PUT** /domain/admin/user/{userId} | Update a domain user.
 
 
 <a name="createDomainUser"></a>
@@ -73,7 +73,7 @@ Name | Type | Description  | Notes
 
 <a name="deleteDomainUser"></a>
 # **deleteDomainUser**
-> deleteDomainUser(userid)
+> deleteDomainUser(userId)
 
 Delete a domain user.
 
@@ -102,9 +102,9 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 DomainApi apiInstance = new DomainApi();
-String userid = "userid_example"; // String | Identifier of the domain user to delete.
+String userId = "userId_example"; // String | Identifier of the domain user to delete.
 try {
-    apiInstance.deleteDomainUser(userid);
+    apiInstance.deleteDomainUser(userId);
 } catch (ApiException e) {
     System.err.println("Exception when calling DomainApi#deleteDomainUser");
     e.printStackTrace();
@@ -115,7 +115,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **userid** | **String**| Identifier of the domain user to delete. |
+ **userId** | **String**| Identifier of the domain user to delete. |
 
 ### Return type
 
@@ -132,7 +132,7 @@ null (empty response body)
 
 <a name="getDomainUser"></a>
 # **getDomainUser**
-> User getDomainUser(userid)
+> User getDomainUser(userId)
 
 Get a domain user by its identifier.
 
@@ -161,9 +161,9 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 DomainApi apiInstance = new DomainApi();
-String userid = "userid_example"; // String | Identifier of the domain user to retrieve.
+String userId = "userId_example"; // String | Identifier of the domain user to retrieve.
 try {
-    User result = apiInstance.getDomainUser(userid);
+    User result = apiInstance.getDomainUser(userId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling DomainApi#getDomainUser");
@@ -175,7 +175,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **userid** | **String**| Identifier of the domain user to retrieve. |
+ **userId** | **String**| Identifier of the domain user to retrieve. |
 
 ### Return type
 
@@ -260,7 +260,7 @@ Name | Type | Description  | Notes
 
 <a name="updateDomainUser"></a>
 # **updateDomainUser**
-> User updateDomainUser(userid, user)
+> User updateDomainUser(userId, user)
 
 Update a domain user.
 
@@ -289,10 +289,10 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 DomainApi apiInstance = new DomainApi();
-String userid = "userid_example"; // String | Identifier of the domain user to update.
+String userId = "userId_example"; // String | Identifier of the domain user to update.
 User user = new User(); // User | User object to update.
 try {
-    User result = apiInstance.updateDomainUser(userid, user);
+    User result = apiInstance.updateDomainUser(userId, user);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling DomainApi#updateDomainUser");
@@ -304,7 +304,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **userid** | **String**| Identifier of the domain user to update. |
+ **userId** | **String**| Identifier of the domain user to update. |
  **user** | [**User**](User.md)| User object to update. |
 
 ### Return type

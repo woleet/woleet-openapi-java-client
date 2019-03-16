@@ -5,11 +5,11 @@ All URIs are relative to *https://api.woleet.io/v1*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**createAnchor**](AnchorApi.md#createAnchor) | **POST** /anchor | Create a new anchor.
-[**deleteAnchor**](AnchorApi.md#deleteAnchor) | **DELETE** /anchor/{anchorid} | Delete an anchor.
-[**getAnchor**](AnchorApi.md#getAnchor) | **GET** /anchor/{anchorid} | Get an anchor by its identifier.
+[**deleteAnchor**](AnchorApi.md#deleteAnchor) | **DELETE** /anchor/{anchorId} | Delete an anchor.
+[**getAnchor**](AnchorApi.md#getAnchor) | **GET** /anchor/{anchorId} | Get an anchor by its identifier.
 [**searchAnchorIds**](AnchorApi.md#searchAnchorIds) | **GET** /anchorids | Search for public anchors&#39; identifiers.
 [**searchAnchors**](AnchorApi.md#searchAnchors) | **GET** /anchors | Search for anchors.
-[**updateAnchor**](AnchorApi.md#updateAnchor) | **PUT** /anchor/{anchorid} | Update an anchor.
+[**updateAnchor**](AnchorApi.md#updateAnchor) | **PUT** /anchor/{anchorId} | Update an anchor.
 
 
 <a name="createAnchor"></a>
@@ -74,7 +74,7 @@ Name | Type | Description  | Notes
 
 <a name="deleteAnchor"></a>
 # **deleteAnchor**
-> deleteAnchor(anchorid)
+> deleteAnchor(anchorId)
 
 Delete an anchor.
 
@@ -103,9 +103,9 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 AnchorApi apiInstance = new AnchorApi();
-String anchorid = "anchorid_example"; // String | Identifier of the anchor to delete.
+String anchorId = "anchorId_example"; // String | Identifier of the anchor to delete.
 try {
-    apiInstance.deleteAnchor(anchorid);
+    apiInstance.deleteAnchor(anchorId);
 } catch (ApiException e) {
     System.err.println("Exception when calling AnchorApi#deleteAnchor");
     e.printStackTrace();
@@ -116,7 +116,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **anchorid** | **String**| Identifier of the anchor to delete. |
+ **anchorId** | **String**| Identifier of the anchor to delete. |
 
 ### Return type
 
@@ -133,7 +133,7 @@ null (empty response body)
 
 <a name="getAnchor"></a>
 # **getAnchor**
-> Anchor getAnchor(anchorid)
+> Anchor getAnchor(anchorId)
 
 Get an anchor by its identifier.
 
@@ -162,9 +162,9 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 AnchorApi apiInstance = new AnchorApi();
-String anchorid = "anchorid_example"; // String | Identifier of the anchor to retrieve.
+String anchorId = "anchorId_example"; // String | Identifier of the anchor to retrieve.
 try {
-    Anchor result = apiInstance.getAnchor(anchorid);
+    Anchor result = apiInstance.getAnchor(anchorId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling AnchorApi#getAnchor");
@@ -176,7 +176,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **anchorid** | **String**| Identifier of the anchor to retrieve. |
+ **anchorId** | **String**| Identifier of the anchor to retrieve. |
 
 ### Return type
 
@@ -292,7 +292,7 @@ Integer page = 0; // Integer | Index of the page to retrieve (from 0).
 Integer size = 20; // Integer | Number of anchors per page.
 String direction = "ASC"; // String | Sorting direction: ASC for ascending DESC for descending. 
 String sort = "created"; // String | Sorting property: possible values are limited to `id`, `created`, `hash` and `signedHash`. 
-String name = "name_example"; // String | `name` to search for: all anchors whose `name` property contains this sub-string are returned.<br> **WARNING: searching by name can timeout on a large anchor set.** 
+String name = "name_example"; // String | `name` to search for: all anchors whose `name` property contains this sub-string are returned.<br> **WARNING: Searching by name can timeout on a large anchor set.** 
 String hash = "hash_example"; // String | `hash` to search for: all anchors whose `hash` property is equal are returned. 
 String signedHash = "signedHash_example"; // String | `signedHash` to search for: all anchors whose `signedHash` property is equal are returned. 
 List<String> tags = Arrays.asList(); // List<String> | `tags` to search for: all anchors having all of these tags sets are returned. 
@@ -313,7 +313,7 @@ Name | Type | Description  | Notes
  **size** | **Integer**| Number of anchors per page. | [optional] [default to 20]
  **direction** | **String**| Sorting direction: ASC for ascending DESC for descending.  | [optional] [default to ASC] [enum: ASC, DESC]
  **sort** | **String**| Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60;, &#x60;hash&#x60; and &#x60;signedHash&#x60;.  | [optional] [default to created] [enum: id, created, hash, signedHash]
- **name** | **String**| &#x60;name&#x60; to search for: all anchors whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: searching by name can timeout on a large anchor set.**  | [optional]
+ **name** | **String**| &#x60;name&#x60; to search for: all anchors whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: Searching by name can timeout on a large anchor set.**  | [optional]
  **hash** | **String**| &#x60;hash&#x60; to search for: all anchors whose &#x60;hash&#x60; property is equal are returned.  | [optional]
  **signedHash** | **String**| &#x60;signedHash&#x60; to search for: all anchors whose &#x60;signedHash&#x60; property is equal are returned.  | [optional]
  **tags** | [**List&lt;String&gt;**](String.md)| &#x60;tags&#x60; to search for: all anchors having all of these tags sets are returned.  | [optional]
@@ -333,7 +333,7 @@ Name | Type | Description  | Notes
 
 <a name="updateAnchor"></a>
 # **updateAnchor**
-> Anchor updateAnchor(anchorid, anchor)
+> Anchor updateAnchor(anchorId, anchor)
 
 Update an anchor.
 
@@ -362,10 +362,10 @@ JWTAuth.setApiKey("YOUR API KEY");
 //JWTAuth.setApiKeyPrefix("Token");
 
 AnchorApi apiInstance = new AnchorApi();
-String anchorid = "anchorid_example"; // String | Identifier of anchor to update.
+String anchorId = "anchorId_example"; // String | Identifier of anchor to update.
 Anchor anchor = new Anchor(); // Anchor | Anchor object to update.
 try {
-    Anchor result = apiInstance.updateAnchor(anchorid, anchor);
+    Anchor result = apiInstance.updateAnchor(anchorId, anchor);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling AnchorApi#updateAnchor");
@@ -377,7 +377,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **anchorid** | **String**| Identifier of anchor to update. |
+ **anchorId** | **String**| Identifier of anchor to update. |
  **anchor** | [**Anchor**](Anchor.md)| Anchor object to update. |
 
 ### Return type
