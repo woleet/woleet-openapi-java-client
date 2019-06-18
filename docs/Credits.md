@@ -4,7 +4,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**credits** | **Integer** | The remaining anchoring credits of the authenticated user&#39;s account. |  [optional]
+**credits** | **Integer** | The remaining number of anchoring credits of the authenticated user&#39;s account. |  [optional]
+**signCredits** | **Integer** | The remaining number of signature credits of the authenticated user&#39;s account. |  [optional]
 
 
 

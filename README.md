@@ -1,9 +1,9 @@
 # woleet-api-client
 
 Woleet API
-- API version: 1.5.3
+- API version: 1.6.1
 
-Welcome to **Woleet API reference documentation**.<br> It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/v1.5.1/reference)** before reading this documentation. 
+Welcome to **Woleet API reference documentation**.<br> It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/reference)** before reading this documentation. 
 
   For more information, please visit [https://www.woleet.io/](https://www.woleet.io/)
 
@@ -40,7 +40,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>io.woleet</groupId>
   <artifactId>woleet-api-client</artifactId>
-  <version>1.0.1</version>
+  <version>1.6.1</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -50,7 +50,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "io.woleet:woleet-api-client:1.0.1"
+compile "io.woleet:woleet-api-client:1.6.1"
 ```
 
 ### Others
@@ -63,7 +63,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/woleet-api-client-1.0.1.jar`
+* `target/woleet-api-client-1.6.1.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -117,29 +117,30 @@ All URIs are relative to *https://api.woleet.io/v1*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *AnchorApi* | [**createAnchor**](docs/AnchorApi.md#createAnchor) | **POST** /anchor | Create a new anchor.
-*AnchorApi* | [**deleteAnchor**](docs/AnchorApi.md#deleteAnchor) | **DELETE** /anchor/{anchorid} | Delete an anchor.
-*AnchorApi* | [**getAnchor**](docs/AnchorApi.md#getAnchor) | **GET** /anchor/{anchorid} | Get an anchor by its identifier.
+*AnchorApi* | [**deleteAnchor**](docs/AnchorApi.md#deleteAnchor) | **DELETE** /anchor/{anchorId} | Delete an anchor.
+*AnchorApi* | [**getAnchor**](docs/AnchorApi.md#getAnchor) | **GET** /anchor/{anchorId} | Get an anchor by its identifier.
 *AnchorApi* | [**searchAnchorIds**](docs/AnchorApi.md#searchAnchorIds) | **GET** /anchorids | Search for public anchors&#39; identifiers.
 *AnchorApi* | [**searchAnchors**](docs/AnchorApi.md#searchAnchors) | **GET** /anchors | Search for anchors.
-*AnchorApi* | [**updateAnchor**](docs/AnchorApi.md#updateAnchor) | **PUT** /anchor/{anchorid} | Update an anchor.
+*AnchorApi* | [**updateAnchor**](docs/AnchorApi.md#updateAnchor) | **PUT** /anchor/{anchorId} | Update an anchor.
 *DomainApi* | [**createDomainUser**](docs/DomainApi.md#createDomainUser) | **POST** /domain/admin/user | Create a new domain user.
-*DomainApi* | [**deleteDomainUser**](docs/DomainApi.md#deleteDomainUser) | **DELETE** /domain/admin/user/{userid} | Delete a domain user.
-*DomainApi* | [**getDomainUser**](docs/DomainApi.md#getDomainUser) | **GET** /domain/admin/user/{userid} | Get a domain user by its identifier.
+*DomainApi* | [**deleteDomainUser**](docs/DomainApi.md#deleteDomainUser) | **DELETE** /domain/admin/user/{userId} | Delete a domain user.
+*DomainApi* | [**getDomainUser**](docs/DomainApi.md#getDomainUser) | **GET** /domain/admin/user/{userId} | Get a domain user by its identifier.
 *DomainApi* | [**searchDomainUsers**](docs/DomainApi.md#searchDomainUsers) | **GET** /domain/admin/users | Search for domain users.
-*DomainApi* | [**updateDomainUser**](docs/DomainApi.md#updateDomainUser) | **PUT** /domain/admin/user/{userid} | Update a domain user.
-*ReceiptApi* | [**getOTSReceipt**](docs/ReceiptApi.md#getOTSReceipt) | **GET** /receipt/{anchorid}/ots | Get the proof receipt of an anchor (OpenTimestamps proof format).
-*ReceiptApi* | [**getReceipt**](docs/ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorid} | Get the proof receipt of an anchor (Chainpoint proof format).
+*DomainApi* | [**updateDomainUser**](docs/DomainApi.md#updateDomainUser) | **PUT** /domain/admin/user/{userId} | Update a domain user.
+*ReceiptApi* | [**getOTSReceipt**](docs/ReceiptApi.md#getOTSReceipt) | **GET** /receipt/{anchorId}/ots | Get the proof receipt of an anchor (OpenTimestamps proof format).
+*ReceiptApi* | [**getReceipt**](docs/ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorId} | Get the proof receipt of an anchor (Chainpoint proof format).
 *ReceiptApi* | [**verifyReceipt**](docs/ReceiptApi.md#verifyReceipt) | **POST** /receipt/verify | Verify a proof receipt.
 *SignatureRequestApi* | [**createSignatureRequest**](docs/SignatureRequestApi.md#createSignatureRequest) | **POST** /signatureRequest | Create a new signature request.
-*SignatureRequestApi* | [**deleteSignatureRequest**](docs/SignatureRequestApi.md#deleteSignatureRequest) | **DELETE** /signatureRequest/{requestid} | Delete a signature request.
-*SignatureRequestApi* | [**getSignatureRequest**](docs/SignatureRequestApi.md#getSignatureRequest) | **GET** /signatureRequest/{requestid} | Get a signature request by its identifier.
+*SignatureRequestApi* | [**deleteSignatureRequest**](docs/SignatureRequestApi.md#deleteSignatureRequest) | **DELETE** /signatureRequest/{requestId} | Delete a signature request.
+*SignatureRequestApi* | [**getSignatureRequest**](docs/SignatureRequestApi.md#getSignatureRequest) | **GET** /signatureRequest/{requestId} | Get a signature request by its identifier.
 *SignatureRequestApi* | [**searchSignatureRequests**](docs/SignatureRequestApi.md#searchSignatureRequests) | **GET** /signatureRequests | Search for signature requests.
-*SignatureRequestApi* | [**signSignatureRequest**](docs/SignatureRequestApi.md#signSignatureRequest) | **POST** /signatureRequest/{requestid}/sign | Sign a signature request.
-*SignatureRequestApi* | [**updateSignatureRequest**](docs/SignatureRequestApi.md#updateSignatureRequest) | **PUT** /signatureRequest/{requestid} | Update a signature request.
+*SignatureRequestApi* | [**sendSignatureRequestOTP**](docs/SignatureRequestApi.md#sendSignatureRequestOTP) | **GET** /signatureRequest/{requestId}/otp/{signeeId} | Generate and send a One Time Password to a signee of a signature request.
+*SignatureRequestApi* | [**signSignatureRequest**](docs/SignatureRequestApi.md#signSignatureRequest) | **POST** /signatureRequest/{requestId}/sign | Sign a signature request.
+*SignatureRequestApi* | [**updateSignatureRequest**](docs/SignatureRequestApi.md#updateSignatureRequest) | **PUT** /signatureRequest/{requestId} | Update a signature request.
 *TokenApi* | [**generateToken**](docs/TokenApi.md#generateToken) | **GET** /token | Generate a JWT token.
 *TokenApi* | [**revokeToken**](docs/TokenApi.md#revokeToken) | **DELETE** /token | Revoke a JWT token.
 *UserApi* | [**getCallbackSecret**](docs/UserApi.md#getCallbackSecret) | **GET** /user/callbackSecret | Get the currently used callback secret (null if not set).
-*UserApi* | [**getCredits**](docs/UserApi.md#getCredits) | **GET** /user/credits | Get user&#39;s anchoriong credits.
+*UserApi* | [**getCredits**](docs/UserApi.md#getCredits) | **GET** /user/credits | Get user&#39;s credits.
 *UserApi* | [**getTokens**](docs/UserApi.md#getTokens) | **GET** /user/tokens | Get user&#39;s registered JWT tokens.
 *UserApi* | [**putTokens**](docs/UserApi.md#putTokens) | **PUT** /user/tokens | Update user&#39;s registered JWT tokens.
 *UserApi* | [**updateCallbackSecret**](docs/UserApi.md#updateCallbackSecret) | **PUT** /user/callbackSecret | Generates a new callback secret.
