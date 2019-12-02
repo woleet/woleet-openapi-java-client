@@ -20,33 +20,42 @@ Use this operation to retrieve the OpenTimestamps proof receipt associated to a 
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.ReceiptApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.ReceiptApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-ReceiptApi apiInstance = new ReceiptApi();
-String anchorId = "anchorId_example"; // String | Identifier of the anchor for which to build the proof receipt.
-try {
-    File result = apiInstance.getOTSReceipt(anchorId);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling ReceiptApi#getOTSReceipt");
-    e.printStackTrace();
+    ReceiptApi apiInstance = new ReceiptApi(defaultClient);
+    String anchorId = "anchorId_example"; // String | Identifier of the anchor for which to build the proof receipt.
+    try {
+      File result = apiInstance.getOTSReceipt(anchorId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling ReceiptApi#getOTSReceipt");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -69,6 +78,13 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The proof receipt (conform to the OpenTimestamps format). |  -  |
+**202** | The proof receipt is not ready for this anchor. |  -  |
+**404** | No anchor matching the given identifier. |  -  |
+
 <a name="getReceipt"></a>
 # **getReceipt**
 > Receipt getReceipt(anchorId)
@@ -80,33 +96,42 @@ Use this operation to retrieve the Chainpoint proof receipt associated to a give
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.ReceiptApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.ReceiptApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-ReceiptApi apiInstance = new ReceiptApi();
-String anchorId = "anchorId_example"; // String | Identifier of the anchor for which to build the proof receipt.
-try {
-    Receipt result = apiInstance.getReceipt(anchorId);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling ReceiptApi#getReceipt");
-    e.printStackTrace();
+    ReceiptApi apiInstance = new ReceiptApi(defaultClient);
+    String anchorId = "anchorId_example"; // String | Identifier of the anchor for which to build the proof receipt.
+    try {
+      Receipt result = apiInstance.getReceipt(anchorId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling ReceiptApi#getReceipt");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -129,6 +154,13 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The proof receipt (conform to the Chainpoint format). |  -  |
+**202** | The proof receipt is not ready for this anchor. |  -  |
+**404** | No anchor matching the given identifier. |  -  |
+
 <a name="verifyReceipt"></a>
 # **verifyReceipt**
 > ReceiptVerificationStatus verifyReceipt(receipt)
@@ -140,33 +172,42 @@ Use this operation to verify a Chainpoint proof receipt and get the timestamp of
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.ReceiptApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.ReceiptApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-ReceiptApi apiInstance = new ReceiptApi();
-Receipt receipt = new Receipt(); // Receipt | Chainpoint proof receipt to verify.
-try {
-    ReceiptVerificationStatus result = apiInstance.verifyReceipt(receipt);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling ReceiptApi#verifyReceipt");
-    e.printStackTrace();
+    ReceiptApi apiInstance = new ReceiptApi(defaultClient);
+    Receipt receipt = new Receipt(); // Receipt | Chainpoint proof receipt to verify.
+    try {
+      ReceiptVerificationStatus result = apiInstance.verifyReceipt(receipt);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling ReceiptApi#verifyReceipt");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -188,4 +229,10 @@ Name | Type | Description  | Notes
 
  - **Content-Type**: application/json
  - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The proof receipt verification status. |  -  |
+**400** | Invalid proof receipt object. More details are returned in the response body as a JSON object. |  -  |
 

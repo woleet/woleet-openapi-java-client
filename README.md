@@ -1,7 +1,7 @@
 # woleet-api-client
 
 Woleet API
-- API version: 1.6.1
+- API version: 1.6.2
 
 Welcome to **Woleet API reference documentation**.<br> It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/reference)** before reading this documentation. 
 
@@ -72,40 +72,43 @@ Please follow the [installation](#installation) instruction and execute the foll
 
 ```java
 
-import io.woleet.api.*;
+// Import classes:
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
 import io.woleet.api.auth.*;
-import io.woleet.api.client.model.*;
+import io.woleet.api.models.*;
 import io.woleet.api.client.AnchorApi;
 
-import java.io.File;
-import java.util.*;
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-public class AnchorApiExample {
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        
-        // Configure HTTP basic authorization: BasicAuth
-        HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-        BasicAuth.setUsername("YOUR USERNAME");
-        BasicAuth.setPassword("YOUR PASSWORD");
-
-        // Configure API key authorization: JWTAuth
-        ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-        JWTAuth.setApiKey("YOUR API KEY");
-        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-        //JWTAuth.setApiKeyPrefix("Token");
-
-        AnchorApi apiInstance = new AnchorApi();
-        Anchor anchor = new Anchor(); // Anchor | Anchor object to create.
-        try {
-            Anchor result = apiInstance.createAnchor(anchor);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling AnchorApi#createAnchor");
-            e.printStackTrace();
-        }
+    AnchorApi apiInstance = new AnchorApi(defaultClient);
+    Anchor anchor = new Anchor(); // Anchor | Anchor object to create.
+    try {
+      Anchor result = apiInstance.createAnchor(anchor);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling AnchorApi#createAnchor");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
     }
+  }
 }
 
 ```
@@ -134,7 +137,7 @@ Class | Method | HTTP request | Description
 *SignatureRequestApi* | [**deleteSignatureRequest**](docs/SignatureRequestApi.md#deleteSignatureRequest) | **DELETE** /signatureRequest/{requestId} | Delete a signature request.
 *SignatureRequestApi* | [**getSignatureRequest**](docs/SignatureRequestApi.md#getSignatureRequest) | **GET** /signatureRequest/{requestId} | Get a signature request by its identifier.
 *SignatureRequestApi* | [**searchSignatureRequests**](docs/SignatureRequestApi.md#searchSignatureRequests) | **GET** /signatureRequests | Search for signature requests.
-*SignatureRequestApi* | [**sendSignatureRequestOTP**](docs/SignatureRequestApi.md#sendSignatureRequestOTP) | **GET** /signatureRequest/{requestId}/otp/{signeeId} | Generate and send a One Time Password to a signee of a signature request.
+*SignatureRequestApi* | [**sendSignatureRequestOTP**](docs/SignatureRequestApi.md#sendSignatureRequestOTP) | **GET** /signatureRequest/{requestId}/otp/{signeeId} | Generate and send an OTP to a signee of a signature request.
 *SignatureRequestApi* | [**signSignatureRequest**](docs/SignatureRequestApi.md#signSignatureRequest) | **POST** /signatureRequest/{requestId}/sign | Sign a signature request.
 *SignatureRequestApi* | [**updateSignatureRequest**](docs/SignatureRequestApi.md#updateSignatureRequest) | **PUT** /signatureRequest/{requestId} | Update a signature request.
 *TokenApi* | [**generateToken**](docs/TokenApi.md#generateToken) | **GET** /token | Generate a JWT token.
@@ -156,7 +159,9 @@ Class | Method | HTTP request | Description
  - [Credits](docs/Credits.md)
  - [Identity](docs/Identity.md)
  - [IdentityVerificationStatus](docs/IdentityVerificationStatus.md)
+ - [Info](docs/Info.md)
  - [InlineObject](docs/InlineObject.md)
+ - [Key](docs/Key.md)
  - [Receipt](docs/Receipt.md)
  - [ReceiptAnchorsNode](docs/ReceiptAnchorsNode.md)
  - [ReceiptHeader](docs/ReceiptHeader.md)

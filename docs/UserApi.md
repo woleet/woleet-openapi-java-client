@@ -22,32 +22,41 @@ Use this operation to get the api callback secret.&lt;br&gt;
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.UserApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.UserApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-UserApi apiInstance = new UserApi();
-try {
-    CallbackSecret result = apiInstance.getCallbackSecret();
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling UserApi#getCallbackSecret");
-    e.printStackTrace();
+    UserApi apiInstance = new UserApi(defaultClient);
+    try {
+      CallbackSecret result = apiInstance.getCallbackSecret();
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling UserApi#getCallbackSecret");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -67,6 +76,11 @@ This endpoint does not need any parameter.
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The currently used callback secret. |  -  |
+
 <a name="getCredits"></a>
 # **getCredits**
 > Credits getCredits()
@@ -78,32 +92,41 @@ Use this operation to get the remaining signature and anchoring credits of the a
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.UserApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.UserApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-UserApi apiInstance = new UserApi();
-try {
-    Credits result = apiInstance.getCredits();
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling UserApi#getCredits");
-    e.printStackTrace();
+    UserApi apiInstance = new UserApi(defaultClient);
+    try {
+      Credits result = apiInstance.getCredits();
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling UserApi#getCredits");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -123,6 +146,11 @@ This endpoint does not need any parameter.
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The remaining signature and anchoring credits. |  -  |
+
 <a name="getTokens"></a>
 # **getTokens**
 > List&lt;String&gt; getTokens()
@@ -134,32 +162,41 @@ Use this operation to list all JWT tokens registered for the authenticated user.
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.UserApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.UserApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-UserApi apiInstance = new UserApi();
-try {
-    List<String> result = apiInstance.getTokens();
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling UserApi#getTokens");
-    e.printStackTrace();
+    UserApi apiInstance = new UserApi(defaultClient);
+    try {
+      List<String> result = apiInstance.getTokens();
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling UserApi#getTokens");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -179,9 +216,14 @@ This endpoint does not need any parameter.
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The list of JWT tokens of the user, possibly empty. |  -  |
+
 <a name="putTokens"></a>
 # **putTokens**
-> putTokens(inlineObject)
+> putTokens(tokens)
 
 Update user&#39;s registered JWT tokens.
 
@@ -190,32 +232,41 @@ Use this operation to update the list of JWT tokens registered for the authentic
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.UserApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.UserApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-UserApi apiInstance = new UserApi();
-InlineObject inlineObject = new InlineObject(); // InlineObject | 
-try {
-    apiInstance.putTokens(inlineObject);
-} catch (ApiException e) {
-    System.err.println("Exception when calling UserApi#putTokens");
-    e.printStackTrace();
+    UserApi apiInstance = new UserApi(defaultClient);
+    InlineObject tokens = new InlineObject(); // InlineObject | 
+    try {
+      apiInstance.putTokens(tokens);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling UserApi#putTokens");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -223,7 +274,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **inlineObject** | [**InlineObject**](InlineObject.md)|  | [optional]
+ **tokens** | [**InlineObject**](InlineObject.md)|  |
 
 ### Return type
 
@@ -238,6 +289,11 @@ null (empty response body)
  - **Content-Type**: application/json
  - **Accept**: Not defined
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The list of JWT tokens was successfully updated. |  -  |
+
 <a name="updateCallbackSecret"></a>
 # **updateCallbackSecret**
 > CallbackSecret updateCallbackSecret()
@@ -249,32 +305,41 @@ Use this operation to generate the api callback secret.&lt;br&gt;
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.UserApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.UserApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-UserApi apiInstance = new UserApi();
-try {
-    CallbackSecret result = apiInstance.updateCallbackSecret();
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling UserApi#updateCallbackSecret");
-    e.printStackTrace();
+    UserApi apiInstance = new UserApi(defaultClient);
+    try {
+      CallbackSecret result = apiInstance.updateCallbackSecret();
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling UserApi#updateCallbackSecret");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -293,4 +358,9 @@ This endpoint does not need any parameter.
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The newly generated callback secret. |  -  |
 

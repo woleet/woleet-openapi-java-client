@@ -1,7 +1,9 @@
 
+
 # AnchorIds
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **content** | **List&lt;String&gt;** | Array of identifiers of anchors matching the search criteria. |  [optional]

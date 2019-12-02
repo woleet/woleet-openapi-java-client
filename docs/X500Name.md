@@ -1,7 +1,10 @@
 
+
 # X500Name
 
+X500 Distinguished Name.
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **C** | **String** | Country code |  [optional]

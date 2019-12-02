@@ -19,33 +19,42 @@ Use this operation to generate a new JWT token.&lt;br&gt; JWT tokens can be used
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.TokenApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.TokenApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-TokenApi apiInstance = new TokenApi();
-String cdata = "cdata_example"; // String | Client data to inject into the generated JWT token (64 characters max).<br> This data is not processed by the platform, and can be easily retrieved from the token by BASE64 decoding its `payload`. 
-try {
-    Token result = apiInstance.generateToken(cdata);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling TokenApi#generateToken");
-    e.printStackTrace();
+    TokenApi apiInstance = new TokenApi(defaultClient);
+    String cdata = "cdata_example"; // String | Client data to inject into the generated JWT token (64 characters max).<br> This data is not processed by the platform, and can be easily retrieved from the token by BASE64 decoding its `payload`. 
+    try {
+      Token result = apiInstance.generateToken(cdata);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling TokenApi#generateToken");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -68,6 +77,12 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The JWT token. |  -  |
+**400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
+
 <a name="revokeToken"></a>
 # **revokeToken**
 > revokeToken(token)
@@ -79,32 +94,41 @@ Use this operation to revoke a JWT token.&lt;br&gt; JWT tokens have no expiratio
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.TokenApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.TokenApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-TokenApi apiInstance = new TokenApi();
-String token = "token_example"; // String | JWT token to revoke.
-try {
-    apiInstance.revokeToken(token);
-} catch (ApiException e) {
-    System.err.println("Exception when calling TokenApi#revokeToken");
-    e.printStackTrace();
+    TokenApi apiInstance = new TokenApi(defaultClient);
+    String token = "token_example"; // String | JWT token to revoke.
+    try {
+      apiInstance.revokeToken(token);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling TokenApi#revokeToken");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -126,4 +150,10 @@ null (empty response body)
 
  - **Content-Type**: Not defined
  - **Accept**: Not defined
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The JWT token is revoked. |  -  |
+**400** | Invalid JWT token object. More details are returned in the response body as a JSON object. |  -  |
 

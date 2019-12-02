@@ -1,7 +1,9 @@
 
+
 # Anchors
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **content** | [**List&lt;Anchor&gt;**](Anchor.md) | Array of anchors matching the search criteria. |  [optional]

@@ -1,7 +1,10 @@
 
+
 # Identity
 
+Signee's identity provided as a set of X.500 attributes (see https://www.ietf.org/rfc/rfc4519.txt).
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **commonName** | **String** | commonName (CN) (2.5.4.3) | 

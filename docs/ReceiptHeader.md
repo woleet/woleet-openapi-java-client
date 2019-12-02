@@ -1,7 +1,10 @@
 
+
 # ReceiptHeader
 
+Chainpoint 1.x only
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **chainpointVersion** | **String** |  |  [optional]

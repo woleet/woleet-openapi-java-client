@@ -23,33 +23,42 @@ Use this operation to create a new anchor of one of these two types:&lt;br&gt;  
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.AnchorApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.AnchorApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-AnchorApi apiInstance = new AnchorApi();
-Anchor anchor = new Anchor(); // Anchor | Anchor object to create.
-try {
-    Anchor result = apiInstance.createAnchor(anchor);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling AnchorApi#createAnchor");
-    e.printStackTrace();
+    AnchorApi apiInstance = new AnchorApi(defaultClient);
+    Anchor anchor = new Anchor(); // Anchor | Anchor object to create.
+    try {
+      Anchor result = apiInstance.createAnchor(anchor);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling AnchorApi#createAnchor");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -72,6 +81,13 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The created anchor (for signature anchors, the &#x60;hash&#x60; property is automatically set to the SHA256 of the signature, which is what is actually anchored into the blockchain). |  -  |
+**400** | Invalid anchor object. More details are returned in the response body as a JSON object. |  -  |
+**402** | Insufficient credits. |  -  |
+
 <a name="deleteAnchor"></a>
 # **deleteAnchor**
 > deleteAnchor(anchorId)
@@ -83,32 +99,41 @@ Use this operation to delete an anchor.&lt;br&gt; **WARNING: You should never de
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.AnchorApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.AnchorApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-AnchorApi apiInstance = new AnchorApi();
-String anchorId = "anchorId_example"; // String | Identifier of the anchor to delete.
-try {
-    apiInstance.deleteAnchor(anchorId);
-} catch (ApiException e) {
-    System.err.println("Exception when calling AnchorApi#deleteAnchor");
-    e.printStackTrace();
+    AnchorApi apiInstance = new AnchorApi(defaultClient);
+    String anchorId = "anchorId_example"; // String | Identifier of the anchor to delete.
+    try {
+      apiInstance.deleteAnchor(anchorId);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling AnchorApi#deleteAnchor");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -131,6 +156,12 @@ null (empty response body)
  - **Content-Type**: Not defined
  - **Accept**: Not defined
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The anchor is deleted. |  -  |
+**404** | No anchor matching the given identifier. |  -  |
+
 <a name="getAnchor"></a>
 # **getAnchor**
 > Anchor getAnchor(anchorId)
@@ -142,33 +173,42 @@ Use this operation to retrieve an anchor by its identifier.
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.AnchorApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.AnchorApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-AnchorApi apiInstance = new AnchorApi();
-String anchorId = "anchorId_example"; // String | Identifier of the anchor to retrieve.
-try {
-    Anchor result = apiInstance.getAnchor(anchorId);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling AnchorApi#getAnchor");
-    e.printStackTrace();
+    AnchorApi apiInstance = new AnchorApi(defaultClient);
+    String anchorId = "anchorId_example"; // String | Identifier of the anchor to retrieve.
+    try {
+      Anchor result = apiInstance.getAnchor(anchorId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling AnchorApi#getAnchor");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -191,6 +231,12 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The anchor. |  -  |
+**404** | No anchor matching the given identifier. |  -  |
+
 <a name="searchAnchorIds"></a>
 # **searchAnchorIds**
 > AnchorIds searchAnchorIds(page, size, hash, signedHash)
@@ -202,36 +248,45 @@ Use this operation to retrieve the identifiers of all public anchors having a gi
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.AnchorApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.AnchorApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-AnchorApi apiInstance = new AnchorApi();
-Integer page = 0; // Integer | Index of the page to retrieve (from 0).
-Integer size = 20; // Integer | Number of anchors per page.
-String hash = "hash_example"; // String | `hash` to search for: all public anchors whose `hash` property is equal are returned. 
-String signedHash = "signedHash_example"; // String | `signedHash` to search for: all public anchors whose `signedHash` property is equal are returned. 
-try {
-    AnchorIds result = apiInstance.searchAnchorIds(page, size, hash, signedHash);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling AnchorApi#searchAnchorIds");
-    e.printStackTrace();
+    AnchorApi apiInstance = new AnchorApi(defaultClient);
+    Integer page = 0; // Integer | Index of the page to retrieve (from 0).
+    Integer size = 20; // Integer | Number of anchors per page.
+    String hash = "hash_example"; // String | `hash` to search for: all public anchors whose `hash` property is equal are returned. 
+    String signedHash = "signedHash_example"; // String | `signedHash` to search for: all public anchors whose `signedHash` property is equal are returned. 
+    try {
+      AnchorIds result = apiInstance.searchAnchorIds(page, size, hash, signedHash);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling AnchorApi#searchAnchorIds");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -257,6 +312,11 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | An array (possibly empty) of the identifiers of all public anchors matching all search criteria, plus additional paging information. |  -  |
+
 <a name="searchAnchors"></a>
 # **searchAnchors**
 > Anchors searchAnchors(page, size, direction, sort, name, hash, signedHash, tags)
@@ -268,40 +328,49 @@ Use this operation to retrieve all anchors having a given &#x60;name&#x60;, &#x6
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.AnchorApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.AnchorApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-AnchorApi apiInstance = new AnchorApi();
-Integer page = 0; // Integer | Index of the page to retrieve (from 0).
-Integer size = 20; // Integer | Number of anchors per page.
-String direction = "ASC"; // String | Sorting direction: ASC for ascending DESC for descending. 
-String sort = "created"; // String | Sorting property: possible values are limited to `id`, `created`, `hash` and `signedHash`. 
-String name = "name_example"; // String | `name` to search for: all anchors whose `name` property contains this sub-string are returned.<br> **WARNING: Searching by name can timeout on a large anchor set.** 
-String hash = "hash_example"; // String | `hash` to search for: all anchors whose `hash` property is equal are returned. 
-String signedHash = "signedHash_example"; // String | `signedHash` to search for: all anchors whose `signedHash` property is equal are returned. 
-List<String> tags = Arrays.asList(); // List<String> | `tags` to search for: all anchors having all of these tags sets are returned. 
-try {
-    Anchors result = apiInstance.searchAnchors(page, size, direction, sort, name, hash, signedHash, tags);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling AnchorApi#searchAnchors");
-    e.printStackTrace();
+    AnchorApi apiInstance = new AnchorApi(defaultClient);
+    Integer page = 0; // Integer | Index of the page to retrieve (from 0).
+    Integer size = 20; // Integer | Number of anchors per page.
+    String direction = "ASC"; // String | Sorting direction: ASC for ascending DESC for descending. 
+    String sort = "created"; // String | Sorting property: possible values are limited to `id`, `created`, `hash` and `signedHash`. 
+    String name = "name_example"; // String | `name` to search for: all anchors whose `name` property contains this sub-string are returned.<br> **WARNING: Searching by name can timeout on a large anchor set.** 
+    String hash = "hash_example"; // String | `hash` to search for: all anchors whose `hash` property is equal are returned. 
+    String signedHash = "signedHash_example"; // String | `signedHash` to search for: all anchors whose `signedHash` property is equal are returned. 
+    List<String> tags = Arrays.asList(); // List<String> | `tags` to search for: all anchors having all of these tags sets are returned. 
+    try {
+      Anchors result = apiInstance.searchAnchors(page, size, direction, sort, name, hash, signedHash, tags);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling AnchorApi#searchAnchors");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -331,6 +400,12 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | An array (possibly empty) of all anchors matching all search criteria, plus additional paging and sorting information. |  -  |
+**504** | Can be triggered when searching by name if the request takes too long to process. |  -  |
+
 <a name="updateAnchor"></a>
 # **updateAnchor**
 > Anchor updateAnchor(anchorId, anchor)
@@ -342,34 +417,43 @@ Use this operation to update an anchor.&lt;br&gt; Only the properties &#x60;name
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.AnchorApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.AnchorApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-AnchorApi apiInstance = new AnchorApi();
-String anchorId = "anchorId_example"; // String | Identifier of anchor to update.
-Anchor anchor = new Anchor(); // Anchor | Anchor object to update.
-try {
-    Anchor result = apiInstance.updateAnchor(anchorId, anchor);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling AnchorApi#updateAnchor");
-    e.printStackTrace();
+    AnchorApi apiInstance = new AnchorApi(defaultClient);
+    String anchorId = "anchorId_example"; // String | Identifier of anchor to update.
+    Anchor anchor = new Anchor(); // Anchor | Anchor object to update.
+    try {
+      Anchor result = apiInstance.updateAnchor(anchorId, anchor);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling AnchorApi#updateAnchor");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -392,4 +476,11 @@ Name | Type | Description  | Notes
 
  - **Content-Type**: application/json
  - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The updated anchor. |  -  |
+**400** | Invalid anchor object. More details are returned in the response body as a JSON object. |  -  |
+**404** | No anchor matching the given identifier. |  -  |
 

@@ -1,7 +1,9 @@
 
+
 # Credits
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **credits** | **Integer** | The remaining number of anchoring credits of the authenticated user&#39;s account. |  [optional]

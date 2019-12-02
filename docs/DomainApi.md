@@ -17,38 +17,47 @@ Method | HTTP request | Description
 
 Create a new domain user.
 
-Use this operation to create a new domain user.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;info&#x60; and &#x60;status&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor. 
+Use this operation to create a new domain user.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;info&#x60; and &#x60;status&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned user. 
 
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.DomainApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.DomainApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-DomainApi apiInstance = new DomainApi();
-User user = new User(); // User | User object to create (password must be provided).
-try {
-    User result = apiInstance.createDomainUser(user);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling DomainApi#createDomainUser");
-    e.printStackTrace();
+    DomainApi apiInstance = new DomainApi(defaultClient);
+    User user = new User(); // User | User object to create (password must be provided).
+    try {
+      User result = apiInstance.createDomainUser(user);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling DomainApi#createDomainUser");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -71,6 +80,12 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The created user. |  -  |
+**400** | Invalid user object. More details are returned in the response body as a JSON object. |  -  |
+
 <a name="deleteDomainUser"></a>
 # **deleteDomainUser**
 > deleteDomainUser(userId)
@@ -82,32 +97,41 @@ Use this operation to delete a domain user.
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.DomainApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.DomainApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-DomainApi apiInstance = new DomainApi();
-String userId = "userId_example"; // String | Identifier of the domain user to delete.
-try {
-    apiInstance.deleteDomainUser(userId);
-} catch (ApiException e) {
-    System.err.println("Exception when calling DomainApi#deleteDomainUser");
-    e.printStackTrace();
+    DomainApi apiInstance = new DomainApi(defaultClient);
+    String userId = "userId_example"; // String | Identifier of the domain user to delete.
+    try {
+      apiInstance.deleteDomainUser(userId);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling DomainApi#deleteDomainUser");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -130,6 +154,12 @@ null (empty response body)
  - **Content-Type**: Not defined
  - **Accept**: Not defined
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The user is deleted. |  -  |
+**404** | No user matching the given identifier. |  -  |
+
 <a name="getDomainUser"></a>
 # **getDomainUser**
 > User getDomainUser(userId)
@@ -141,33 +171,42 @@ Use this operation to retrieve a domain user by its identifier.
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.DomainApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.DomainApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-DomainApi apiInstance = new DomainApi();
-String userId = "userId_example"; // String | Identifier of the domain user to retrieve.
-try {
-    User result = apiInstance.getDomainUser(userId);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling DomainApi#getDomainUser");
-    e.printStackTrace();
+    DomainApi apiInstance = new DomainApi(defaultClient);
+    String userId = "userId_example"; // String | Identifier of the domain user to retrieve.
+    try {
+      User result = apiInstance.getDomainUser(userId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling DomainApi#getDomainUser");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -190,6 +229,12 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The user. |  -  |
+**404** | No user matching the given identifier. |  -  |
+
 <a name="searchDomainUsers"></a>
 # **searchDomainUsers**
 > Users searchDomainUsers(page, size, direction, sort, email)
@@ -201,37 +246,46 @@ Use this operation to list all domain users or search for domain users given the
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.DomainApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.DomainApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-DomainApi apiInstance = new DomainApi();
-Integer page = 0; // Integer | Index of the page to retrieve (from 0).
-Integer size = 20; // Integer | Number of users per page.
-String direction = "ASC"; // String | Sorting direction: ASC for ascending DESC for descending. 
-String sort = "created"; // String | Sorting property: possible values are `email`, `created`, `roles`, `info.firstName`, `info.lastName`, `status`. 
-String email = "email_example"; // String | email to search for: a sub-string of the email. 
-try {
-    Users result = apiInstance.searchDomainUsers(page, size, direction, sort, email);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling DomainApi#searchDomainUsers");
-    e.printStackTrace();
+    DomainApi apiInstance = new DomainApi(defaultClient);
+    Integer page = 0; // Integer | Index of the page to retrieve (from 0).
+    Integer size = 20; // Integer | Number of users per page.
+    String direction = "ASC"; // String | Sorting direction: ASC for ascending DESC for descending. 
+    String sort = "created"; // String | Sorting property: possible values are `email`, `created`, `roles`, `info.firstName`, `info.lastName`, `status`. 
+    String email = "email_example"; // String | email to search for: a sub-string of the email. 
+    try {
+      Users result = apiInstance.searchDomainUsers(page, size, direction, sort, email);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling DomainApi#searchDomainUsers");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -258,6 +312,11 @@ Name | Type | Description  | Notes
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | An array of all users matching all search criteria, plus additional paging and sorting information. |  -  |
+
 <a name="updateDomainUser"></a>
 # **updateDomainUser**
 > User updateDomainUser(userId, user)
@@ -269,34 +328,43 @@ Use this operation to update a domain user.
 ### Example
 ```java
 // Import classes:
-//import io.woleet.api.ApiClient;
-//import io.woleet.api.ApiException;
-//import io.woleet.api.Configuration;
-//import io.woleet.api.auth.*;
-//import io.woleet.api.client.DomainApi;
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.DomainApi;
 
-ApiClient defaultClient = Configuration.getDefaultApiClient();
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
 
-// Configure HTTP basic authorization: BasicAuth
-HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-BasicAuth.setUsername("YOUR USERNAME");
-BasicAuth.setPassword("YOUR PASSWORD");
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
 
-// Configure API key authorization: JWTAuth
-ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-JWTAuth.setApiKey("YOUR API KEY");
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//JWTAuth.setApiKeyPrefix("Token");
-
-DomainApi apiInstance = new DomainApi();
-String userId = "userId_example"; // String | Identifier of the domain user to update.
-User user = new User(); // User | User object to update.
-try {
-    User result = apiInstance.updateDomainUser(userId, user);
-    System.out.println(result);
-} catch (ApiException e) {
-    System.err.println("Exception when calling DomainApi#updateDomainUser");
-    e.printStackTrace();
+    DomainApi apiInstance = new DomainApi(defaultClient);
+    String userId = "userId_example"; // String | Identifier of the domain user to update.
+    User user = new User(); // User | User object to update.
+    try {
+      User result = apiInstance.updateDomainUser(userId, user);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling DomainApi#updateDomainUser");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -319,4 +387,11 @@ Name | Type | Description  | Notes
 
  - **Content-Type**: application/json
  - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The updated user. |  -  |
+**400** | Invalid user object. More details are returned in the response body as a JSON object. |  -  |
+**404** | No user matching the given identifier. |  -  |
 
