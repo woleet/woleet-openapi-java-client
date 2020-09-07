@@ -23,47 +23,63 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * InlineObject
+ * SignatureRequestDelegate
  */
 
-public class InlineObject {
-  public static final String SERIALIZED_NAME_TOKENS = "tokens";
-  @SerializedName(SERIALIZED_NAME_TOKENS)
-  private List<String> tokens = null;
+public class SignatureRequestDelegate {
+  public static final String SERIALIZED_NAME_SIGNEE_ID = "signeeId";
+  @SerializedName(SERIALIZED_NAME_SIGNEE_ID)
+  private String signeeId;
+
+  public static final String SERIALIZED_NAME_O_T_P = "OTP";
+  @SerializedName(SERIALIZED_NAME_O_T_P)
+  private String OTP;
 
 
-  public InlineObject tokens(List<String> tokens) {
+  public SignatureRequestDelegate signeeId(String signeeId) {
     
-    this.tokens = tokens;
-    return this;
-  }
-
-  public InlineObject addTokensItem(String tokensItem) {
-    if (this.tokens == null) {
-      this.tokens = new ArrayList<String>();
-    }
-    this.tokens.add(tokensItem);
+    this.signeeId = signeeId;
     return this;
   }
 
    /**
-   * Get tokens
-   * @return tokens
+   * Secret identifier of the signer (provided by email).
+   * @return signeeId
   **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "Secret identifier of the signer (provided by email).")
 
-  public List<String> getTokens() {
-    return tokens;
+  public String getSigneeId() {
+    return signeeId;
   }
 
 
-  public void setTokens(List<String> tokens) {
-    this.tokens = tokens;
+  public void setSigneeId(String signeeId) {
+    this.signeeId = signeeId;
+  }
+
+
+  public SignatureRequestDelegate OTP(String OTP) {
+    
+    this.OTP = OTP;
+    return this;
+  }
+
+   /**
+   * OTP of the signer (only required if &#x60;requiresOTP&#x60; was set to &#x60;true&#x60; for thìs signer). 
+   * @return OTP
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "OTP of the signer (only required if `requiresOTP` was set to `true` for thìs signer). ")
+
+  public String getOTP() {
+    return OTP;
+  }
+
+
+  public void setOTP(String OTP) {
+    this.OTP = OTP;
   }
 
 
@@ -75,21 +91,23 @@ public class InlineObject {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    InlineObject inlineObject = (InlineObject) o;
-    return Objects.equals(this.tokens, inlineObject.tokens);
+    SignatureRequestDelegate signatureRequestDelegate = (SignatureRequestDelegate) o;
+    return Objects.equals(this.signeeId, signatureRequestDelegate.signeeId) &&
+        Objects.equals(this.OTP, signatureRequestDelegate.OTP);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(tokens);
+    return Objects.hash(signeeId, OTP);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class InlineObject {\n");
-    sb.append("    tokens: ").append(toIndentedString(tokens)).append("\n");
+    sb.append("class SignatureRequestDelegate {\n");
+    sb.append("    signeeId: ").append(toIndentedString(signeeId)).append("\n");
+    sb.append("    OTP: ").append(toIndentedString(OTP)).append("\n");
     sb.append("}");
     return sb.toString();
   }

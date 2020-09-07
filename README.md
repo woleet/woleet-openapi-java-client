@@ -1,7 +1,7 @@
 # woleet-api-client
 
 Woleet API
-- API version: 1.6.2
+- API version: 1.7.5
 
 Welcome to **Woleet API reference documentation**.<br> It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/reference)** before reading this documentation. 
 
@@ -122,7 +122,8 @@ Class | Method | HTTP request | Description
 *AnchorApi* | [**createAnchor**](docs/AnchorApi.md#createAnchor) | **POST** /anchor | Create a new anchor.
 *AnchorApi* | [**deleteAnchor**](docs/AnchorApi.md#deleteAnchor) | **DELETE** /anchor/{anchorId} | Delete an anchor.
 *AnchorApi* | [**getAnchor**](docs/AnchorApi.md#getAnchor) | **GET** /anchor/{anchorId} | Get an anchor by its identifier.
-*AnchorApi* | [**searchAnchorIds**](docs/AnchorApi.md#searchAnchorIds) | **GET** /anchorids | Search for public anchors&#39; identifiers.
+*AnchorApi* | [**getAnchorAttestation**](docs/AnchorApi.md#getAnchorAttestation) | **GET** /anchor/{anchorId}/attestation | Download the Proof Attestation document of an anchor.
+*AnchorApi* | [**searchAnchorIds**](docs/AnchorApi.md#searchAnchorIds) | **GET** /anchorIds | Search for public anchor identifiers.
 *AnchorApi* | [**searchAnchors**](docs/AnchorApi.md#searchAnchors) | **GET** /anchors | Search for anchors.
 *AnchorApi* | [**updateAnchor**](docs/AnchorApi.md#updateAnchor) | **PUT** /anchor/{anchorId} | Update an anchor.
 *DomainApi* | [**createDomainUser**](docs/DomainApi.md#createDomainUser) | **POST** /domain/admin/user | Create a new domain user.
@@ -131,14 +132,19 @@ Class | Method | HTTP request | Description
 *DomainApi* | [**searchDomainUsers**](docs/DomainApi.md#searchDomainUsers) | **GET** /domain/admin/users | Search for domain users.
 *DomainApi* | [**updateDomainUser**](docs/DomainApi.md#updateDomainUser) | **PUT** /domain/admin/user/{userId} | Update a domain user.
 *ReceiptApi* | [**getOTSReceipt**](docs/ReceiptApi.md#getOTSReceipt) | **GET** /receipt/{anchorId}/ots | Get the proof receipt of an anchor (OpenTimestamps proof format).
-*ReceiptApi* | [**getReceipt**](docs/ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorId} | Get the proof receipt of an anchor (Chainpoint proof format).
+*ReceiptApi* | [**getReceipt**](docs/ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorId} | Get the proof receipt of an anchor (Chainpoint 2.x proof format).
 *ReceiptApi* | [**verifyReceipt**](docs/ReceiptApi.md#verifyReceipt) | **POST** /receipt/verify | Verify a proof receipt.
 *SignatureRequestApi* | [**createSignatureRequest**](docs/SignatureRequestApi.md#createSignatureRequest) | **POST** /signatureRequest | Create a new signature request.
+*SignatureRequestApi* | [**delegateSignatureRequest**](docs/SignatureRequestApi.md#delegateSignatureRequest) | **POST** /signatureRequest/{requestId}/delegate | Sign a signature request by delegating the signature.
 *SignatureRequestApi* | [**deleteSignatureRequest**](docs/SignatureRequestApi.md#deleteSignatureRequest) | **DELETE** /signatureRequest/{requestId} | Delete a signature request.
+*SignatureRequestApi* | [**feedbackSignatureRequest**](docs/SignatureRequestApi.md#feedbackSignatureRequest) | **POST** /signatureRequest/{requestId}/feedback | Report feedback about a signature request.
 *SignatureRequestApi* | [**getSignatureRequest**](docs/SignatureRequestApi.md#getSignatureRequest) | **GET** /signatureRequest/{requestId} | Get a signature request by its identifier.
+*SignatureRequestApi* | [**getSignatureRequestAttestation**](docs/SignatureRequestApi.md#getSignatureRequestAttestation) | **GET** /signatureRequest/{requestId}/attestation | Download the Signature Attestation document of a signature request.
+*SignatureRequestApi* | [**searchSignatureRequestIds**](docs/SignatureRequestApi.md#searchSignatureRequestIds) | **GET** /signatureRequestIds | Search for public signature request identifiers.
 *SignatureRequestApi* | [**searchSignatureRequests**](docs/SignatureRequestApi.md#searchSignatureRequests) | **GET** /signatureRequests | Search for signature requests.
-*SignatureRequestApi* | [**sendSignatureRequestOTP**](docs/SignatureRequestApi.md#sendSignatureRequestOTP) | **GET** /signatureRequest/{requestId}/otp/{signeeId} | Generate and send an OTP to a signee of a signature request.
-*SignatureRequestApi* | [**signSignatureRequest**](docs/SignatureRequestApi.md#signSignatureRequest) | **POST** /signatureRequest/{requestId}/sign | Sign a signature request.
+*SignatureRequestApi* | [**sendSignatureRequestOTP**](docs/SignatureRequestApi.md#sendSignatureRequestOTP) | **GET** /signatureRequest/{requestId}/otp/{signeeId} | Generate and send an OTP to a signer of a signature request.
+*SignatureRequestApi* | [**signSignatureRequest**](docs/SignatureRequestApi.md#signSignatureRequest) | **POST** /signatureRequest/{requestId}/sign | Sign a signature request by registering a signature.
+*SignatureRequestApi* | [**transitionSignatureRequest**](docs/SignatureRequestApi.md#transitionSignatureRequest) | **POST** /signatureRequest/{requestId}/transition | Change the state of a signature request.
 *SignatureRequestApi* | [**updateSignatureRequest**](docs/SignatureRequestApi.md#updateSignatureRequest) | **PUT** /signatureRequest/{requestId} | Update a signature request.
 *TokenApi* | [**generateToken**](docs/TokenApi.md#generateToken) | **GET** /token | Generate a JWT token.
 *TokenApi* | [**revokeToken**](docs/TokenApi.md#revokeToken) | **DELETE** /token | Revoke a JWT token.
@@ -164,19 +170,21 @@ Class | Method | HTTP request | Description
  - [Key](docs/Key.md)
  - [Receipt](docs/Receipt.md)
  - [ReceiptAnchorsNode](docs/ReceiptAnchorsNode.md)
- - [ReceiptHeader](docs/ReceiptHeader.md)
  - [ReceiptProofNode](docs/ReceiptProofNode.md)
  - [ReceiptSignature](docs/ReceiptSignature.md)
- - [ReceiptTarget](docs/ReceiptTarget.md)
- - [ReceiptTargetProofNode](docs/ReceiptTargetProofNode.md)
  - [ReceiptVerificationStatus](docs/ReceiptVerificationStatus.md)
  - [SignatureRequest](docs/SignatureRequest.md)
+ - [SignatureRequestDelegate](docs/SignatureRequestDelegate.md)
+ - [SignatureRequestFeedback](docs/SignatureRequestFeedback.md)
+ - [SignatureRequestIds](docs/SignatureRequestIds.md)
  - [SignatureRequestSign](docs/SignatureRequestSign.md)
  - [SignatureRequestSignResult](docs/SignatureRequestSignResult.md)
+ - [SignatureRequestState](docs/SignatureRequestState.md)
  - [SignatureRequests](docs/SignatureRequests.md)
  - [Token](docs/Token.md)
  - [User](docs/User.md)
  - [Users](docs/Users.md)
+ - [Watcher](docs/Watcher.md)
  - [X500Name](docs/X500Name.md)
  - [X509SubjectIssuer](docs/X509SubjectIssuer.md)
 

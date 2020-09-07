@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 Get the currently used callback secret (null if not set).
 
-Use this operation to get the api callback secret.&lt;br&gt; 
+Use this operation to get the api callback secret.
 
 ### Example
 ```java
@@ -87,7 +87,7 @@ This endpoint does not need any parameter.
 
 Get user&#39;s credits.
 
-Use this operation to get the remaining signature and anchoring credits of the authenticated user.&lt;br&gt; 
+Use this operation to get the remaining signature and anchoring credits of the authenticated user.
 
 ### Example
 ```java
@@ -157,7 +157,7 @@ This endpoint does not need any parameter.
 
 Get user&#39;s registered JWT tokens.
 
-Use this operation to list all JWT tokens registered for the authenticated user. 
+Use this operation to list all JWT tokens registered for the authenticated user.
 
 ### Example
 ```java
@@ -227,7 +227,7 @@ This endpoint does not need any parameter.
 
 Update user&#39;s registered JWT tokens.
 
-Use this operation to update the list of JWT tokens registered for the authenticated user. 
+Use this operation to update the list of JWT tokens registered for the authenticated user.
 
 ### Example
 ```java
@@ -292,7 +292,8 @@ null (empty response body)
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | The list of JWT tokens was successfully updated. |  -  |
+**200** | The list of JWT tokens has been successfully updated. |  -  |
+**400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
 
 <a name="updateCallbackSecret"></a>
 # **updateCallbackSecret**
@@ -300,7 +301,7 @@ null (empty response body)
 
 Generates a new callback secret.
 
-Use this operation to generate the api callback secret.&lt;br&gt; 
+Use this operation to generate the api callback secret.
 
 ### Example
 ```java

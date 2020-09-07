@@ -2,7 +2,7 @@
 
 # Identity
 
-Signee's identity provided as a set of X.500 attributes (see https://www.ietf.org/rfc/rfc4519.txt).
+Signer's identity provided as a set of X.500 attributes (see https://www.ietf.org/rfc/rfc4519.txt).
 ## Properties
 
 Name | Type | Description | Notes

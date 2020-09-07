@@ -43,7 +43,7 @@ public class Example {
     //JWTAuth.setApiKeyPrefix("Token");
 
     TokenApi apiInstance = new TokenApi(defaultClient);
-    String cdata = "cdata_example"; // String | Client data to inject into the generated JWT token (64 characters max).<br> This data is not processed by the platform, and can be easily retrieved from the token by BASE64 decoding its `payload`. 
+    String cdata = "cdata_example"; // String | Client data to inject into the generated JWT token (64 characters max).<br> This data is not processed by the platform, and can be easily retrieved from the token by Base64 decoding its `payload`. 
     try {
       Token result = apiInstance.generateToken(cdata);
       System.out.println(result);
@@ -62,7 +62,7 @@ public class Example {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **cdata** | **String**| Client data to inject into the generated JWT token (64 characters max).&lt;br&gt; This data is not processed by the platform, and can be easily retrieved from the token by BASE64 decoding its &#x60;payload&#x60;.  | [optional]
+ **cdata** | **String**| Client data to inject into the generated JWT token (64 characters max).&lt;br&gt; This data is not processed by the platform, and can be easily retrieved from the token by Base64 decoding its &#x60;payload&#x60;.  | [optional]
 
 ### Return type
 
@@ -155,5 +155,5 @@ null (empty response body)
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | The JWT token is revoked. |  -  |
-**400** | Invalid JWT token object. More details are returned in the response body as a JSON object. |  -  |
+**400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
 

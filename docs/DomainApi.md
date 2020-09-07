@@ -84,7 +84,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | The created user. |  -  |
-**400** | Invalid user object. More details are returned in the response body as a JSON object. |  -  |
+**400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
 
 <a name="deleteDomainUser"></a>
 # **deleteDomainUser**
@@ -316,6 +316,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | An array of all users matching all search criteria, plus additional paging and sorting information. |  -  |
+**400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
 
 <a name="updateDomainUser"></a>
 # **updateDomainUser**
@@ -392,6 +393,6 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | The updated user. |  -  |
-**400** | Invalid user object. More details are returned in the response body as a JSON object. |  -  |
+**400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
 **404** | No user matching the given identifier. |  -  |
 

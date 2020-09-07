@@ -7,7 +7,8 @@ Method | HTTP request | Description
 [**createAnchor**](AnchorApi.md#createAnchor) | **POST** /anchor | Create a new anchor.
 [**deleteAnchor**](AnchorApi.md#deleteAnchor) | **DELETE** /anchor/{anchorId} | Delete an anchor.
 [**getAnchor**](AnchorApi.md#getAnchor) | **GET** /anchor/{anchorId} | Get an anchor by its identifier.
-[**searchAnchorIds**](AnchorApi.md#searchAnchorIds) | **GET** /anchorids | Search for public anchors&#39; identifiers.
+[**getAnchorAttestation**](AnchorApi.md#getAnchorAttestation) | **GET** /anchor/{anchorId}/attestation | Download the Proof Attestation document of an anchor.
+[**searchAnchorIds**](AnchorApi.md#searchAnchorIds) | **GET** /anchorIds | Search for public anchor identifiers.
 [**searchAnchors**](AnchorApi.md#searchAnchors) | **GET** /anchors | Search for anchors.
 [**updateAnchor**](AnchorApi.md#updateAnchor) | **PUT** /anchor/{anchorId} | Update an anchor.
 
@@ -18,7 +19,7 @@ Method | HTTP request | Description
 
 Create a new anchor.
 
-Use this operation to create a new anchor of one of these two types:&lt;br&gt;  - a data anchor (generating a proof of existence receipt) allows to prove the existence of some data at some point in time.&lt;br&gt; - a signature anchor (generating a proof of signature receipt) allows to prove the existence of the signature of some data at some point in time, the validity of the signature and the signee&#39;s identity.&lt;br&gt;  The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;status&#x60;, &#x60;timestamp&#x60; and &#x60;confirmations&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor.&lt;br&gt; For data anchors, only the properties &#x60;name&#x60; and &#x60;hash&#x60; are required: the &#x60;hash&#x60; property must be the SHA256 hash of the data to anchor, and must be computed caller side. This allows not to leak the original data.&lt;br&gt; For signature anchors, only the properties &#x60;name&#x60;, &#x60;signedHash&#x60;, &#x60;signature&#x60; and &#x60;pubKey&#x60; are required (though the &#x60;identityURL&#x60; property is highly recommended): the &#x60;signedHash&#x60; property must be the SHA256 hash of the data to sign. This allows not to leak the original data and to keep the actual signed data small (signing the digest is equivalent to signing the original data).&lt;br&gt; Be sure to have at least 1 anchoring credit on your account. The &#x60;signature&#x60; property must contain a valid signature of the &#x60;data&#x60; property using the private key paired with the &#x60;pubKey&#x60; public key. 
+Use this operation to create a new anchor of one of these two types:&lt;br&gt;  - a data anchor (generating a proof of existence receipt) allows to prove the existence of some data at some point in time.&lt;br&gt; - a signature anchor (generating a proof of signature receipt) allows to prove the existence of the signature of some data at some point in time, the validity of the signature and the signer&#39;s identity.&lt;br&gt;  The properties &#x60;id&#x60;, &#x60;created&#x60;, &#x60;lastModified&#x60;, &#x60;status&#x60;, &#x60;timestamp&#x60; and &#x60;confirmations&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned anchor.&lt;br&gt; For data anchors, only the properties &#x60;name&#x60; and &#x60;hash&#x60; are required: the &#x60;hash&#x60; property must be the SHA256 hash of the data to anchor, and must be computed caller side. This allows not to leak the original data.&lt;br&gt; For signature anchors, only the properties &#x60;name&#x60;, &#x60;signedHash&#x60;, &#x60;signature&#x60; and &#x60;pubKey&#x60; are required (though the &#x60;identityURL&#x60; property is highly recommended): the &#x60;signedHash&#x60; property must be the SHA256 hash of the data to sign. This allows not to leak the original data and to keep the actual signed data small (signing the digest is equivalent to signing the original data).&lt;br&gt; Be sure to have at least 1 anchoring credit on your account. The &#x60;signature&#x60; property must contain a valid signature of the &#x60;data&#x60; property using the private key paired with the &#x60;pubKey&#x60; public key. 
 
 ### Example
 ```java
@@ -84,8 +85,8 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | The created anchor (for signature anchors, the &#x60;hash&#x60; property is automatically set to the SHA256 of the signature, which is what is actually anchored into the blockchain). |  -  |
-**400** | Invalid anchor object. More details are returned in the response body as a JSON object. |  -  |
+**200** | The created anchor.&lt;br&gt; Note that for signature anchors, the &#x60;hash&#x60; property is automatically set to the SHA256 of the signature, which is what is actually anchored into the blockchain).  |  -  |
+**400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
 **402** | Insufficient credits. |  -  |
 
 <a name="deleteAnchor"></a>
@@ -237,13 +238,89 @@ Name | Type | Description  | Notes
 **200** | The anchor. |  -  |
 **404** | No anchor matching the given identifier. |  -  |
 
+<a name="getAnchorAttestation"></a>
+# **getAnchorAttestation**
+> File getAnchorAttestation(anchorId)
+
+Download the Proof Attestation document of an anchor.
+
+Use this operation to retrieve the Proof Attestation document of an anchor.&lt;br&gt; This PDF file is available only once the anchor is CONFIRMED. 
+
+### Example
+```java
+// Import classes:
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.AnchorApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
+
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
+
+    AnchorApi apiInstance = new AnchorApi(defaultClient);
+    String anchorId = "anchorId_example"; // String | Identifier of the anchor.
+    try {
+      File result = apiInstance.getAnchorAttestation(anchorId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling AnchorApi#getAnchorAttestation");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **anchorId** | **String**| Identifier of the anchor. |
+
+### Return type
+
+[**File**](File.md)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Download successful. |  -  |
+**400** | Proof attestation not yet available. |  -  |
+**404** | Anchor not found. |  -  |
+
 <a name="searchAnchorIds"></a>
 # **searchAnchorIds**
 > AnchorIds searchAnchorIds(page, size, hash, signedHash)
 
-Search for public anchors&#39; identifiers.
+Search for public anchor identifiers.
 
-Use this operation to retrieve the identifiers of all public anchors having a given &#x60;hash&#x60; and/or &#x60;signedHash&#x60; property.&lt;br&gt; Only public anchors&#39; identifiers are returned.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to retrieve public anchors&#39; identifiers.&lt;br&gt; Paging is supported. 
+Use this operation to retrieve the identifiers of all public anchors having a given &#x60;hash&#x60; and/or &#x60;signedHash&#x60; property.&lt;br&gt; Only public anchor identifiers are returned.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to retrieve public anchor identifiers.&lt;br&gt; Paging is supported. 
 
 ### Example
 ```java
@@ -273,7 +350,7 @@ public class Example {
 
     AnchorApi apiInstance = new AnchorApi(defaultClient);
     Integer page = 0; // Integer | Index of the page to retrieve (from 0).
-    Integer size = 20; // Integer | Number of anchors per page.
+    Integer size = 20; // Integer | Number of anchor identifiers per page.
     String hash = "hash_example"; // String | `hash` to search for: all public anchors whose `hash` property is equal are returned. 
     String signedHash = "signedHash_example"; // String | `signedHash` to search for: all public anchors whose `signedHash` property is equal are returned. 
     try {
@@ -295,7 +372,7 @@ public class Example {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **page** | **Integer**| Index of the page to retrieve (from 0). | [optional] [default to 0]
- **size** | **Integer**| Number of anchors per page. | [optional] [default to 20]
+ **size** | **Integer**| Number of anchor identifiers per page. | [optional] [default to 20]
  **hash** | **String**| &#x60;hash&#x60; to search for: all public anchors whose &#x60;hash&#x60; property is equal are returned.  | [optional]
  **signedHash** | **String**| &#x60;signedHash&#x60; to search for: all public anchors whose &#x60;signedHash&#x60; property is equal are returned.  | [optional]
 
@@ -316,6 +393,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | An array (possibly empty) of the identifiers of all public anchors matching all search criteria, plus additional paging information. |  -  |
+**400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
 
 <a name="searchAnchors"></a>
 # **searchAnchors**
@@ -404,6 +482,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | An array (possibly empty) of all anchors matching all search criteria, plus additional paging and sorting information. |  -  |
+**400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
 **504** | Can be triggered when searching by name if the request takes too long to process. |  -  |
 
 <a name="updateAnchor"></a>
@@ -481,6 +560,6 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | The updated anchor. |  -  |
-**400** | Invalid anchor object. More details are returned in the response body as a JSON object. |  -  |
+**400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
 **404** | No anchor matching the given identifier. |  -  |
 
