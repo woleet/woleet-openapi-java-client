@@ -15,7 +15,7 @@ Method | HTTP request | Description
 
 Get the proof receipt of an anchor (OpenTimestamps proof format).
 
-Use this operation to retrieve the OpenTimestamps proof receipt associated to a given anchor.&lt;br&gt; This binary file is available only once the anchor status is SENT.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier need to be known). 
+Use this operation to retrieve the OpenTimestamps proof receipt associated to a given data anchor.&lt;br&gt; Note that this operation is available for signature anchors.&lt;br&gt; This binary file is available only once the anchor status is SENT.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier need to be known). 
 
 ### Example
 ```java
@@ -44,7 +44,7 @@ public class Example {
     //JWTAuth.setApiKeyPrefix("Token");
 
     ReceiptApi apiInstance = new ReceiptApi(defaultClient);
-    String anchorId = "anchorId_example"; // String | Identifier of the anchor for which to build the proof receipt.
+    String anchorId = "anchorId_example"; // String | Identifier of the data anchor for which to build the proof receipt.
     try {
       File result = apiInstance.getOTSReceipt(anchorId);
       System.out.println(result);
@@ -63,7 +63,7 @@ public class Example {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **anchorId** | **String**| Identifier of the anchor for which to build the proof receipt. |
+ **anchorId** | **String**| Identifier of the data anchor for which to build the proof receipt. |
 
 ### Return type
 
@@ -82,7 +82,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | The proof receipt (conform to the OpenTimestamps format). |  -  |
-**202** | The proof receipt is not yet ready for this anchor. |  -  |
+**202** | The proof receipt is not yet available for this anchor. |  -  |
 **404** | No anchor matching the given identifier. |  -  |
 
 <a name="getReceipt"></a>
@@ -158,7 +158,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | The proof receipt (conform to the Chainpoint 2.x format). |  -  |
-**202** | The proof receipt is not yet ready for this anchor. |  -  |
+**202** | The proof receipt is not yet available for this anchor. |  -  |
 **404** | No anchor matching the given identifier. |  -  |
 
 <a name="verifyReceipt"></a>

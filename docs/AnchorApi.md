@@ -310,7 +310,7 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Download successful. |  -  |
+**200** | The proof attestation. |  -  |
 **400** | Proof attestation not yet available. |  -  |
 **404** | Anchor not found. |  -  |
 

@@ -1,7 +1,7 @@
 # woleet-api-client
 
 Woleet API
-- API version: 1.7.5
+- API version: 1.7.7
 
 Welcome to **Woleet API reference documentation**.<br> It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/reference)** before reading this documentation. 
 
@@ -137,18 +137,20 @@ Class | Method | HTTP request | Description
 *SignatureRequestApi* | [**createSignatureRequest**](docs/SignatureRequestApi.md#createSignatureRequest) | **POST** /signatureRequest | Create a new signature request.
 *SignatureRequestApi* | [**delegateSignatureRequest**](docs/SignatureRequestApi.md#delegateSignatureRequest) | **POST** /signatureRequest/{requestId}/delegate | Sign a signature request by delegating the signature.
 *SignatureRequestApi* | [**deleteSignatureRequest**](docs/SignatureRequestApi.md#deleteSignatureRequest) | **DELETE** /signatureRequest/{requestId} | Delete a signature request.
-*SignatureRequestApi* | [**feedbackSignatureRequest**](docs/SignatureRequestApi.md#feedbackSignatureRequest) | **POST** /signatureRequest/{requestId}/feedback | Report feedback about a signature request.
 *SignatureRequestApi* | [**getSignatureRequest**](docs/SignatureRequestApi.md#getSignatureRequest) | **GET** /signatureRequest/{requestId} | Get a signature request by its identifier.
 *SignatureRequestApi* | [**getSignatureRequestAttestation**](docs/SignatureRequestApi.md#getSignatureRequestAttestation) | **GET** /signatureRequest/{requestId}/attestation | Download the Signature Attestation document of a signature request.
+*SignatureRequestApi* | [**getSignatureRequestProofBundle**](docs/SignatureRequestApi.md#getSignatureRequestProofBundle) | **GET** /signatureRequest/{requestId}/proofbundle | Get the proof bundle of a signature request.
+*SignatureRequestApi* | [**reportSignatureRequestFeedback**](docs/SignatureRequestApi.md#reportSignatureRequestFeedback) | **POST** /signatureRequest/{requestId}/feedback | Report feedback about a signature request.
 *SignatureRequestApi* | [**searchSignatureRequestIds**](docs/SignatureRequestApi.md#searchSignatureRequestIds) | **GET** /signatureRequestIds | Search for public signature request identifiers.
 *SignatureRequestApi* | [**searchSignatureRequests**](docs/SignatureRequestApi.md#searchSignatureRequests) | **GET** /signatureRequests | Search for signature requests.
 *SignatureRequestApi* | [**sendSignatureRequestOTP**](docs/SignatureRequestApi.md#sendSignatureRequestOTP) | **GET** /signatureRequest/{requestId}/otp/{signeeId} | Generate and send an OTP to a signer of a signature request.
+*SignatureRequestApi* | [**sendSignatureRequestReminder**](docs/SignatureRequestApi.md#sendSignatureRequestReminder) | **POST** /signatureRequest/{requestId}/remind | Send a reminder email to a set of signers of a signature request.
 *SignatureRequestApi* | [**signSignatureRequest**](docs/SignatureRequestApi.md#signSignatureRequest) | **POST** /signatureRequest/{requestId}/sign | Sign a signature request by registering a signature.
 *SignatureRequestApi* | [**transitionSignatureRequest**](docs/SignatureRequestApi.md#transitionSignatureRequest) | **POST** /signatureRequest/{requestId}/transition | Change the state of a signature request.
 *SignatureRequestApi* | [**updateSignatureRequest**](docs/SignatureRequestApi.md#updateSignatureRequest) | **PUT** /signatureRequest/{requestId} | Update a signature request.
 *TokenApi* | [**generateToken**](docs/TokenApi.md#generateToken) | **GET** /token | Generate a JWT token.
 *TokenApi* | [**revokeToken**](docs/TokenApi.md#revokeToken) | **DELETE** /token | Revoke a JWT token.
-*UserApi* | [**getCallbackSecret**](docs/UserApi.md#getCallbackSecret) | **GET** /user/callbackSecret | Get the currently used callback secret (null if not set).
+*UserApi* | [**getCallbackSecret**](docs/UserApi.md#getCallbackSecret) | **GET** /user/callbackSecret | Get the current callback secret (null if not set).
 *UserApi* | [**getCredits**](docs/UserApi.md#getCredits) | **GET** /user/credits | Get user&#39;s credits.
 *UserApi* | [**getTokens**](docs/UserApi.md#getTokens) | **GET** /user/tokens | Get user&#39;s registered JWT tokens.
 *UserApi* | [**putTokens**](docs/UserApi.md#putTokens) | **PUT** /user/tokens | Update user&#39;s registered JWT tokens.
@@ -163,6 +165,7 @@ Class | Method | HTTP request | Description
  - [AuthorizedSignee](docs/AuthorizedSignee.md)
  - [CallbackSecret](docs/CallbackSecret.md)
  - [Credits](docs/Credits.md)
+ - [GetSignatureRequestProofBundle](docs/GetSignatureRequestProofBundle.md)
  - [Identity](docs/Identity.md)
  - [IdentityVerificationStatus](docs/IdentityVerificationStatus.md)
  - [Info](docs/Info.md)
