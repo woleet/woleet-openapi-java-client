@@ -7,6 +7,7 @@ Method | HTTP request | Description
 [**createSignatureRequest**](SignatureRequestApi.md#createSignatureRequest) | **POST** /signatureRequest | Create a new signature request.
 [**delegateSignatureRequest**](SignatureRequestApi.md#delegateSignatureRequest) | **POST** /signatureRequest/{requestId}/delegate | Sign a signature request by delegating the signature.
 [**deleteSignatureRequest**](SignatureRequestApi.md#deleteSignatureRequest) | **DELETE** /signatureRequest/{requestId} | Delete a signature request.
+[**downloadSignatureRequestFile**](SignatureRequestApi.md#downloadSignatureRequestFile) | **GET** /signatureRequest/{requestId}/file | Download the file to sign.
 [**getSignatureRequest**](SignatureRequestApi.md#getSignatureRequest) | **GET** /signatureRequest/{requestId} | Get a signature request by its identifier.
 [**getSignatureRequestAttestation**](SignatureRequestApi.md#getSignatureRequestAttestation) | **GET** /signatureRequest/{requestId}/attestation | Download the Signature Attestation document of a signature request.
 [**getSignatureRequestProofBundle**](SignatureRequestApi.md#getSignatureRequestProofBundle) | **GET** /signatureRequest/{requestId}/proofbundle | Get the proof bundle of a signature request.
@@ -18,6 +19,7 @@ Method | HTTP request | Description
 [**signSignatureRequest**](SignatureRequestApi.md#signSignatureRequest) | **POST** /signatureRequest/{requestId}/sign | Sign a signature request by registering a signature.
 [**transitionSignatureRequest**](SignatureRequestApi.md#transitionSignatureRequest) | **POST** /signatureRequest/{requestId}/transition | Change the state of a signature request.
 [**updateSignatureRequest**](SignatureRequestApi.md#updateSignatureRequest) | **PUT** /signatureRequest/{requestId} | Update a signature request.
+[**uploadSignatureRequestFile**](SignatureRequestApi.md#uploadSignatureRequestFile) | **POST** /signatureRequest/{requestId}/file | Upload the file to sign.
 
 
 <a name="createSignatureRequest"></a>
@@ -252,6 +254,82 @@ null (empty response body)
 **200** | The signature request is deleted. |  -  |
 **404** | No signature request matching the given identifier. |  -  |
 
+<a name="downloadSignatureRequestFile"></a>
+# **downloadSignatureRequestFile**
+> File downloadSignatureRequestFile(requestId)
+
+Download the file to sign.
+
+Use this operation to download the file to be signed for a signature request.&lt;br&gt; The name of the file is included in the &#x60;Content-Disposition&#x60; header (see https://www.ietf.org/rfc/rfc6266.txt). 
+
+### Example
+```java
+// Import classes:
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.SignatureRequestApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
+
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
+
+    SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
+    String requestId = "requestId_example"; // String | Identifier of the signature request.
+    try {
+      File result = apiInstance.downloadSignatureRequestFile(requestId);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling SignatureRequestApi#downloadSignatureRequestFile");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **requestId** | **String**| Identifier of the signature request. |
+
+### Return type
+
+[**File**](File.md)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/octet-stream
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | The file to sign. |  -  |
+**400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
+**404** | Signature request not found. |  -  |
+
 <a name="getSignatureRequest"></a>
 # **getSignatureRequest**
 > SignatureRequest getSignatureRequest(requestId, signeeId)
@@ -335,7 +413,7 @@ Name | Type | Description  | Notes
 
 Download the Signature Attestation document of a signature request.
 
-Use this operation to retrieve the Signature Attestation document of a signature request.&lt;br&gt; This PDF file summarizes the signature request and includes the proof bundle attached.&lt;br&gt; The proof bundle is a JSON file containing all the pieces of evidence:&lt;br&gt; - the audit trail&lt;br&gt; - the proof receipt of the signature of the audit trail by the platform&lt;br&gt; - the proof receipts of the signature of the file by the signers&lt;br&gt; Consequently, the Signature Attestation is only available once all the following conditions are met:&lt;br&gt; - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)&lt;br&gt; - all the proofs receipts are available (ie. have been anchored)&lt;br&gt; - the audit trail is generated and signed by the platform and its proof receipt is available (ie. is anchored)&lt;br&gt; Once these conditions are met, the platform generates and signs the signature attestation and set the &#x60;attestationAnchorId&#x60; property.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to retrieve the signature attestation of a signature request (but its identifier need to be known). 
+Use this operation to retrieve the Signature Attestation document of a signature request.&lt;br&gt; This PDF file summarizes the signature request and includes the proof bundle attached.&lt;br&gt; The proof bundle is a JSON file containing all the pieces of evidence:&lt;br&gt; - the audit trail&lt;br&gt; - the proof receipt of the signature of the audit trail by the platform&lt;br&gt; - the proof receipts of the signature of the file by the signers&lt;br&gt; Consequently, the signature attestation is only available once all the following conditions are met:&lt;br&gt; - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)&lt;br&gt; - all the proofs receipts are available (ie. have been anchored)&lt;br&gt; - the audit trail is generated and signed by the platform and its proof receipt is available (ie. is anchored)&lt;br&gt; Once these conditions are met, the platform generates and signs the signature attestation and set the &#x60;attestationAnchorId&#x60; property.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to retrieve the signature attestation of a signature request (but its identifier need to be known). 
 
 ### Example
 ```java
@@ -676,7 +754,7 @@ public class Example {
     Integer page = 0; // Integer | Index of the page to retrieve (from 0).
     Integer size = 20; // Integer | Number of anchors per page.
     String direction = "ASC"; // String | Sorting direction: ASC for ascending DESC for descending. 
-    String sort = "created"; // String | Sorting property: possible values are limited to `id`, `created` and `hashToSign`. 
+    String sort = "created"; // String | Sorting property: possible values are limited to `created` and `hashToSign`. 
     String name = "name_example"; // String | `name` to search for: all signature requests whose `name` property contains this sub-string are returned.<br> **WARNING: Searching by name can timeout on a large signature request set.** 
     String hashToSign = "hashToSign_example"; // String | `hashToSign` to search for: all signature requests whose `hashToSign` property is equal are returned. 
     List<String> state = Arrays.asList(); // List<String> | `state` to search for: all signature requests having one of those state are returned. 
@@ -701,7 +779,7 @@ Name | Type | Description  | Notes
  **page** | **Integer**| Index of the page to retrieve (from 0). | [optional] [default to 0]
  **size** | **Integer**| Number of anchors per page. | [optional] [default to 20]
  **direction** | **String**| Sorting direction: ASC for ascending DESC for descending.  | [optional] [default to ASC] [enum: ASC, DESC]
- **sort** | **String**| Sorting property: possible values are limited to &#x60;id&#x60;, &#x60;created&#x60; and &#x60;hashToSign&#x60;.  | [optional] [default to created] [enum: id, created, hashToSign]
+ **sort** | **String**| Sorting property: possible values are limited to &#x60;created&#x60; and &#x60;hashToSign&#x60;.  | [optional] [default to created] [enum: id, created, hashToSign]
  **name** | **String**| &#x60;name&#x60; to search for: all signature requests whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: Searching by name can timeout on a large signature request set.**  | [optional]
  **hashToSign** | **String**| &#x60;hashToSign&#x60; to search for: all signature requests whose &#x60;hashToSign&#x60; property is equal are returned.  | [optional]
  **state** | [**List&lt;String&gt;**](String.md)| &#x60;state&#x60; to search for: all signature requests having one of those state are returned.  | [optional] [enum: DRAFT, PENDING, IN_PROGRESS, COMPLETED, CLOSED, CANCELED, EXPIRED]
@@ -973,7 +1051,7 @@ Name | Type | Description  | Notes
 
 Change the state of a signature request.
 
-Use this operation to transition a **stateful** signature request to a new state.&lt;br&gt; Possible transitions are:&lt;br&gt; - from DRAFT to PENDING: start the signature request: the platform wait for the activation date (if any) and transition to IN_PROGRESS&lt;br&gt; - from PENDING to DRAFT: suspend the signature request: allow it to be updated&lt;br&gt; - from PENDING to CANCELED: cancel the signature request without waiting for the  activation date&lt;br&gt; - from IN_PROGRESS to CLOSED: close the signature request without waiting for all signatures to be colleted&lt;br&gt; - from IN_PROGRESS to CANCELED: cancel the signature request before all signatures get colleted&lt;br&gt; Note that **stateless** signature requests can only be transitioned to CLOSED (TODO: explain) 
+Use this operation to transition a **stateful** signature request to a new state.&lt;br&gt; Possible transitions are:&lt;br&gt; - from DRAFT to PENDING: start the signature request: the platform wait for the activation date (if any) and transition to IN_PROGRESS&lt;br&gt; - from PENDING to DRAFT: suspend the signature request: allow it to be updated&lt;br&gt; - from PENDING to CANCELED: cancel the signature request without waiting for the  activation date&lt;br&gt; - from IN_PROGRESS to CLOSED: close the signature request without waiting for all signatures to be colleted&lt;br&gt; - from IN_PROGRESS to CANCELED: cancel the signature request before all signatures get colleted&lt;br&gt; Note that **stateless** signature requests can only be transitioned to CLOSED, allowing to trigger the generation of the audit trail and the signature attestation. 
 
 ### Example
 ```java
@@ -1043,6 +1121,7 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | The transitioned signature request. |  -  |
 **400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
+**403** | Forbidden. Invalid transition. |  -  |
 **404** | Signature request not found. |  -  |
 
 <a name="updateSignatureRequest"></a>
@@ -1051,7 +1130,7 @@ Name | Type | Description  | Notes
 
 Update a signature request.
 
-Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;public&#x60;, &#x60;callbackURL&#x60;, &#x60;activation&#x60;, &#x60;deadline&#x60;, &#x60;identityURL&#x60;, &#x60;fileName&#x60;, &#x60;fileURL&#x60;, &#x60;lang&#x60;, &#x60;vars&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified. 
+Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;public&#x60;, &#x60;callbackURL&#x60;, &#x60;activation&#x60;, &#x60;deadline&#x60;, &#x60;identityURL&#x60;, &#x60;fileName&#x60;, &#x60;fileURL&#x60;, &#x60;lang&#x60;, &#x60;vars&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified.&lt;br&gt; Only **stateless** signature requests or **stateful** signature request in &#39;DRAFT&#39; state can be updated. 
 
 ### Example
 ```java
@@ -1121,5 +1200,85 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | The updated signature request. |  -  |
 **400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
+**403** | Forbidden. The signature request cannot be updated. |  -  |
 **404** | No signature request matching the given identifier. |  -  |
+
+<a name="uploadSignatureRequestFile"></a>
+# **uploadSignatureRequestFile**
+> SignatureRequest uploadSignatureRequestFile(requestId, file)
+
+Upload the file to sign.
+
+Use this operation to upload the file to be signed for a signature request.&lt;br&gt; The SHA256 hash of the uploaded file must be equal to the &#x60;hashToSign&#x60; property of the signature request or the upload fails.&lt;br&gt; Once uploaded, the file is stored and the &#x60;fileURL&#x60; property of the signature request is set, so that it can be used by a signature application to download and present the file to the signers.&lt;br&gt; Only **stateless** signature requests or **stateful** signature request in &#39;DRAFT&#39; state can be updated. **WARNING: the storage of the file to be signed is provided for convenience only: it is not required, and you should never upload a file if you have any concern about its privacy.** 
+
+### Example
+```java
+// Import classes:
+import io.woleet.api.ApiClient;
+import io.woleet.api.ApiException;
+import io.woleet.api.Configuration;
+import io.woleet.api.auth.*;
+import io.woleet.api.models.*;
+import io.woleet.api.client.SignatureRequestApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("https://api.woleet.io/v1");
+    
+    // Configure HTTP basic authorization: BasicAuth
+    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
+    BasicAuth.setUsername("YOUR USERNAME");
+    BasicAuth.setPassword("YOUR PASSWORD");
+
+    // Configure API key authorization: JWTAuth
+    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
+    JWTAuth.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //JWTAuth.setApiKeyPrefix("Token");
+
+    SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
+    String requestId = "requestId_example"; // String | Identifier of the signature request.
+    File file = new File("/path/to/file"); // File | The file to sign.
+    try {
+      SignatureRequest result = apiInstance.uploadSignatureRequestFile(requestId, file);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling SignatureRequestApi#uploadSignatureRequestFile");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **requestId** | **String**| Identifier of the signature request. |
+ **file** | **File**| The file to sign. |
+
+### Return type
+
+[**SignatureRequest**](SignatureRequest.md)
+
+### Authorization
+
+[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: multipart/form-data
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | File succesfully uploaded and linked to signature request. |  -  |
+**400** | Invalid request. More details are returned in the response body as a JSON object. |  -  |
+**403** | Forbidden. The file cannot be uploaded. |  -  |
+**404** | Signature request not found. |  -  |
 
