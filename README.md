@@ -40,7 +40,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>io.woleet</groupId>
   <artifactId>woleet-api-client</artifactId>
-  <version>1.6.1</version>
+  <version>1.8.0</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -50,7 +50,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "io.woleet:woleet-api-client:1.6.1"
+compile "io.woleet:woleet-api-client:1.8.0"
 ```
 
 ### Others
@@ -63,7 +63,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/woleet-api-client-1.6.1.jar`
+* `target/woleet-api-client-1.8.0.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
