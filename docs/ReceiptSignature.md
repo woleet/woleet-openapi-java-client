@@ -2,7 +2,7 @@
 
 # ReceiptSignature
 
-For proof of signature receipts only. The anchored signature.
+Proof of signature (for proof of signature receipts only).
 ## Properties
 
 Name | Type | Description | Notes

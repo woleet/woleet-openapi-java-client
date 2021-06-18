@@ -1,0 +1,3610 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: contact@woleet.com
+    url: https://www.woleet.io/
+  description: |
+    Welcome to **Woleet API reference documentation**.<br>
+    It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/reference)** before reading this documentation.
+  termsOfService: https://doc.woleet.io/docs/terms-of-service
+  title: Woleet API
+  version: 1.10.0
+servers:
+- url: https://api.woleet.io/v1
+security:
+- BasicAuth: []
+- JWTAuth: []
+tags:
+- description: Create and manage anchors.
+  name: anchor
+- description: Get and verify proof receipts.
+  name: receipt
+- description: Create and manage signature requests.
+  name: signatureRequest
+- description: Create and revoke JWT tokens.
+  name: token
+- description: Manage user information.
+  name: user
+- description: Manage domain users.
+  name: domain
+paths:
+  /anchor:
+    post:
+      description: |
+        Use this operation to create a new anchor of one of these two types:<br>
+        - a data anchor (generating a proof of existence receipt) allows to prove the existence of some data at some point in time.<br>
+        - a signature anchor (generating a proof of signature receipt) allows to prove the existence of the signature of some data at some point in time, the validity of the signature and the signer's identity.<br>
+        The properties `id`, `created`, `lastModified`, `status`, `timestamp` and `confirmations` are read-only and so must not be provided: they are managed by the platform and added to the returned anchor.<br>
+        For data anchors, only the properties `name` and `hash` are required: the `hash` property must be the SHA256 hash of the data to anchor, and must be computed caller side. This allows not to leak the original data.<br>
+        For signature anchors, only the properties `name`, `signedHash`, `signature` and `pubKey` are required (though the `identityURL` property is highly recommended).<br>
+        Be sure to have at least 1 anchoring credit on your account.
+      operationId: createAnchor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/anchor'
+        description: Anchor object to create.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/anchor'
+          description: The created anchor.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "402":
+          description: Insufficient credits.
+      summary: Create a new anchor.
+      tags:
+      - anchor
+      x-codegen-request-body-name: anchor
+      x-contentType: application/json
+      x-accepts: application/json
+  /anchor/{anchorId}:
+    delete:
+      description: |
+        Use this operation to delete an anchor.<br>
+        **WARNING: You should never delete an anchor, otherwise you will no longer be able to download its proof receipt.<br>
+        Use this for test purpose only.**
+      operationId: deleteAnchor
+      parameters:
+      - description: Identifier of the anchor to delete.
+        explode: false
+        in: path
+        name: anchorId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: The anchor is deleted.
+        "404":
+          description: No anchor matching the given identifier.
+      summary: Delete an anchor.
+      tags:
+      - anchor
+      x-accepts: application/json
+    get:
+      description: Use this operation to retrieve an anchor by its identifier.
+      operationId: getAnchor
+      parameters:
+      - description: Identifier of the anchor to retrieve.
+        explode: false
+        in: path
+        name: anchorId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/anchor'
+          description: The anchor.
+        "404":
+          description: No anchor matching the given identifier.
+      summary: Get an anchor by its identifier.
+      tags:
+      - anchor
+      x-accepts: application/json
+    put:
+      description: |
+        Use this operation to update an anchor.<br>
+        Only the properties `name`, `public`, `tags`, `metadata` and `callbackURL` can be modified.
+      operationId: updateAnchor
+      parameters:
+      - description: Identifier of anchor to update.
+        explode: false
+        in: path
+        name: anchorId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/anchor'
+        description: Anchor object to update.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/anchor'
+          description: The updated anchor.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "404":
+          description: No anchor matching the given identifier.
+      summary: Update an anchor.
+      tags:
+      - anchor
+      x-codegen-request-body-name: anchor
+      x-contentType: application/json
+      x-accepts: application/json
+  /anchor/{anchorId}/attestation:
+    get:
+      description: |
+        Use this operation to retrieve the Proof Attestation document of an anchor.<br>
+        This PDF file is only available once the anchor is CONFIRMED.
+      operationId: getAnchorAttestation
+      parameters:
+      - description: Identifier of the anchor.
+        explode: false
+        in: path
+        name: anchorId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pdfFile'
+          description: The proof attestation.
+        "400":
+          description: Proof attestation not yet available.
+        "404":
+          description: Anchor not found.
+      summary: Download the Proof Attestation document of an anchor.
+      tags:
+      - anchor
+      x-accepts: application/json
+  /anchorIds:
+    get:
+      description: |
+        Use this operation to retrieve the identifiers of all public anchors having a given `hash` and/or `signedHash` property.<br>
+        Only public anchor identifiers are returned.<br>
+        This is a publicly accessible endpoint: authentication is not required to retrieve public anchor identifiers.<br>
+        Paging is supported.
+      operationId: searchAnchorIds
+      parameters:
+      - description: Index of the page to retrieve (from 0).
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 0
+          type: integer
+        style: form
+      - description: Number of anchor identifiers per page.
+        explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 20
+          type: integer
+        style: form
+      - description: |
+          `hash` to search for: all public anchors whose `hash` property is equal are returned.
+        explode: true
+        in: query
+        name: hash
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |
+          `signedHash` to search for: all public anchors whose `signedHash` property is equal are returned.
+        explode: true
+        in: query
+        name: signedHash
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/anchorIds'
+          description: An array (possibly empty) of the identifiers of all public
+            anchors matching all search criteria, plus additional paging information.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+      summary: Search for public anchor identifiers.
+      tags:
+      - anchor
+      x-accepts: application/json
+  /anchors:
+    get:
+      description: |
+        Use this operation to retrieve all anchors having a given `name`, `hash`, `signedHash` and/or `tags` property.<br>
+        Only anchors belonging to the authenticated user are returned.<br>
+        Paging and sorting is supported.
+      operationId: searchAnchors
+      parameters:
+      - description: Index of the page to retrieve (from 0).
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 0
+          type: integer
+        style: form
+      - description: Number of anchors per page.
+        explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 20
+          type: integer
+        style: form
+      - description: |
+          Sorting direction: ASC for ascending DESC for descending.
+        explode: true
+        in: query
+        name: direction
+        required: false
+        schema:
+          default: ASC
+          enum:
+          - ASC
+          - DESC
+          type: string
+        style: form
+      - description: |
+          Sorting property: possible values are limited to `created`, `hash` and `signedHash`.
+        explode: true
+        in: query
+        name: sort
+        required: false
+        schema:
+          default: created
+          enum:
+          - id
+          - created
+          - hash
+          - signedHash
+          type: string
+        style: form
+      - description: |
+          `name` to search for: all anchors whose `name` property contains this sub-string are returned.<br>
+          **WARNING: Searching by name can timeout on a large anchor set.**
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |
+          `hash` to search for: all anchors whose `hash` property is equal are returned.
+        explode: true
+        in: query
+        name: hash
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |
+          `signedHash` to search for: all anchors whose `signedHash` property is equal are returned.
+        explode: true
+        in: query
+        name: signedHash
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |
+          Tags to search for: all anchors having all of these tags sets are returned.
+        explode: false
+        in: query
+        name: tags
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/anchors'
+          description: An array (possibly empty) of all anchors matching all search
+            criteria, plus additional paging and sorting information.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "504":
+          description: Can be triggered when searching by name if the request takes
+            too long to process.
+      summary: Search for anchors.
+      tags:
+      - anchor
+      x-accepts: application/json
+  /receipt/{anchorId}:
+    get:
+      description: |
+        Use this operation to retrieve the proof receipt associated to a given anchor.<br>
+        This JSON file is only available once the anchor status is SENT.<br>
+        This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier need to be known).
+      operationId: getReceipt
+      parameters:
+      - description: Identifier of the anchor for which to build the proof receipt.
+        explode: false
+        in: path
+        name: anchorId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: |
+          `true` if a partial proof receipt is to be returned when the proof of timestamp is not yet available (ie. the data or the signature has not yet been anchored).<br>
+          If the proof of timestamp is availalble (anchor is SENT or CONFIRMED) a regular proof receipt is returned (with response code 200).
+          Otherwise, a partial proof receipt not including the proof of timestamp is returned (response code 202).<br>
+          The partial proof receipt of a signature anchor allows to verify the signature and the identity of the signer immediatly after signing, without having to wait for the anchoring process to complete.
+        explode: true
+        in: query
+        name: allowPartial
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/receipt'
+          description: The proof receipt.
+        "202":
+          description: |
+            If `allowPartial` is `false` or unset: the proof receipt is not yet available.<br>
+            If `allowPartial` is `true`: the partial proof receipt (returned in the response body).
+        "404":
+          description: No anchor matching the given identifier.
+      summary: Get the proof receipt of an anchor.
+      tags:
+      - receipt
+      x-accepts: application/json
+  /receipt/{anchorId}/ots:
+    get:
+      description: |
+        Use this operation to retrieve the OpenTimestamps proof receipt associated to a given data anchor
+        (note that this operation is NOT available for signature anchors).<br>
+        This binary file is only available once the anchor status is SENT.<br>
+        This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier need to be known).
+      operationId: getOTSReceipt
+      parameters:
+      - description: Identifier of the data anchor for which to build the proof receipt.
+        explode: false
+        in: path
+        name: anchorId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/otsReceipt'
+          description: The proof receipt (conform to the OpenTimestamps format).
+        "202":
+          description: The proof receipt is not yet available.
+        "404":
+          description: No anchor matching the given identifier.
+      summary: Get the proof receipt of an anchor (OpenTimestamps proof format).
+      tags:
+      - receipt
+      x-accepts: application/json
+  /receipt/verify:
+    post:
+      description: |
+        Use this operation to verify a proof receipt and get the timestamp of the proof.<br>
+        For proof of signature receipts including an identity URL, this operation also verifies and returns information about the signer's identity.<br>
+        This is a publicly accessible endpoint: authentication is not required to verify a proof receipt.
+      operationId: verifyReceipt
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/receipt'
+        description: Proof receipt to verify.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/receiptVerificationStatus'
+          description: The proof receipt verification status.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+      summary: Verify a proof receipt.
+      tags:
+      - receipt
+      x-codegen-request-body-name: receipt
+      x-contentType: application/json
+      x-accepts: application/json
+  /signatureRequest:
+    post:
+      description: |
+        Use this operation to create a new signature request.<br>
+        The properties `id`, `created` and `lastModified` are read-only and so must not be provided: they are managed by the platform and added to the returned request.<br>
+        Only the properties `name` and `hashToSign` are required: the `hashToSign` property must be the SHA256 hash of the file to sign.<br>
+        Be sure to have enough signature and anchoring credits on your account to fulfill the signature request (each registered signature costs you 1 signature and 1 anchoring credit).<br>
+      operationId: createSignatureRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signatureRequest'
+        description: SignatureRequest object to create.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signatureRequest'
+          description: The created signature request.
+        "400":
+          description: Invalid request. More details are returned in the responsebody
+            as a JSON object.
+      summary: Create a new signature request.
+      tags:
+      - signatureRequest
+      x-codegen-request-body-name: signatureRequest
+      x-contentType: application/json
+      x-accepts: application/json
+  /signatureRequest/{requestId}/transition:
+    post:
+      description: |
+        Use this operation to transition a **stateful** signature request to a new state.<br>
+        Possible transitions are:<br>
+        - from DRAFT to PENDING: start the signature request: the platform wait for the activation date (if any) and transition to IN_PROGRESS<br>
+        - from PENDING to DRAFT: suspend the signature request: allow it to be updated<br>
+        - from PENDING to CANCELED: cancel the signature request without waiting for the  activation date<br>
+        - from IN_PROGRESS to CLOSED: close the signature request without waiting for all signatures to be colleted<br>
+        - from IN_PROGRESS to CANCELED: cancel the signature request before all signatures get colleted<br>
+        Note that **stateless** signature requests can only be transitioned to CLOLSED or CANCELED,
+        which triggers the generation of the audit trail and its signature by the platform.
+      operationId: transitionSignatureRequest
+      parameters:
+      - description: Identifier of the signature request.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signatureRequestState'
+        description: New state of the signature request.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signatureRequest'
+          description: The transitioned signature request.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "403":
+          description: Forbidden. Invalid transition.
+        "404":
+          description: Signature request not found.
+      summary: Change the state of a signature request.
+      tags:
+      - signatureRequest
+      x-codegen-request-body-name: state
+      x-contentType: application/json
+      x-accepts: application/json
+  /signatureRequest/{requestId}/remind:
+    post:
+      description: |
+        Use this operation to send a reminder email to a set of signers of a signature request.<br>
+        This email reminds them that they have a document to sign.
+      operationId: sendSignatureRequestReminder
+      parameters:
+      - description: Identifier of the signature request.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                example: john.doe@acme.com
+                type: string
+              type: array
+        description: |
+          The list of emails of the authorized signers who will receive the reminder email.
+        required: true
+      responses:
+        "200":
+          description: Reminder email succesfully sent to the signers.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "403":
+          description: Forbidden. The signature request is not in progress, or at
+            least one of the signers already signed.
+        "404":
+          description: Signature request not found.
+        "429":
+          description: Too many requests. A minimum delay of 1 hours is required between
+            two reminder emails.
+      summary: Send a reminder email to a set of signers of a signature request.
+      tags:
+      - signatureRequest
+      x-codegen-request-body-name: signeeEmails
+      x-contentType: application/json
+      x-accepts: application/json
+  /signatureRequest/{requestId}/otp/{signeeId}:
+    get:
+      description: |
+        Use this operation to generate and send a new OTP (One Time Password) by SMS to a signer of a signature request.<br>
+        This OTP can be used to sign during a maximum period of 10 mn.
+      operationId: sendSignatureRequestOTP
+      parameters:
+      - description: Identifier of the signature request.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: |
+          Secret identifier of the signer wanting to retrieve his OTP.<br>
+          **This secret identifier is generated by the platform and provided by email to the signer only.
+          It allows the platform to authenticate the signer and verify his email address.**
+        explode: false
+        in: path
+        name: signeeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: OTP succesfully generated and sent by SMS to the signer.
+        "401":
+          description: Unauthorized. The signer is not an authorized signer (secret
+            signer identifier not found).
+        "403":
+          description: Forbidden. The signature request is not in progress, or the
+            signer does not require an OTP.
+        "404":
+          description: Signature request not found.
+        "429":
+          description: Too many requests. A minimum delay of 1 second is required
+            between two OTP generation.
+      summary: Generate and send an OTP to a signer of a signature request.
+      tags:
+      - signatureRequest
+      x-accepts: application/json
+  /signatureRequest/{requestId}/sign:
+    post:
+      description: |
+        A signer can use this operation to sign a signature request by registering a signature he procuded on his own.<br>
+        The signature is automatically anchored on behalf of the owner of the signature request.<br>
+        The signature anchor created is added to the list of signature anchors of the signature request.<br>
+        This is a publicly accessible endpoint: authentication is not required to register a signature
+        (authentication of the signer rely on the knowledge of his secret identifier and OTP, or on the control of his public key).
+      operationId: signSignatureRequest
+      parameters:
+      - description: Identifier of the signature request.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signatureRequestSign'
+        description: Signature to register.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signatureRequestSignResult'
+          description: Signature succesfully registered. The signature anchor created
+            is returned.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "401":
+          description: Unauthorized. The signer is not an authorized signer (public
+            key or secret signer identifier not found, or invalid OTP).
+        "402":
+          description: Insufficient credits. The owner of the signature request runs
+            out of signature or anchoring credit.
+        "403":
+          description: Forbidden. The signature request is not in progress, the maximum
+            number of signatures has been reached or the OTP has expired.
+        "404":
+          description: Signature request not found.
+        "409":
+          description: Conflict. The signer has already signed.
+        "429":
+          description: Too many requests. A minimum delay of 1 second is required
+            after providing an invalid OTP.
+      summary: Sign a signature request by registering a signature.
+      tags:
+      - signatureRequest
+      x-codegen-request-body-name: signature
+      x-contentType: application/json
+      x-accepts: application/json
+  /signatureRequest/{requestId}/delegate:
+    post:
+      description: |
+        A signer can use this operation to sign a signature request by delegating the signature to the platform.<br>
+        When using this signature mode, the signature key of the signer is controled by the platform, which acts as a trusted third party.<br>
+        The signature is automatically anchored on behalf of the owner of the signature request.<br>
+        The signature anchor created is added to the list of signature anchors of the signature request.<br>
+        This is a publicly accessible endpoint: authentication is not required to delegate a signature
+        (authentication of the signer rely on the knowledge of his secret identifier and OTP, or on the control of his public key).
+      operationId: delegateSignatureRequest
+      parameters:
+      - description: Identifier of the signature request.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signatureRequestDelegate'
+        description: Authentication information about the signer.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signatureRequestSignResult'
+          description: Signature succesfully delegated. The signature anchor created
+            is returned.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "401":
+          description: Unauthorized. The signer is not an authorized signer (secret
+            signer identifier not found, or invalid OTP).
+        "402":
+          description: Insufficient credits. The owner of the signature request runs
+            out of signature or anchoring credit.
+        "403":
+          description: Forbidden. The signature request is not in progress, the maximum
+            number of signatures has been reached or the OTP has expired.
+        "404":
+          description: Signature request not found.
+        "409":
+          description: Conflict. The signer has already signed.
+        "429":
+          description: Too many requests. A minimum delay of 1 second is required
+            after providing an invalid OTP.
+      summary: Sign a signature request by delegating the signature.
+      tags:
+      - signatureRequest
+      x-codegen-request-body-name: delegate
+      x-contentType: application/json
+      x-accepts: application/json
+  /signatureRequest/{requestId}/feedback:
+    post:
+      description: |
+        A signer can use this operation to report a feedback to the owner of a signature request.<br>
+        This is a publicly accessible endpoint: authentication is not required to report a feedback
+        (authentication of the signer rely on the knowledge of his secret identifier).
+      operationId: reportSignatureRequestFeedback
+      parameters:
+      - description: Identifier of the signature request.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signatureRequestFeedback'
+        description: Feedback to report.
+        required: true
+      responses:
+        "200":
+          description: Feedback succesfully reported.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "401":
+          description: Unauthorized. The signer is not an authorized signer (secret
+            signer identifier not found).
+        "404":
+          description: Signature request not found.
+      summary: Report a feedback about a signature request.
+      tags:
+      - signatureRequest
+      x-codegen-request-body-name: feedback
+      x-contentType: application/json
+      x-accepts: application/json
+  /signatureRequest/{requestId}/event:
+    post:
+      description: |
+        A signer can use this operation to report an event on a signature request.<br>
+        Events reported are included in the audit trail of the signature request.<br>
+        This is a publicly accessible endpoint: authentication is not required to report an event
+        (authentication of the signer rely on the knowledge of his secret identifier).
+      operationId: reportSignatureRequestEvent
+      parameters:
+      - description: Identifier of the signature request.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signatureRequestEvent'
+        description: Event to report.
+        required: true
+      responses:
+        "200":
+          description: Event succesfully reported.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "401":
+          description: Unauthorized. The signer is not an authorized signer (secret
+            signer identifier not found).
+        "404":
+          description: Signature request not found.
+      summary: Report an event on a signature request.
+      tags:
+      - signatureRequest
+      x-codegen-request-body-name: event
+      x-contentType: application/json
+      x-accepts: application/json
+  /signatureRequest/{requestId}/attestation:
+    get:
+      description: |
+        Use this operation to retrieve the Signature Attestation document of a signature request.<br>
+        This PDF file summarizes the signature request and includes the proof bundle as an attachement.<br>
+        The proof bundle is a JSON file containing all the pieces of evidence:<br>
+        - the audit trail<br>
+        - the proof receipt of the signature of the audit trail by the platform<br>
+        - the proof receipts of the signature of the file by the signers<br>
+        Consequently, the signature attestation is only available once all the following conditions are met:<br>
+        - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)<br>
+        - all the proof receipts are available (ie. all signatures have been anchored)<br>
+        - the audit trail is generated and signed by the platform and its proof receipt is available (ie. its signature has been anchored)<br>
+        Once these conditions are met, the platform sets the `proofBundleComplete` property to `true`.<br>
+        This is a publicly accessible endpoint: authentication is not required to retrieve the signature attestation of a signature request (but its identifier needs to be known).
+      operationId: getSignatureRequestAttestation
+      parameters:
+      - description: Identifier of the signature request.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pdfFile'
+          description: The Signature Attestation document.
+        "400":
+          description: Signature Attestation document not yet available.
+        "404":
+          description: Signature request not found.
+      summary: Download the Signature Attestation document of a signature request.
+      tags:
+      - signatureRequest
+      x-accepts: application/json
+  /signatureRequest/{requestId}/proofbundle:
+    get:
+      description: |
+        Use this operation to retrieve the proof bundle of a signature request.<br>
+        The proof bundle is a JSON file containing all the pieces of evidence:<br>
+        - the audit trail<br>
+        - the proof receipt of the signature of the audit trail by the platform<br>
+        - the proof receipts of the signature of the file by the signers<br>
+        Consequently, the proof bundle is only available once all the following conditions are met:<br>
+        - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)<br>
+        - all the proof receipts are available (ie. all signatures have been anchored)<br>
+        - the audit trail is generated and signed by the platform and its proof receipt is available (ie. its signature has been anchored)<br>
+        Once these conditions are met, the platform sets the `proofBundleComplete` property to `true`.<br>
+        If this endpoint is called before all these conditions are met, it returns only the available proof receipts (with a 202 status).<br>
+        This is a publicly accessible endpoint: authentication is not required to retrieve the proof receipts of a signature request (but its identifier needs to be known).
+      operationId: getSignatureRequestProofBundle
+      parameters:
+      - description: Identifier of the signature request.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signatureRequestProofBundle'
+          description: The proof bundle of the signature request.
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signatureRequestProofBundle'
+          description: A partial proof bundle of the signature request (some signature
+            are missing or not all receipts are yet available).
+        "404":
+          description: Signature request not found.
+      summary: Get the proof bundle of a signature request.
+      tags:
+      - signatureRequest
+      x-accepts: application/json
+  /signatureRequest/{requestId}/file:
+    get:
+      description: |
+        Use this operation to download the file to be signed for a signature request.<br>
+        The name of the file is included in the `Content-Disposition` header (see https://www.ietf.org/rfc/rfc6266.txt).
+      operationId: downloadSignatureRequestFile
+      parameters:
+      - description: Identifier of the signature request.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+          description: The file to sign.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "404":
+          description: Signature request not found.
+      summary: Download the file to sign.
+      tags:
+      - signatureRequest
+      x-accepts: application/octet-stream
+    post:
+      description: |
+        Use this operation to upload the file to be signed for a signature request.<br>
+        The SHA256 hash of the uploaded file must be equal to the `hashToSign` property of the signature request or the upload fails.<br>
+        Once uploaded, the file is stored and the `fileURL` property of the signature request is set, so that it can be used by a signature application to download and present the file to the signers.<br>
+        Only **stateless** signature requests or **stateful** signature request in 'DRAFT' state can be updated.
+        **WARNING: the storage of the file to be signed is provided for convenience only: it is not required, and you should never upload a file if you have any concern about its privacy.**
+      operationId: uploadSignatureRequestFile
+      parameters:
+      - description: Identifier of the signature request.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  description: The file to sign.
+                  format: binary
+                  type: string
+              required:
+              - file
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signatureRequest'
+          description: File succesfully uploaded and linked to signature request.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "403":
+          description: Forbidden. The file cannot be uploaded.
+        "404":
+          description: Signature request not found.
+      summary: Upload the file to sign.
+      tags:
+      - signatureRequest
+      x-contentType: multipart/form-data
+      x-accepts: application/json
+  /signatureRequest/{requestId}:
+    delete:
+      description: |
+        Use this operation to delete a signature request.<br>
+        **WARNING: You should never delete a signature request, otherwise you will no longer be able to download its proof bundle or Signature Attestation document.<br>
+        Use this for test purpose only.**
+      operationId: deleteSignatureRequest
+      parameters:
+      - description: Identifier of the signature request to delete.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: The signature request is deleted.
+        "404":
+          description: No signature request matching the given identifier.
+      summary: Delete a signature request.
+      tags:
+      - signatureRequest
+      x-accepts: application/json
+    get:
+      description: Use this operation to retrieve a signature request by its identifier.
+      operationId: getSignatureRequest
+      parameters:
+      - description: Identifier of the signature request to retrieve.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: |
+          Secret identifier of the signer wanting to retrieve the signature request.<br>
+          If set, information related to this signer is guaranteed to be returned in `authorizedSignees[0]`.<br>
+          **This secret identifier is generated by the platform and provided by email to the signer only.
+          It allows the platform to authenticate the signer and verify his email address.**
+        explode: true
+        in: query
+        name: signeeId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signatureRequest'
+          description: The signature request.
+        "404":
+          description: No signature request matching the given identifier.
+      summary: Get a signature request by its identifier.
+      tags:
+      - signatureRequest
+      x-accepts: application/json
+    put:
+      description: |
+        Use this operation to update a signature request.<br>
+        Only the properties `name`, `public`, `callbackURL`, `activation`, `deadline`, `identityURL`, `fileName`, `fileURL`, `lang`, `vars`, `maxSignatures` and `authorizedSignees` can be modified.<br>
+        Only **stateless** signature requests or **stateful** signature request in 'DRAFT' state can be updated.
+      operationId: updateSignatureRequest
+      parameters:
+      - description: Identifier of signature request to update.
+        explode: false
+        in: path
+        name: requestId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signatureRequest'
+        description: SignatureRequest object to update.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signatureRequest'
+          description: The updated signature request.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "403":
+          description: Forbidden. The signature request cannot be updated.
+        "404":
+          description: No signature request matching the given identifier.
+      summary: Update a signature request.
+      tags:
+      - signatureRequest
+      x-codegen-request-body-name: request
+      x-contentType: application/json
+      x-accepts: application/json
+  /signatureRequestIds:
+    get:
+      description: |
+        Use this operation to retrieve the identifiers of all public signature requests having a given `hashToSign` property.<br>
+        Only public signature request identifiers are returned.<br>
+        This is a publicly accessible endpoint: authentication is not required to retrieve public signature request identifiers.<br>
+        Paging is supported.
+      operationId: searchSignatureRequestIds
+      parameters:
+      - description: Index of the page to retrieve (from 0).
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 0
+          type: integer
+        style: form
+      - description: Number of signature request identifiers per page.
+        explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 20
+          type: integer
+        style: form
+      - description: |
+          `hashToSign` to search for: all public signature requests whose `hashToSign` property is equal are returned.
+        explode: true
+        in: query
+        name: hashToSign
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signatureRequestIds'
+          description: An array (possibly empty) of the identifiers of all public
+            signature requests matching all search criteria, plus additional paging
+            information.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+      summary: Search for public signature request identifiers.
+      tags:
+      - signatureRequest
+      x-accepts: application/json
+  /signatureRequests:
+    get:
+      description: |
+        Use this operation to retrieve all signature requests having a given `name` and/or `hashToSign` property.<br>
+        Only requests belonging to the authenticated user are returned.<br>
+        Paging and sorting is supported.
+      operationId: searchSignatureRequests
+      parameters:
+      - description: Index of the page to retrieve (from 0).
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 0
+          type: integer
+        style: form
+      - description: Number of anchors per page.
+        explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 20
+          type: integer
+        style: form
+      - description: |
+          Sorting direction: ASC for ascending DESC for descending.
+        explode: true
+        in: query
+        name: direction
+        required: false
+        schema:
+          default: ASC
+          enum:
+          - ASC
+          - DESC
+          type: string
+        style: form
+      - description: |
+          Sorting property: possible values are limited to `created` and `hashToSign`.
+        explode: true
+        in: query
+        name: sort
+        required: false
+        schema:
+          default: created
+          enum:
+          - id
+          - created
+          - hashToSign
+          type: string
+        style: form
+      - description: |
+          `name` to search for: all signature requests whose `name` property contains this sub-string are returned.<br>
+          **WARNING: Searching by name can timeout on a large signature request set.**
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |
+          `hashToSign` to search for: all signature requests whose `hashToSign` property is equal are returned.
+        explode: true
+        in: query
+        name: hashToSign
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: |
+          States to search for: all signature requests whose `state` property is part of theses states are returned.
+        explode: false
+        in: query
+        name: states
+        required: false
+        schema:
+          items:
+            enum:
+            - DRAFT
+            - PENDING
+            - IN_PROGRESS
+            - COMPLETED
+            - CLOSED
+            - CANCELED
+            - EXPIRED
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signatureRequests'
+          description: An array (possibly empty) of all signature requests matching
+            all search criteria, plus additional paging and sorting information.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "504":
+          description: Can be triggered when searching by name if the request takes
+            too long to process.
+      summary: Search for signature requests.
+      tags:
+      - signatureRequest
+      x-accepts: application/json
+  /token:
+    delete:
+      description: |
+        Use this operation to revoke a JWT token.<br>
+        JWT tokens have no expiration date so are always valid: if you need to invalidate a token (eg. because you think it is compromised) you need to use this endpoint to inform the platform that this token must no longer be accepted.
+      operationId: revokeToken
+      parameters:
+      - description: JWT token to revoke.
+        explode: true
+        in: query
+        name: token
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          description: The JWT token is revoked.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+      summary: Revoke a JWT token.
+      tags:
+      - token
+      x-accepts: application/json
+    get:
+      description: |
+        Use this operation to generate a new JWT token.<br>
+        JWT tokens can be used to authenticate to the API, using the `Bearer` scheme of the `Authorization` header, like:<br>
+        `Authorization: Bearer {JWT token}`
+      operationId: generateToken
+      parameters:
+      - description: |
+          Client data to inject into the generated JWT token (64 characters max).<br>
+          This data is not processed by the platform, and can be easily retrieved from the token by Base64 decoding its `payload`.
+        explode: true
+        in: query
+        name: cdata
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/token'
+          description: The JWT token.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+      summary: Generate a JWT token.
+      tags:
+      - token
+      x-accepts: application/json
+  /user/credits:
+    get:
+      description: Use this operation to get the remaining signature and anchoring
+        credits of the authenticated user.
+      operationId: getCredits
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/credits'
+          description: The remaining signature and anchoring credits.
+      summary: Get user's credits.
+      tags:
+      - user
+      x-accepts: application/json
+  /user/tokens:
+    get:
+      description: Use this operation to list all JWT tokens registered for the authenticated
+        user.
+      operationId: getTokens
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tokens'
+          description: The list of JWT tokens of the user, possibly empty.
+      summary: Get user's registered JWT tokens.
+      tags:
+      - user
+      x-accepts: application/json
+    put:
+      description: Use this operation to update the list of JWT tokens registered
+        for the authenticated user.
+      operationId: putTokens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tokens'
+        description: The list of JWT tokens to update.
+        required: true
+      responses:
+        "200":
+          description: The list of JWT tokens has been successfully updated.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+      summary: Update user's registered JWT tokens.
+      tags:
+      - user
+      x-codegen-request-body-name: tokens
+      x-contentType: application/json
+      x-accepts: application/json
+  /user/callbackSecret:
+    get:
+      description: Use this operation to get the API callback secret.
+      operationId: getCallbackSecret
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/callbackSecret'
+          description: The current callback secret.
+      summary: Get the current callback secret (null if not set).
+      tags:
+      - user
+      x-accepts: application/json
+    put:
+      description: Use this operation to generate the API callback secret.
+      operationId: updateCallbackSecret
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/callbackSecret'
+          description: The newly generated callback secret.
+      summary: Generates a new callback secret.
+      tags:
+      - user
+      x-accepts: application/json
+  /domain/admin/user:
+    post:
+      description: |
+        Use this operation to create a new domain user.<br>
+        The properties `id`, `created`, `lastModified`, `info` and `status` are read-only and so must not be provided: they are managed by the platform and added to the returned user.
+      operationId: createDomainUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+        description: User object to create (password must be provided).
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+          description: The created user.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+      summary: Create a new domain user.
+      tags:
+      - domain
+      x-codegen-request-body-name: user
+      x-contentType: application/json
+      x-accepts: application/json
+  /domain/admin/user/{userId}:
+    delete:
+      description: Use this operation to delete a domain user.
+      operationId: deleteDomainUser
+      parameters:
+      - description: Identifier of the domain user to delete.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: The user is deleted.
+        "404":
+          description: No user matching the given identifier.
+      summary: Delete a domain user.
+      tags:
+      - domain
+      x-accepts: application/json
+    get:
+      description: Use this operation to retrieve a domain user by its identifier.
+      operationId: getDomainUser
+      parameters:
+      - description: Identifier of the domain user to retrieve.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+          description: The user.
+        "404":
+          description: No user matching the given identifier.
+      summary: Get a domain user by its identifier.
+      tags:
+      - domain
+      x-accepts: application/json
+    put:
+      description: Use this operation to update a domain user.
+      operationId: updateDomainUser
+      parameters:
+      - description: Identifier of the domain user to update.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+        description: User object to update.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+          description: The updated user.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+        "404":
+          description: No user matching the given identifier.
+      summary: Update a domain user.
+      tags:
+      - domain
+      x-codegen-request-body-name: user
+      x-contentType: application/json
+      x-accepts: application/json
+  /domain/admin/users:
+    get:
+      description: |
+        Use this operation to list all domain users or search for domain users given their email.<br>
+        Paging and sorting is supported.
+      operationId: searchDomainUsers
+      parameters:
+      - description: Index of the page to retrieve (from 0).
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 0
+          type: integer
+        style: form
+      - description: Number of users per page.
+        explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 20
+          type: integer
+        style: form
+      - description: |
+          Sorting direction: ASC for ascending DESC for descending.
+        explode: true
+        in: query
+        name: direction
+        required: false
+        schema:
+          default: ASC
+          enum:
+          - ASC
+          - DESC
+          type: string
+        style: form
+      - description: |
+          Sorting property: possible values are `email`, `created`, `roles`, `info.firstName`, `info.lastName`, `status`.
+        explode: true
+        in: query
+        name: sort
+        required: false
+        schema:
+          default: created
+          enum:
+          - email
+          - created
+          - roles
+          - info.firstName
+          - info.lastName
+          - status
+          type: string
+        style: form
+      - description: |
+          `email` to search for: a sub-string of the email.
+        explode: true
+        in: query
+        name: email
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/users'
+          description: An array of all users matching all search criteria, plus additional
+            paging and sorting information.
+        "400":
+          description: Invalid request. More details are returned in the response
+            body as a JSON object.
+      summary: Search for domain users.
+      tags:
+      - domain
+      x-accepts: application/json
+components:
+  schemas:
+    receipt:
+      description: |
+        A proof receipt:<br>
+        - the proof of timestamp is provided as a Chainpoint 2.x proof receipt.<br>
+        - the proof of signature (if applicable) is provided in the `signature` property.<br>
+        If the proof receipt is partial (ie. does not contain the proof of timestamp) Chainpoint 2.x fields are not provided.
+      example:
+        targetHash: targetHash
+        signature:
+          signedIssuerDomain: signedIssuerDomain
+          signature: signature
+          signedHash: signedHash
+          identityURL: identityURL
+          signedIdentity: signedIdentity
+          pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+        merkleRoot: merkleRoot
+        proof:
+        - left: left
+          right: right
+        - left: left
+          right: right
+        anchors:
+        - sourceId: sourceId
+          type: type
+        - sourceId: sourceId
+          type: type
+        type: type
+        partial: true
+      properties:
+        targetHash:
+          description: SHA256 hash of the proven data or signature.
+          type: string
+        type:
+          description: |
+            Chainpoint 2.x: Type of the proof receipt.<br>
+            **Currently only 'ChainpointSHA256v2' is supported.**
+          type: string
+        merkleRoot:
+          description: |
+            Chainpoint 2.x: Root of the Merkle tree.
+          type: string
+        proof:
+          description: |
+            Chainpoint 2.x: Merkle proof (path from `targetHash` to `merkleRoot` in the Merkle tree).
+          items:
+            $ref: '#/components/schemas/receipt_proof_node'
+          type: array
+        anchors:
+          description: |
+            Chainpoint 2.x: List of sources where the root of the Merkle proof is anchored.
+          items:
+            $ref: '#/components/schemas/receipt_anchors_node'
+          type: array
+        partial:
+          description: |
+            `true` if the receipt is partial (ie. does not contain the Chainpoint 2.x proof of timestamp)
+          type: boolean
+        signature:
+          $ref: '#/components/schemas/receipt_signature'
+      type: object
+    receipt_proof_node:
+      example:
+        left: left
+        right: right
+      properties:
+        left:
+          type: string
+        right:
+          type: string
+      type: object
+    receipt_anchors_node:
+      example:
+        sourceId: sourceId
+        type: type
+      properties:
+        type:
+          description: |
+            Type of the anchor.<br>
+            **Currently only 'BTCOpReturn' is supported.**
+          type: string
+        sourceId:
+          type: string
+      type: object
+    receipt_signature:
+      description: Proof of signature (for proof of signature receipts only).
+      example:
+        signedIssuerDomain: signedIssuerDomain
+        signature: signature
+        signedHash: signedHash
+        identityURL: identityURL
+        signedIdentity: signedIdentity
+        pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+      properties:
+        signedHash:
+          description: SHA256 hash (ie. the fingerprint) of the signed file.
+          type: string
+        signedIdentity:
+          description: X500 Distinguished Name representing the signed identity.
+          type: string
+        signedIssuerDomain:
+          description: Domain name of the identity issuer (ie. of the organization
+            who verified the identity).
+          type: string
+        pubKey:
+          description: |
+            Public key of the signer.<br>
+            **Currently only Bitcoin addresses are supported.**
+          example: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+          type: string
+        signature:
+          description: |
+            Signature of the `signedHash` property using the public key `pubKey`, or, if any of `signedIdentity` or `signedIssuerDomain` is provided,
+            signature of SHA256(`signedHash` + `signedIdentity` + `signedIssuerDomain`) using the public key `pubKey`.
+          type: string
+        identityURL:
+          description: Web hook to use to verify the signer's identity.
+          type: string
+      type: object
+    otsReceipt:
+      description: An OpenTimestamps proof receipt.
+      format: binary
+      type: string
+    pdfFile:
+      description: A PDF file.
+      format: binary
+      type: string
+    signatureRequest:
+      example:
+        ordered: true
+        fileName: NDA.pdf
+        auditTrailAnchorId: a3790416-16c3-4182-a310-9ef491c38a4c
+        created: 1620294758688
+        identityURL: https://wids.acme.com/identity
+        watchers:
+        - commonName: John Doe
+          vars: '{"key":"value"}'
+          lang: fr
+          email: john.doe@acme.com
+        - commonName: John Doe
+          vars: '{"key":"value"}'
+          lang: fr
+          email: john.doe@acme.com
+        hashToSign: c1a52fac4179685e102a5c2bca3342661c3b1d17644b5f22c8feec0b503a8a3e
+        maxSignatures: 10
+        anchors:
+        - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
+          signedIssuerDomain: signedIssuerDomain
+          signature: signature
+          created: 1620294758688
+          notifyByEmail: true
+          identityURL: identityURL
+          txId: txId
+          confirmations: 6
+          signedIdentity: signedIdentity
+          tags:
+          - tags
+          - tags
+          public: true
+          name: name
+          signedHash: signedHash
+          callbackURL: https://acme.com/callback/woleet/anchor
+          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          lastModified: 1620294759999
+          hash: hash
+          pubKey: pubKey
+          status: WAIT
+          timestamp: 0
+        - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
+          signedIssuerDomain: signedIssuerDomain
+          signature: signature
+          created: 1620294758688
+          notifyByEmail: true
+          identityURL: identityURL
+          txId: txId
+          confirmations: 6
+          signedIdentity: signedIdentity
+          tags:
+          - tags
+          - tags
+          public: true
+          name: name
+          signedHash: signedHash
+          callbackURL: https://acme.com/callback/woleet/anchor
+          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          lastModified: 1620294759999
+          hash: hash
+          pubKey: pubKey
+          status: WAIT
+          timestamp: 0
+        auditTrailData: eyJhdWRpdENvbnRleHQiOnsiaWQiOiJiNzkwNDMyYi1kNjYyLTQ2MzMtOGNjMi0xMjc0ODZiMjYzYjgiLCJuYW1lIjoiU2FtcGxlIn0sImF1ZGl0RXZlbnRzIjpbeyJkYXRlIjoxNjIyMTk5NTA5NDExLCJ0eXBlIjoiQ0xPU0VEIn1dfQo=
+        public: true
+        proofBundleComplete: true
+        authorizedSignees:
+        - commonName: John Doe
+          identityURL: https://wids.acme.com/identity
+          OTP: OTP
+          anchorId: anchorId
+          signedOn: 0
+          countryCallingCode: "33"
+          phone: "612345678"
+          requiresOTP: true
+          signsFaceToFace: true
+          feedbackMessage: feedbackMessage
+          vars: '{}'
+          id: id
+          lang: fr
+          device: SERVER
+          feedbackSubject: feedbackSubject
+          auditTrailId: auditTrailId
+          email: john.doe@acme.com
+          pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+        - commonName: John Doe
+          identityURL: https://wids.acme.com/identity
+          OTP: OTP
+          anchorId: anchorId
+          signedOn: 0
+          countryCallingCode: "33"
+          phone: "612345678"
+          requiresOTP: true
+          signsFaceToFace: true
+          feedbackMessage: feedbackMessage
+          vars: '{}'
+          id: id
+          lang: fr
+          device: SERVER
+          feedbackSubject: feedbackSubject
+          auditTrailId: auditTrailId
+          email: john.doe@acme.com
+          pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+        testMode: true
+        name: Non-disclosure agreement
+        callbackURL: https://acme.com/callback/woleet/signatureRequest
+        fileURL: https://acme.com/files/NDA.pdf
+        id: a3790416-16c3-4182-a310-9ef491c38a4c
+        lastModified: 1620294759999
+        vars: '{"requesterName":"ACME Corp."}'
+        lang: fr
+        activation: 1720294759999
+        deadline: 1720294759999
+      properties:
+        id:
+          description: Signature request identifier. It is allocated by the platform,
+            and so must not be provided at creation time.
+          example: a3790416-16c3-4182-a310-9ef491c38a4c
+          readOnly: true
+          type: string
+        created:
+          description: Date of creation (in milliseconds since Unix epoch).
+          example: 1620294758688
+          format: int64
+          readOnly: true
+          type: integer
+        lastModified:
+          description: Date of last modification (in milliseconds since Unix epoch).
+          example: 1620294759999
+          format: int64
+          readOnly: true
+          type: integer
+        name:
+          description: Name of the signature request (doesn't need to be unique).
+          example: Non-disclosure agreement
+          type: string
+        state:
+          $ref: '#/components/schemas/signatureRequestState'
+        callbackURL:
+          description: |
+            Web hook to be called by the platform whenever:<br>
+            - the `state` property changes<br>
+            - a new signature is registered<br>
+            - the `proofBundleComplete` property is set to `true` by the platform (which means that the proof bundle and the Signature Attestation document are ready to download)<br>
+            The platform does a POST request on this URL with the signature request as a JSON object in the request body.<br>
+            Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br>
+            Please refer to the <a target="_blank" href="https://doc.woleet.io/reference#using-callbacks">documentation</a> for more details.
+          example: https://acme.com/callback/woleet/signatureRequest
+          type: string
+        vars:
+          description: |
+            A set of variables (key/value pairs) that can be used to customize the signature request workflow.<br>
+            Values must be of type null, boolean, string or number: nested JSON objects are not allowed.<br>
+            In particular, these variables can be used to customize the various email sent and disable some of these emails.<br>
+            Please refer to the <a target="_blank" href="https://doc.woleet.io/reference#custom-signature-workflow">documentation</a> for more details.<br>
+            **This property is only available to the owner and the signers of the signature request.**
+          example: '{"requesterName":"ACME Corp."}'
+          type: object
+        lang:
+          description: The preferred language (provided as an ISO 639-1 string) to
+            use when emailing the signers.
+          example: fr
+          type: string
+        public:
+          description: |
+            `true` (or unset) if the signature request is public (ie. discoverable by its `hashToSign`) or `false` if it must be private (ie. not discoverable).<br>
+            **Signature anchors created in the scope of a signature request inherit from its `public` property.**
+          type: boolean
+        hashToSign:
+          description: |
+            SHA256 hash (ie. the fingerprint) of the file to sign.<br>
+            The value must be provided as an hexadecimal lowercase string. The hash of the empty file is forbidden.<br>
+          example: c1a52fac4179685e102a5c2bca3342661c3b1d17644b5f22c8feec0b503a8a3e
+          type: string
+        activation:
+          description: |
+            Date of activation of the signature request (in milliseconds since Unix epoch).<br>
+            When not set or null, no activation date is applied.
+          example: 1720294759999
+          format: int64
+          type: integer
+        deadline:
+          description: |
+            Deadline of the signature request (in milliseconds since Unix epoch).<br>
+            When not set or null, no deadline is applied.<br>
+            If set, signatures registered after the deadline are refused.
+          example: 1720294759999
+          format: int64
+          type: integer
+        identityURL:
+          description: |
+            Web hook to use to verify the signers' identity.<br>
+            If set, it is used to verify the identity of the signers at signature registration time.
+          example: https://wids.acme.com/identity
+          type: string
+        fileName:
+          description: |
+            Name of the file to sign.<br>
+            If set, the signature application can use it to give an indication about the file to the signers.
+          example: NDA.pdf
+          type: string
+        fileURL:
+          description: |
+            Public URL of the file to sign.<br>
+            If set, the signature application can use it to download and present the file to the signers.
+          example: https://acme.com/files/NDA.pdf
+          type: string
+        maxSignatures:
+          description: |
+            Maximum number of signatures to accept for this signature request.<br>
+            When not set or null, no maximum is applied.<br>
+            This property and the `authorizedSignees` property are mutually exclusive.<br>
+            **This property is only available to the owner of the signature request.**
+          example: 10
+          format: int32
+          type: integer
+        authorizedSignees:
+          description: |
+            List of all signers authorized to register their signature (no duplicate is authorized).<br>
+            When not set or null, anybody can sign the signature request.<br>
+            If set, signers not being part of this list are not allowed to register their signature.<br>
+            This property and the `maxSignatures` property are mutually exclusive.
+          items:
+            $ref: '#/components/schemas/authorizedSignee'
+          type: array
+        watchers:
+          description: |
+            List of all watchers to notify by email about the progress of the signature request.<br>
+            The set of events being notified are:<br>
+            - the signature request is activated<br>
+            - a signer signs the signature request<br>
+            - the signature request is canceled<br>
+            - the signature request is closed or completed and the Signature Attestation document is ready
+            **This property is only available to the owner of the signature request.**
+          items:
+            $ref: '#/components/schemas/watcher'
+          type: array
+        ordered:
+          description: |
+            `true` if the signers must sign in their order of appearance in the `authorizedSignees` list.<br>
+            In this mode, each signer is notified only once the previous signer completes his signature.<br>
+            **Only stateful signature request can be ordered.**
+          type: boolean
+        anchors:
+          description: |
+            List of signature anchors created in the scope of this signature request<br>
+            A signature anchor is created each time a new signature is registered.
+          items:
+            $ref: '#/components/schemas/anchor'
+          readOnly: true
+          type: array
+        auditTrailData:
+          description: |
+            Audit trail data.<br>
+            When the signature request is COMPLETED (by the platform) or CLOSED (by the requester) its audit trail
+            (ie. the list of events recorded by the platform during the signature request workflow) is serialized to a
+            JSON object and Base64 encoded. This data is then signed by the platform and recorded in this property.
+          example: eyJhdWRpdENvbnRleHQiOnsiaWQiOiJiNzkwNDMyYi1kNjYyLTQ2MzMtOGNjMi0xMjc0ODZiMjYzYjgiLCJuYW1lIjoiU2FtcGxlIn0sImF1ZGl0RXZlbnRzIjpbeyJkYXRlIjoxNjIyMTk5NTA5NDExLCJ0eXBlIjoiQ0xPU0VEIn1dfQo=
+          readOnly: true
+          type: string
+        auditTrailAnchorId:
+          description: |
+            Identifier of the signature anchor created by the platform to sign the audit trail data.<br>
+            This property is set only once the audit trail is generated and can be used to retrieve its proof receipt.
+          example: a3790416-16c3-4182-a310-9ef491c38a4c
+          readOnly: true
+          type: string
+        proofBundleComplete:
+          description: |
+            `true` when all pieces of evidence are available.<br>
+            The proof bundle and the Signature Attestation are ready to download.
+          readOnly: true
+          type: boolean
+        testMode:
+          description: |
+            **WARNING: Do not use (test purpose only).**
+          type: boolean
+      required:
+      - hashToSign
+      - name
+      type: object
+    signatureRequestState:
+      description: |
+        State of the signature request.<br>
+        If not set, the signature request is **stateless** and can be updated at any time (eg. to add new signers on the fly).<br>
+        If set to 'DRAFT' at creation time, the signature request is **stateful** and its state can be transitioned using the dedicated endpoint.<br>
+        Available states:<br>
+        - `DRAFT`: the signature request is being edited (only `DRAFT` signature requests can be updated)<br>
+        - `PENDING`: the signature request is awaiting for its activation date<br>
+        - `IN_PROGRESS`: the activation date has been reached, the signature request emails have been sent to the signers (if applicable) and the signatures are being collected<br>
+        - `COMPLETED`: all signatures have been collected<br>
+        - `CLOSED`: the signature request has been closed by the owner before all signatures could be collected<br>
+        - `CANCELED`: the signature request has been canceled by the owner before all signatures could be collected<br>
+        - `EXPIRED`: the deadline of the signature request has been reached before all signatures could be collected
+      enum:
+      - DRAFT
+      - PENDING
+      - IN_PROGRESS
+      - COMPLETED
+      - CLOSED
+      - CANCELED
+      - EXPIRED
+      type: string
+    signatureRequests:
+      example:
+        number: 1
+        last: true
+        numberOfElements: 0
+        size: 6
+        content:
+        - ordered: true
+          fileName: NDA.pdf
+          auditTrailAnchorId: a3790416-16c3-4182-a310-9ef491c38a4c
+          created: 1620294758688
+          identityURL: https://wids.acme.com/identity
+          watchers:
+          - commonName: John Doe
+            vars: '{"key":"value"}'
+            lang: fr
+            email: john.doe@acme.com
+          - commonName: John Doe
+            vars: '{"key":"value"}'
+            lang: fr
+            email: john.doe@acme.com
+          hashToSign: c1a52fac4179685e102a5c2bca3342661c3b1d17644b5f22c8feec0b503a8a3e
+          maxSignatures: 10
+          anchors:
+          - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
+            signedIssuerDomain: signedIssuerDomain
+            signature: signature
+            created: 1620294758688
+            notifyByEmail: true
+            identityURL: identityURL
+            txId: txId
+            confirmations: 6
+            signedIdentity: signedIdentity
+            tags:
+            - tags
+            - tags
+            public: true
+            name: name
+            signedHash: signedHash
+            callbackURL: https://acme.com/callback/woleet/anchor
+            id: a3790416-16c3-4182-a310-9ef491c38a4c
+            lastModified: 1620294759999
+            hash: hash
+            pubKey: pubKey
+            status: WAIT
+            timestamp: 0
+          - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
+            signedIssuerDomain: signedIssuerDomain
+            signature: signature
+            created: 1620294758688
+            notifyByEmail: true
+            identityURL: identityURL
+            txId: txId
+            confirmations: 6
+            signedIdentity: signedIdentity
+            tags:
+            - tags
+            - tags
+            public: true
+            name: name
+            signedHash: signedHash
+            callbackURL: https://acme.com/callback/woleet/anchor
+            id: a3790416-16c3-4182-a310-9ef491c38a4c
+            lastModified: 1620294759999
+            hash: hash
+            pubKey: pubKey
+            status: WAIT
+            timestamp: 0
+          auditTrailData: eyJhdWRpdENvbnRleHQiOnsiaWQiOiJiNzkwNDMyYi1kNjYyLTQ2MzMtOGNjMi0xMjc0ODZiMjYzYjgiLCJuYW1lIjoiU2FtcGxlIn0sImF1ZGl0RXZlbnRzIjpbeyJkYXRlIjoxNjIyMTk5NTA5NDExLCJ0eXBlIjoiQ0xPU0VEIn1dfQo=
+          public: true
+          proofBundleComplete: true
+          authorizedSignees:
+          - commonName: John Doe
+            identityURL: https://wids.acme.com/identity
+            OTP: OTP
+            anchorId: anchorId
+            signedOn: 0
+            countryCallingCode: "33"
+            phone: "612345678"
+            requiresOTP: true
+            signsFaceToFace: true
+            feedbackMessage: feedbackMessage
+            vars: '{}'
+            id: id
+            lang: fr
+            device: SERVER
+            feedbackSubject: feedbackSubject
+            auditTrailId: auditTrailId
+            email: john.doe@acme.com
+            pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+          - commonName: John Doe
+            identityURL: https://wids.acme.com/identity
+            OTP: OTP
+            anchorId: anchorId
+            signedOn: 0
+            countryCallingCode: "33"
+            phone: "612345678"
+            requiresOTP: true
+            signsFaceToFace: true
+            feedbackMessage: feedbackMessage
+            vars: '{}'
+            id: id
+            lang: fr
+            device: SERVER
+            feedbackSubject: feedbackSubject
+            auditTrailId: auditTrailId
+            email: john.doe@acme.com
+            pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+          testMode: true
+          name: Non-disclosure agreement
+          callbackURL: https://acme.com/callback/woleet/signatureRequest
+          fileURL: https://acme.com/files/NDA.pdf
+          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          lastModified: 1620294759999
+          vars: '{"requesterName":"ACME Corp."}'
+          lang: fr
+          activation: 1720294759999
+          deadline: 1720294759999
+        - ordered: true
+          fileName: NDA.pdf
+          auditTrailAnchorId: a3790416-16c3-4182-a310-9ef491c38a4c
+          created: 1620294758688
+          identityURL: https://wids.acme.com/identity
+          watchers:
+          - commonName: John Doe
+            vars: '{"key":"value"}'
+            lang: fr
+            email: john.doe@acme.com
+          - commonName: John Doe
+            vars: '{"key":"value"}'
+            lang: fr
+            email: john.doe@acme.com
+          hashToSign: c1a52fac4179685e102a5c2bca3342661c3b1d17644b5f22c8feec0b503a8a3e
+          maxSignatures: 10
+          anchors:
+          - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
+            signedIssuerDomain: signedIssuerDomain
+            signature: signature
+            created: 1620294758688
+            notifyByEmail: true
+            identityURL: identityURL
+            txId: txId
+            confirmations: 6
+            signedIdentity: signedIdentity
+            tags:
+            - tags
+            - tags
+            public: true
+            name: name
+            signedHash: signedHash
+            callbackURL: https://acme.com/callback/woleet/anchor
+            id: a3790416-16c3-4182-a310-9ef491c38a4c
+            lastModified: 1620294759999
+            hash: hash
+            pubKey: pubKey
+            status: WAIT
+            timestamp: 0
+          - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
+            signedIssuerDomain: signedIssuerDomain
+            signature: signature
+            created: 1620294758688
+            notifyByEmail: true
+            identityURL: identityURL
+            txId: txId
+            confirmations: 6
+            signedIdentity: signedIdentity
+            tags:
+            - tags
+            - tags
+            public: true
+            name: name
+            signedHash: signedHash
+            callbackURL: https://acme.com/callback/woleet/anchor
+            id: a3790416-16c3-4182-a310-9ef491c38a4c
+            lastModified: 1620294759999
+            hash: hash
+            pubKey: pubKey
+            status: WAIT
+            timestamp: 0
+          auditTrailData: eyJhdWRpdENvbnRleHQiOnsiaWQiOiJiNzkwNDMyYi1kNjYyLTQ2MzMtOGNjMi0xMjc0ODZiMjYzYjgiLCJuYW1lIjoiU2FtcGxlIn0sImF1ZGl0RXZlbnRzIjpbeyJkYXRlIjoxNjIyMTk5NTA5NDExLCJ0eXBlIjoiQ0xPU0VEIn1dfQo=
+          public: true
+          proofBundleComplete: true
+          authorizedSignees:
+          - commonName: John Doe
+            identityURL: https://wids.acme.com/identity
+            OTP: OTP
+            anchorId: anchorId
+            signedOn: 0
+            countryCallingCode: "33"
+            phone: "612345678"
+            requiresOTP: true
+            signsFaceToFace: true
+            feedbackMessage: feedbackMessage
+            vars: '{}'
+            id: id
+            lang: fr
+            device: SERVER
+            feedbackSubject: feedbackSubject
+            auditTrailId: auditTrailId
+            email: john.doe@acme.com
+            pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+          - commonName: John Doe
+            identityURL: https://wids.acme.com/identity
+            OTP: OTP
+            anchorId: anchorId
+            signedOn: 0
+            countryCallingCode: "33"
+            phone: "612345678"
+            requiresOTP: true
+            signsFaceToFace: true
+            feedbackMessage: feedbackMessage
+            vars: '{}'
+            id: id
+            lang: fr
+            device: SERVER
+            feedbackSubject: feedbackSubject
+            auditTrailId: auditTrailId
+            email: john.doe@acme.com
+            pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+          testMode: true
+          name: Non-disclosure agreement
+          callbackURL: https://acme.com/callback/woleet/signatureRequest
+          fileURL: https://acme.com/files/NDA.pdf
+          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          lastModified: 1620294759999
+          vars: '{"requesterName":"ACME Corp."}'
+          lang: fr
+          activation: 1720294759999
+          deadline: 1720294759999
+        first: true
+      properties:
+        content:
+          description: Array of signature requests matching the search criteria.
+          items:
+            $ref: '#/components/schemas/signatureRequest'
+          type: array
+        first:
+          description: |
+            `true` if this is the first page.
+          type: boolean
+        last:
+          description: |
+            `true` if this is the last page.
+          type: boolean
+        numberOfElements:
+          description: Number of requests in the retrieved page.
+          type: integer
+        size:
+          description: Number of requests per page.
+          type: integer
+        number:
+          description: Index of the retrieved page (from 0).
+          type: integer
+      type: object
+    signatureRequestIds:
+      example:
+        number: 5
+        last: true
+        numberOfElements: 1
+        size: 5
+        totalPages: 0
+        content:
+        - content
+        - content
+        first: true
+        totalElements: 6
+      properties:
+        content:
+          description: Array of identifiers of signature requests matching the search
+            criteria.
+          items:
+            type: string
+          type: array
+        first:
+          description: |
+            `true` if this is the first page.
+          type: boolean
+        last:
+          description: |
+            `true` if this is the last page.
+          type: boolean
+        totalPages:
+          description: Total number of pages available.
+          type: integer
+        totalElements:
+          description: Total number of signature requests matching the search criteria.
+          type: integer
+        numberOfElements:
+          description: Number of signature requests in the retrieved page.
+          type: integer
+        size:
+          description: Number of signature requests per page.
+          type: integer
+        number:
+          description: Index of the retrieved page (from 0).
+          type: integer
+      type: object
+    authorizedSignee:
+      example:
+        commonName: John Doe
+        identityURL: https://wids.acme.com/identity
+        OTP: OTP
+        anchorId: anchorId
+        signedOn: 0
+        countryCallingCode: "33"
+        phone: "612345678"
+        requiresOTP: true
+        signsFaceToFace: true
+        feedbackMessage: feedbackMessage
+        vars: '{}'
+        id: id
+        lang: fr
+        device: SERVER
+        feedbackSubject: feedbackSubject
+        auditTrailId: auditTrailId
+        email: john.doe@acme.com
+        pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+      properties:
+        commonName:
+          description: The full name of the signer.
+          example: John Doe
+          type: string
+        email:
+          description: |
+            The email of the signer.<br>
+            Two signers cannot have the same email.<br>
+            If set, `commonName` must also be set.
+          example: john.doe@acme.com
+          type: string
+        countryCallingCode:
+          description: |
+            The country calling code of the signer (numbers only, no white space).
+          example: "33"
+          type: string
+        phone:
+          description: |
+            The phone number of the signer (not including the country calling code, numbers only, no white spaces).<br>
+            Two signers cannot have the same phone number.<br>
+            If set, `commonName` must also be set.<br>
+            This phone number must support SMS delivery.
+          example: "612345678"
+          type: string
+        requiresOTP:
+          description: |
+            `true` if the signer must provide an OTP to sign.<br>
+            If `true`, `phone` must be set, since the OTP is sent by SMS.
+          type: boolean
+        signsFaceToFace:
+          description: |
+            `true` if the signer must sign face-to-face, or `false` (or unset) if the signer must sign using the regular signature workflow.<br>
+            If `true`, `requiresOTP` must also be `true`.
+          type: boolean
+        vars:
+          description: |
+            A set of variables (key/value pairs) that can be used to customize the signature request workflow for this signer.<br>
+            Values must be of type null, boolean, string or number: nested JSON objects are not allowed.<br>
+            Variables defined here overwrites the ones defined at signature request level when emailing the signer.<br>
+            **This property is only available to the owner and the signers of the signature request.**
+          type: object
+        lang:
+          description: |
+            The preferred language (provided as an ISO 639-1 string) to use when emailing the signer.<br>
+            If set, this property overwrites the `lang` property defined at signature request level.
+          example: fr
+          type: string
+        pubKey:
+          description: |
+            The public key the signer must use to sign.<br>
+            If not set, the signer can use any key to sign.<br>
+            **Currently only Bitcoin addresses are supported.**
+          example: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+          type: string
+        device:
+          description: |
+            The type of device the signer should use to sign:<br>
+            - SERVER: Woleet.ID Server or equivalent<br>
+            - MOBILE: Woleet.ID Mobile or equivalent<br>
+            - NANO: Ledger Nano S or equivalent<br>
+            If set, the signature application can use it to propose only the corresponding signature mode.
+          enum:
+          - SERVER
+          - MOBILE
+          - NANO
+          type: string
+        identityURL:
+          description: |
+            Web hook to use to verify the signer's identity.<br>
+            If set, this property overwrites the `identityURL` property defined at signature request level.
+          example: https://wids.acme.com/identity
+          type: string
+        feedbackSubject:
+          description: |
+            Last feedback subject reported by the signer to the owner of the signature request.<br>
+            **This property is only available to the owner of the signature request.**
+          readOnly: true
+          type: string
+        feedbackMessage:
+          description: |
+            Last feedback message reported by the signer to the owner of the signature request.<br>
+            **This property is only available to the owner of the signature request.**
+          readOnly: true
+          type: string
+        anchorId:
+          description: If the signer has signed, identifier of the signature anchor
+            created.
+          readOnly: true
+          type: string
+        signedOn:
+          description: If the signer has signed, date of signature (in milliseconds
+            since Unix epoch).
+          format: int64
+          readOnly: true
+          type: integer
+        auditTrailId:
+          description: Identifier of the signer in the audit trail.
+          readOnly: true
+          type: string
+        id:
+          description: |
+            **WARNING: Do not use (test purpose only).**
+          readOnly: true
+          type: string
+        OTP:
+          description: |
+            **WARNING: Do not use (test purpose only).**
+          readOnly: true
+          type: string
+      type: object
+    watcher:
+      description: A watcher of the signature request.
+      example:
+        commonName: John Doe
+        vars: '{"key":"value"}'
+        lang: fr
+        email: john.doe@acme.com
+      properties:
+        email:
+          description: The email of the watcher.
+          example: john.doe@acme.com
+          type: string
+        commonName:
+          description: The full name of the watcher.
+          example: John Doe
+          type: string
+        vars:
+          description: |
+            A set of variables (key/value pairs) that can be used to customize the signature request workflow for this watcher.<br>
+            Values must be of type null, boolean, string or number: nested JSON objects are not allowed.<br>
+            Variables defined here overwrites the ones defined at signature request level when emailing the watcher.
+          example: '{"key":"value"}'
+          type: object
+        lang:
+          description: |
+            The preferred language (provided as an ISO 639-1 string) to use when emailing the watcher.<br>
+            If set, this property overwrites the `lang` property defined at signature request level.
+          example: fr
+          type: string
+      required:
+      - email
+      type: object
+    signatureRequestSign:
+      properties:
+        signature:
+          description: |
+            Signature of the `hashToSign` property of the signature request using the public key `pubKey`, or, if any of `signedIdentity` or `signedIssuerDomain` is provided,
+            signature of SHA256(`hashToSign` + `signedIdentity` + `signedIssuerDomain`) using the public key `pubKey`.
+          type: string
+        pubKey:
+          description: Public key used to sign.
+          example: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+          type: string
+        signedIdentity:
+          description: |
+            X500 Distinguished Name representing the signed identity.<br>
+            If set, the CN (common name) and EMAILADDRESS (email address) attributes must match the common name and email address of the signer as set in the signature request.
+          type: string
+        signedIssuerDomain:
+          description: |
+            Domain name of the identity issuer (ie. of the organization who verified the identity).<br>
+            If set, the domain name of the identity URL must be included in the `signedIssuerDomain` domain name.
+          type: string
+        identityURL:
+          description: |
+            Web hook to use to verify the signer's identity.<br>
+            If set, it is used in place of the `identityURL` property of the signer to create the signature anchor.
+          type: string
+        device:
+          description: |
+            Type of device used to sign:<br>
+            - SERVER: Woleet.ID Server or equivalent<br>
+            - MOBILE: Woleet.ID Mobile or equivalent<br>
+            - NANO: Ledger Nano S or equivalent
+          enum:
+          - SERVER
+          - MOBILE
+          - NANO
+          type: string
+        signeeId:
+          description: |
+            Secret identifier of the signer (provided by email).<br>
+            Only required if `pubKey` was not set for thìs signer.
+          type: string
+        OTP:
+          description: |
+            OTP of the signer (only required if `requiresOTP` was set to `true` for thìs signer).
+          type: string
+      required:
+      - pubKey
+      - signature
+      type: object
+    signatureRequestDelegate:
+      properties:
+        signeeId:
+          description: Secret identifier of the signer (provided by email).
+          type: string
+        OTP:
+          description: |
+            OTP of the signer (only required if `requiresOTP` was set to `true` for thìs signer).
+          type: string
+      required:
+      - signeeId
+      type: object
+    signatureRequestFeedback:
+      properties:
+        signeeId:
+          description: Secret identifier of the signer (provided by email).
+          type: string
+        subject:
+          description: Feedback subject to report to the owner of the signature request.
+          type: string
+        message:
+          description: Feedback message to report to the owner of the signature request.
+          type: string
+      required:
+      - message
+      - signeeId
+      - subject
+      type: object
+    signatureRequestEvent:
+      properties:
+        signeeId:
+          description: Secret identifier of the signer (provided by email).
+          type: string
+        type:
+          description: |
+            Type of the event to report:<br>
+            - DATA_VERIFIED: the signer verified the integrity (ie. hash) of the data to sign
+            - DATA_REVIEWED: the signer reviewed and acceted the data to sign
+            - TCU_ACCEPTED: the signer reviewed and accepted the TCU
+            - TCU_REFUSED: the signer refused the TCU
+            - SIGN_ACCEPTED: the signer accepted to sign the data
+            - SIGN_REFUSED: the signer refused to sign the data
+          enum:
+          - DATA_VERIFIED
+          - DATA_REVIEWED
+          - TCU_ACCEPTED
+          - TCU_REFUSED
+          - SIGN_ACCEPTED
+          - SIGN_REFUSED
+          type: string
+        comment:
+          description: Comment related to the event to report.
+          type: string
+      required:
+      - signeeId
+      - type
+      type: object
+    signatureRequestSignResult:
+      example:
+        anchorId: anchorId
+      properties:
+        anchorId:
+          description: Identifier of the signature anchor created.
+          type: string
+      type: object
+    signatureRequestProofBundle:
+      description: A bundle of all the pieces of evidence of a signature request.
+      example:
+        signatureReceipts:
+        - targetHash: targetHash
+          signature:
+            signedIssuerDomain: signedIssuerDomain
+            signature: signature
+            signedHash: signedHash
+            identityURL: identityURL
+            signedIdentity: signedIdentity
+            pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+          merkleRoot: merkleRoot
+          proof:
+          - left: left
+            right: right
+          - left: left
+            right: right
+          anchors:
+          - sourceId: sourceId
+            type: type
+          - sourceId: sourceId
+            type: type
+          type: type
+          partial: true
+        - targetHash: targetHash
+          signature:
+            signedIssuerDomain: signedIssuerDomain
+            signature: signature
+            signedHash: signedHash
+            identityURL: identityURL
+            signedIdentity: signedIdentity
+            pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+          merkleRoot: merkleRoot
+          proof:
+          - left: left
+            right: right
+          - left: left
+            right: right
+          anchors:
+          - sourceId: sourceId
+            type: type
+          - sourceId: sourceId
+            type: type
+          type: type
+          partial: true
+        auditTrailReceipt:
+          targetHash: targetHash
+          signature:
+            signedIssuerDomain: signedIssuerDomain
+            signature: signature
+            signedHash: signedHash
+            identityURL: identityURL
+            signedIdentity: signedIdentity
+            pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
+          merkleRoot: merkleRoot
+          proof:
+          - left: left
+            right: right
+          - left: left
+            right: right
+          anchors:
+          - sourceId: sourceId
+            type: type
+          - sourceId: sourceId
+            type: type
+          type: type
+          partial: true
+        complete: true
+        auditTrailData: auditTrailData
+      properties:
+        signatureReceipts:
+          description: Proof receipts of the signatures of the file by the signers
+          items:
+            $ref: '#/components/schemas/receipt'
+          type: array
+        auditTrailReceipt:
+          $ref: '#/components/schemas/receipt'
+        auditTrailData:
+          description: Audit trail data (Base64 encoded JSON object)
+          type: string
+        complete:
+          description: |
+            `true` if all pieces of evidence are present in the proof bundle, or `false` if not<br>
+            All the following conditions must be met:<br>
+            - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)<br>
+            - the audit trail is generated and signed by the platform<br>
+            - all the proof receipts are available
+          type: boolean
+      type: object
+    anchor:
+      example:
+        metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
+        signedIssuerDomain: signedIssuerDomain
+        signature: signature
+        created: 1620294758688
+        notifyByEmail: true
+        identityURL: identityURL
+        txId: txId
+        confirmations: 6
+        signedIdentity: signedIdentity
+        tags:
+        - tags
+        - tags
+        public: true
+        name: name
+        signedHash: signedHash
+        callbackURL: https://acme.com/callback/woleet/anchor
+        id: a3790416-16c3-4182-a310-9ef491c38a4c
+        lastModified: 1620294759999
+        hash: hash
+        pubKey: pubKey
+        status: WAIT
+        timestamp: 0
+      properties:
+        id:
+          description: Anchor identifier. It is allocated by the platform, and so
+            must not be provided at creation time.
+          example: a3790416-16c3-4182-a310-9ef491c38a4c
+          readOnly: true
+          type: string
+        created:
+          description: Date of creation (in milliseconds since Unix epoch).
+          example: 1620294758688
+          format: int64
+          readOnly: true
+          type: integer
+        lastModified:
+          description: Date of last modification (in milliseconds since Unix epoch).
+          example: 1620294759999
+          format: int64
+          readOnly: true
+          type: integer
+        name:
+          description: Name of the anchor (doesn't need to be unique).
+          type: string
+        hash:
+          description: |
+            SHA256 hash (ie. the fingerprint) of the data to anchor.<br>
+            The value must be provided as an hexadecimal lowercase string. The hash of the empty file is forbidden.<br>
+            **This property must not be provided when creating a signature anchor: it is automatically set at creation time to the SHA256 hash of the `signature` property provided, meaning that the signature is the actual anchored data.**
+          type: string
+        signedHash:
+          description: |
+            SHA256 hash (ie. the fingerprint) of the signed data.<br>
+            The value must be provided as an hexadecimal lowercase string. The hash of the empty file is forbidden.<br>
+            **This property must not be provided when creating a data anchor.**
+          type: string
+        signedIdentity:
+          description: |
+            X500 Distinguished Name representing the signed identity.<br>
+            **This property must not be provided when creating a data anchor.**
+          type: string
+        signedIssuerDomain:
+          description: |
+            Domain name of the identity issuer (ie. of the organization who verified the identity).<br>
+            If set, the domain name of the identity URL must be included in the `signedIssuerDomain` domain name.<br>
+            **This property must not be provided when creating a data anchor.**
+          type: string
+        pubKey:
+          description: |
+            Public key of the signer.<br>
+            **Currently only Bitcoin addresses are supported.**<br>
+            **This property must not be provided when creating a data anchor.**
+          type: string
+        signature:
+          description: |
+            Signature of the `signedHash` property using the public key `pubKey`, or, if any of the `signedIdentity` or `signedIssuerDomain` properties are provided,
+            signature of SHA256(`signedHash` + `signedIdentity` + `signedIssuerDomain`) using the public key `pubKey`.<br>
+            **Only Bitcoin signatures are currently supported.**<br>
+            **This property must not be provided when creating a data anchor.**
+          type: string
+        identityURL:
+          description: |
+            Web hook of the identity server to use to verify the signer's identity.<br>
+            This URL allows to retrieve the identity associated to the public key `pubKey`.
+            It can also be used to verify that the identity server (itself identified by the TLS certificate of the URL)
+            controls the key used to sign (ie. owns the private part of the key pair) by requesting it to sign some random data.<br>
+            This URL MUST use an HTTPS scheme with a valid and non expired TLS certificate.<br>
+            This URL MUST implement the following GET operation:<br>
+            Query parameters:<br>
+            - `pubKey`: the public key to be verified - mandatory<br>
+            - `leftData`: the left part of the data to be signed (generated randomly by the caller) - if set, the identity server MAY provide a `signature`<br>
+            Output:<br>
+            A JSON object with:
+            - `rightData`: the right part of the data signed (generated randomly by the identity server) - optional<br>
+            - `signature`: the signature of the string `leftData` + `rightData` using the public key `pubKey` - optional<br>
+            - `identity`: the X500 identity associated to the key claimed by the identity server - optional<br>
+            - `key`: additional information about the key - optional<br>
+            If `identity` is not provided, `signature` and `rightData` MUST be provided: in such a case the identity of the signer can be extracted from the TLS certificate.
+          type: string
+        public:
+          description: |
+            `true` (or unset) if the anchor is public (ie. discoverable by its `hash` or `signedHash`) or `false` if it must be private (ie. not discoverable).
+          type: boolean
+        notifyByEmail:
+          description: |
+            `true` if the proof receipt must be sent by email once available, or `false` (or unset) if not.
+          type: boolean
+        tags:
+          description: |
+            Set of tags associated to the anchor. There is no restriction on tag names, except they cannot contain spaces.<br>
+            Tags are aimed at classifying and searching anchors.
+          items:
+            type: string
+          type: array
+        metadata:
+          description: |
+            A set of variables (key/values pairs) to store with the anchor.<br>
+            Values must be of type null, boolean, string or number: nested JSON objects are not allowed.
+          example: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
+          type: object
+        callbackURL:
+          description: |
+            Web hook to be called by the platform whenever the `status` property of the anchor changes:<br>
+            the platform does a POST request on this URL with the anchor as a JSON object in the request body.<br>
+            Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br>
+            Please refer to the <a target="_blank" href="https://doc.woleet.io/reference#using-callbacks">documentation</a> for more details.
+          example: https://acme.com/callback/woleet/anchor
+          type: string
+        status:
+          description: |
+            Status of the anchor:<br>
+            - WAIT: waiting to be processed by the platform (the proof receipt is not yet available for download)<br>
+            - NEW: waiting to be sent to the blockchain (the proof receipt is not yet available for download)<br>
+            - SENT: sent to the blockchain (the proof receipt is ready to download)<br>
+            - CONFIRMED: confirmed at least 6 times by the blockchain (the proof receipt can be verified)
+          enum:
+          - WAIT
+          - NEW
+          - SENT
+          - CONFIRMED
+          readOnly: true
+          type: string
+        timestamp:
+          description: |
+            Proven timestamp of the data (for a data anchor) or of the signature (for a signature anchor).<br>
+            This is actually the time of the Bitcoin block into which the anchoring process occurred (in milliseconds since Unix epoch).<br>
+            Any data whose SHA256 hash equals this anchor's hash is proven to exist at that time and has not been modified since.<br>
+            This property is set when the first confirmation of the Bitcoin block occurs. Once set, the associated proof receipt can be verified (without having to wait for 6 confirmations).
+          format: int64
+          readOnly: true
+          type: integer
+        confirmations:
+          description: |
+            Number of confirmations of the Bitcoin block into which the anchoring process occurred.<br>
+            This property is set when the first confirmation of the Bitcoin block occurs, and removed once the block is confirmed at least 6 times.
+          format: int32
+          readOnly: true
+          type: integer
+        txId:
+          description: Identifier of the Bitcoin transaction where the anchoring occurred.
+          readOnly: true
+          type: string
+      required:
+      - name
+      type: object
+    anchors:
+      description: An array of anchors.
+      example:
+        number: 1
+        last: true
+        numberOfElements: 0
+        size: 6
+        content:
+        - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
+          signedIssuerDomain: signedIssuerDomain
+          signature: signature
+          created: 1620294758688
+          notifyByEmail: true
+          identityURL: identityURL
+          txId: txId
+          confirmations: 6
+          signedIdentity: signedIdentity
+          tags:
+          - tags
+          - tags
+          public: true
+          name: name
+          signedHash: signedHash
+          callbackURL: https://acme.com/callback/woleet/anchor
+          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          lastModified: 1620294759999
+          hash: hash
+          pubKey: pubKey
+          status: WAIT
+          timestamp: 0
+        - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
+          signedIssuerDomain: signedIssuerDomain
+          signature: signature
+          created: 1620294758688
+          notifyByEmail: true
+          identityURL: identityURL
+          txId: txId
+          confirmations: 6
+          signedIdentity: signedIdentity
+          tags:
+          - tags
+          - tags
+          public: true
+          name: name
+          signedHash: signedHash
+          callbackURL: https://acme.com/callback/woleet/anchor
+          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          lastModified: 1620294759999
+          hash: hash
+          pubKey: pubKey
+          status: WAIT
+          timestamp: 0
+        first: true
+      properties:
+        content:
+          description: Array of anchors matching the search criteria.
+          items:
+            $ref: '#/components/schemas/anchor'
+          type: array
+        first:
+          description: |
+            `true` if this is the first page.
+          type: boolean
+        last:
+          description: |
+            `true` if this is the last page.
+          type: boolean
+        numberOfElements:
+          description: Number of anchors in the retrieved page.
+          type: integer
+        size:
+          description: Number of anchors per page.
+          type: integer
+        number:
+          description: Index of the retrieved page (from 0).
+          type: integer
+      type: object
+    anchorIds:
+      description: An array of anchor identifiers.
+      example:
+        number: 5
+        last: true
+        numberOfElements: 1
+        size: 5
+        totalPages: 0
+        content:
+        - content
+        - content
+        first: true
+        totalElements: 6
+      properties:
+        content:
+          description: Array of identifiers of anchors matching the search criteria.
+          items:
+            type: string
+          type: array
+        first:
+          description: |
+            `true` if this is the first page.
+          type: boolean
+        last:
+          description: |
+            `true` if this is the last page.
+          type: boolean
+        totalPages:
+          description: Total number of pages available.
+          type: integer
+        totalElements:
+          description: Total number of anchors matching the search criteria.
+          type: integer
+        numberOfElements:
+          description: Number of anchors in the retrieved page.
+          type: integer
+        size:
+          description: Number of anchors per page.
+          type: integer
+        number:
+          description: Index of the retrieved page (from 0).
+          type: integer
+      type: object
+    receiptVerificationStatus:
+      example:
+        timestampVerificationStatus:
+          code: VERIFIED
+          text: text
+          confirmations: 5
+          timestamp: 1
+        code: VERIFIED
+        identityVerificationStatus:
+          code: VERIFIED
+          signedIssuerDomain: signedIssuerDomain
+          certificates:
+          - subject:
+              ST: ST
+              C: C
+              OU: OU
+              EMAILADDRESS: EMAILADDRESS
+              CN: CN
+              L: L
+              O: O
+            issuer:
+              ST: ST
+              C: C
+              OU: OU
+              EMAILADDRESS: EMAILADDRESS
+              CN: CN
+              L: L
+              O: O
+          - subject:
+              ST: ST
+              C: C
+              OU: OU
+              EMAILADDRESS: EMAILADDRESS
+              CN: CN
+              L: L
+              O: O
+            issuer:
+              ST: ST
+              C: C
+              OU: OU
+              EMAILADDRESS: EMAILADDRESS
+              CN: CN
+              L: L
+              O: O
+          identity:
+            commonName: Jim Smith
+            country: FR
+            organization: Woleet
+            locality: Rennes
+            organizationalUnit: Sales
+          text: text
+          key:
+            name: Jim Smith's key
+            expiration: 1569542400000
+            revokedAt: 1569542400000
+            pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
+            status: valid
+          signedIdentity:
+            commonName: Jim Smith
+            country: FR
+            organization: Woleet
+            locality: Rennes
+            organizationalUnit: Sales
+        text: text
+        confirmations: 6
+        signatureVerificationStatus:
+          code: VERIFIED
+          text: text
+        timestamp: 0
+      properties:
+        code:
+          description: |
+            Proof receipt verification status code:<br>
+            - VERIFIED: success: the proof receipt is verified: both the proof of timestamp AND the proof of signature (if applicable) are valid<br>
+            - INVALID_SIGNATURE: error: the proof of signature is invalid<br>
+            - any other verification status code: the proof of timestamp is not ready or invalid
+          enum:
+          - VERIFIED
+          - TX_NOT_SENT
+          - TX_NOT_CONFIRMED
+          - INVALID_PROOF
+          - TX_NOT_FOUND
+          - TX_MISMATCH_RECEIPT
+          - INVALID_SIGNATURE
+          type: string
+        text:
+          description: Proof receipt verification status text giving more insight
+            about verification errors.
+          type: string
+        timestamp:
+          description: |
+            Proven timestamp of the data (for a data anchor) or of the signature (for a signature anchor).<br>
+            This is actually the time of the Bitcoin block into which the anchoring process occurred (in milliseconds since Unix epoch).
+          format: int64
+          type: integer
+        confirmations:
+          description: Number of confirmations of the Bitcoin block into which the
+            anchoring process occurred.
+          format: int32
+          type: integer
+        timestampVerificationStatus:
+          $ref: '#/components/schemas/timestampVerificationStatus'
+        signatureVerificationStatus:
+          $ref: '#/components/schemas/signatureVerificationStatus'
+        identityVerificationStatus:
+          $ref: '#/components/schemas/identityVerificationStatus'
+      type: object
+    timestampVerificationStatus:
+      example:
+        code: VERIFIED
+        text: text
+        confirmations: 5
+        timestamp: 1
+      properties:
+        code:
+          description: |
+            Timestamp verification status code:<br>
+            - VERIFIED: success: the proof receipt is verified<br>
+            The receipt format is valid, the transaction is present in the Bitcoin blockchain and confirmed at least once,
+            the receipt contains a valid Merkle proof linking its `targetHash` property to the transaction's `OP_RETURN` field.<br>
+            The creation time and the number of confirmation of the block containing the transaction is returned
+            in the `timestamp` and `confirmations` properties.<br>
+            Any data whose SHA256 hash matches the proof receipt's `targetHash` is proven to exist at that time and has not been modified since.<br>
+            - TX_NOT_SENT: warning: the transaction has not yet been sent to the blockchain (ie. the data or the signature has not yet been anchored)<br>
+            - TX_NOT_CONFIRMED: warning: the transaction is not yet confirmed by the blockchain (ie. not yet included in a block)<br>
+            - TX_NOT_FOUND: error: the receipt's `anchors` property does not include a valid Bitcoin transaction<br>
+            - INVALID_PROOF: error: the receipt's `proof` property is not a valid Merkle proof<br>
+            - TX_MISMATCH_RECEIPT: error: the receipt's `merkleRoot` property does not match the transaction's `OP_RETURN` field
+          enum:
+          - VERIFIED
+          - TX_NOT_SENT
+          - TX_NOT_CONFIRMED
+          - INVALID_PROOF
+          - TX_NOT_FOUND
+          - TX_MISMATCH_RECEIPT
+          type: string
+        text:
+          description: Timestamp verification status text giving more insight about
+            verification errors.
+          type: string
+        timestamp:
+          description: |
+            Proven timestamp of the data (for a data anchor) or of the signature (for a signature anchor).<br>
+            This is actually the time of the Bitcoin block into which the anchoring process occurred (in milliseconds since Unix epoch).
+          format: int64
+          type: integer
+        confirmations:
+          description: Number of confirmations of the Bitcoin block into which the
+            anchoring process occurred.
+          format: int32
+          type: integer
+      type: object
+    signatureVerificationStatus:
+      example:
+        code: VERIFIED
+        text: text
+      properties:
+        code:
+          description: |
+            Signature verification status code:<br>
+            - VERIFIED: success: the receipt's `signature` property is a valid signature of `signedHash`,
+            or, if any of `signedIdentity` or `signedIssuerDomain` is provided, a valid signature of
+            SHA256(`signedHash` + `signedIdentity` + `signedIssuerDomain`)
+            using the public key `pubKey`.<br>
+            - SIGNATURE_MISMATCH_RECEIPT: error: the receipt's `targetHash` does not match the SHA256 hash of `signature`.<br>
+            - INVALID_SIGNATURE: error: the receipt's `signature` property is invalid.
+          enum:
+          - VERIFIED
+          - INVALID_SIGNATURE
+          - SIGNATURE_MISMATCH_RECEIPT
+          type: string
+        text:
+          description: Signature verification status text (gives more insights about
+            the verification process).
+          type: string
+      type: object
+    identityVerificationStatus:
+      example:
+        code: VERIFIED
+        signedIssuerDomain: signedIssuerDomain
+        certificates:
+        - subject:
+            ST: ST
+            C: C
+            OU: OU
+            EMAILADDRESS: EMAILADDRESS
+            CN: CN
+            L: L
+            O: O
+          issuer:
+            ST: ST
+            C: C
+            OU: OU
+            EMAILADDRESS: EMAILADDRESS
+            CN: CN
+            L: L
+            O: O
+        - subject:
+            ST: ST
+            C: C
+            OU: OU
+            EMAILADDRESS: EMAILADDRESS
+            CN: CN
+            L: L
+            O: O
+          issuer:
+            ST: ST
+            C: C
+            OU: OU
+            EMAILADDRESS: EMAILADDRESS
+            CN: CN
+            L: L
+            O: O
+        identity:
+          commonName: Jim Smith
+          country: FR
+          organization: Woleet
+          locality: Rennes
+          organizationalUnit: Sales
+        text: text
+        key:
+          name: Jim Smith's key
+          expiration: 1569542400000
+          revokedAt: 1569542400000
+          pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
+          status: valid
+        signedIdentity:
+          commonName: Jim Smith
+          country: FR
+          organization: Woleet
+          locality: Rennes
+          organizationalUnit: Sales
+      properties:
+        code:
+          description: |
+            Identity verification status code:<br>
+            - VERIFIED: success: the signature key is controlled by the identity server (ie. the server provided a valid proof of ownership of the key),<br>
+            and/or the signature key matches an identity on the identity server (ie. the server claimed the signer identity),<br>
+            and/or the identity is signed (ie. the signer claimed his identity by including it in the signed data),<br>
+            and/or the signed identity matches the one on the identity server (both the signer and the identity server claim the identity),<br>
+            - HTTP_ERROR: error: the identity URL cannot be called or returned an HTTP error other than 404<br>
+            - IDENTITY_NOT_FOUND: error: the key does not match any identity on the identity server (ie. the identity URL returned a HTTP error 404)<br>
+            - IDENTITY_MISMATCH: error: the signed identity mismatches the identity on the identity server<br>
+            - INVALID_SIGNATURE: error: the identity server returned an invalid signature (ie. the server failed to provide a valid proof of ownership of the key)<br>
+            - DEPRECATED_KEY: error: the key expired or was revoked before the signature timestamp.
+          enum:
+          - VERIFIED
+          - HTTP_ERROR
+          - IDENTITY_NOT_FOUND
+          - IDENTITY_MISMATCH
+          - INVALID_SIGNATURE
+          - DEPRECATED_KEY
+          type: string
+        text:
+          description: Identity verification status text (gives more insights about
+            the verification process).
+          type: string
+        certificates:
+          description: Array of subjects and issuers of the certificates extracted
+            from the identity URL's TLS certificate.
+          items:
+            $ref: '#/components/schemas/X509SubjectIssuer'
+          type: array
+        identity:
+          $ref: '#/components/schemas/identity'
+        signedIdentity:
+          $ref: '#/components/schemas/identity'
+        signedIssuerDomain:
+          description: Domain name of the identity issuer (ie. of the organization
+            who verified the identity).
+          type: string
+        key:
+          $ref: '#/components/schemas/key'
+      type: object
+    X509SubjectIssuer:
+      example:
+        subject:
+          ST: ST
+          C: C
+          OU: OU
+          EMAILADDRESS: EMAILADDRESS
+          CN: CN
+          L: L
+          O: O
+        issuer:
+          ST: ST
+          C: C
+          OU: OU
+          EMAILADDRESS: EMAILADDRESS
+          CN: CN
+          L: L
+          O: O
+      properties:
+        subject:
+          $ref: '#/components/schemas/X500Name'
+        issuer:
+          $ref: '#/components/schemas/X500Name'
+      type: object
+    X500Name:
+      description: X500 Distinguished Name.
+      example:
+        ST: ST
+        C: C
+        OU: OU
+        EMAILADDRESS: EMAILADDRESS
+        CN: CN
+        L: L
+        O: O
+      properties:
+        C:
+          description: Country code
+          type: string
+        ST:
+          description: State or Province
+          type: string
+        L:
+          description: Locality
+          type: string
+        O:
+          description: Organization
+          type: string
+        OU:
+          description: Organizational Unit
+          type: string
+        CN:
+          description: Common Name
+          type: string
+        EMAILADDRESS:
+          description: Email address
+          type: string
+      type: object
+    identity:
+      description: Signer's identity provided as a set of X.500 attributes (see https://www.ietf.org/rfc/rfc4519.txt).
+      example:
+        commonName: Jim Smith
+        country: FR
+        organization: Woleet
+        locality: Rennes
+        organizationalUnit: Sales
+      properties:
+        commonName:
+          description: commonName (CN) (2.5.4.3)
+          example: Jim Smith
+          type: string
+        organization:
+          description: organizationName (O) (2.5.4.10)
+          example: Woleet
+          type: string
+        organizationalUnit:
+          description: organizationalUnitName (OU) (2.5.4.11)
+          example: Sales
+          type: string
+        locality:
+          description: localityName (L) (2.5.4.7)
+          example: Rennes
+          type: string
+        country:
+          description: countryName (C) (2.5.4.6)
+          example: FR
+          type: string
+      required:
+      - commonName
+      type: object
+    key:
+      description: Key information.
+      example:
+        name: Jim Smith's key
+        expiration: 1569542400000
+        revokedAt: 1569542400000
+        pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
+        status: valid
+      properties:
+        name:
+          description: Key name.
+          example: Jim Smith's key
+          type: string
+        pubKey:
+          description: Public key (bitcoin address when using BIP39 keys).
+          example: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
+          type: string
+        status:
+          description: |
+            Key status:<br>
+            `valid`: the key is valid and can be used to sign<br>
+            `expired`: the key expired at `expiration`<br>
+            `revoked`: the key was revoked at `revokedAt`
+          enum:
+          - valid
+          - expired
+          - revoked
+          example: valid
+          type: string
+        expiration:
+          description: |
+            Key expiration date (Unix ms timestamp).
+            <br>Note that this property is not returned if the key has no expiration date.
+          example: 1569542400000
+          format: int64
+          type: integer
+        revokedAt:
+          description: |
+            Key revocation date (Unix ms timestamp).
+            <br>Note that this property is not returned if the key is not yet revoked.
+          example: 1569542400000
+          format: int64
+          type: integer
+      type: object
+    token:
+      example:
+        token: token
+      properties:
+        token:
+          description: The JWT token value to provide in the `Bearer` scheme of the
+            `Authorization` header.
+          type: string
+      type: object
+    tokens:
+      example:
+        tokens:
+        - tokens
+        - tokens
+      properties:
+        tokens:
+          description: Array of users matching the search criteria.
+          items:
+            type: string
+          type: array
+      required:
+      - tokens
+      type: object
+    credits:
+      example:
+        signCredits: 6
+        credits: 0
+        signatureRequestCredits: 1
+      properties:
+        credits:
+          description: The remaining number of anchoring credits of the authenticated
+            user's account.
+          type: integer
+        signCredits:
+          description: The remaining number of signature credits of the authenticated
+            user's account.
+          type: integer
+        signatureRequestCredits:
+          description: The remaining number of signature request credits of the authenticated
+            user's account.
+          type: integer
+      type: object
+    user:
+      example:
+        password: password
+        created: 1620294758688
+        roles:
+        - ROLE_USER
+        - ROLE_USER
+        id: a3790416-16c3-4182-a310-9ef491c38a4c
+        lastModified: 1620294759999
+        email: email
+        info:
+          firstName: firstName
+          lastName: lastName
+          country: country
+          company: company
+        status: PENDING
+      properties:
+        id:
+          description: User identifier. It is allocated by the platform, and so must
+            not be provided at creation time.
+          example: a3790416-16c3-4182-a310-9ef491c38a4c
+          readOnly: true
+          type: string
+        created:
+          description: Date of creation (in milliseconds since Unix epoch).
+          example: 1620294758688
+          format: int64
+          readOnly: true
+          type: integer
+        lastModified:
+          description: Date of last modification (in milliseconds since Unix epoch).
+          example: 1620294759999
+          format: int64
+          readOnly: true
+          type: integer
+        email:
+          description: Email of the user.
+          type: string
+        password:
+          description: Password of the user (it must be provided at creation time).
+          type: string
+        roles:
+          description: Array of user roles.
+          items:
+            default: ROLE_USER
+            description: |
+              User role:<br>
+              - ROLE_USER: regular domain user<br>
+              - ROLE_DOMAIN_ADMIN: domain administrator.
+            enum:
+            - ROLE_USER
+            - ROLE_DOMAIN_ADMIN
+            type: string
+          type: array
+        info:
+          $ref: '#/components/schemas/info'
+        status:
+          default: PENDING
+          description: |
+            The status of the user:<br>
+            - PENDING: the user email need to be validated<br>
+            - APPROVED: the user can loging<br>
+            - DISABLED: the user cannot login
+          enum:
+          - PENDING
+          - APPROVED
+          - DISABLED
+          type: string
+      required:
+      - email
+      - info
+      - password
+      - roles
+      - status
+      type: object
+    users:
+      example:
+        number: 1
+        last: true
+        numberOfElements: 0
+        size: 6
+        content:
+        - password: password
+          created: 1620294758688
+          roles:
+          - ROLE_USER
+          - ROLE_USER
+          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          lastModified: 1620294759999
+          email: email
+          info:
+            firstName: firstName
+            lastName: lastName
+            country: country
+            company: company
+          status: PENDING
+        - password: password
+          created: 1620294758688
+          roles:
+          - ROLE_USER
+          - ROLE_USER
+          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          lastModified: 1620294759999
+          email: email
+          info:
+            firstName: firstName
+            lastName: lastName
+            country: country
+            company: company
+          status: PENDING
+        first: true
+      properties:
+        content:
+          description: Array of users matching the search criteria.
+          items:
+            $ref: '#/components/schemas/user'
+          type: array
+        first:
+          description: |
+            `true` if this is the first page.
+          type: boolean
+        last:
+          description: |
+            `true` if this is the last page.
+          type: boolean
+        numberOfElements:
+          description: Number of users in the retrieved page.
+          type: integer
+        size:
+          description: Number of users per page.
+          type: integer
+        number:
+          description: Index of the retrieved page (from 0).
+          type: integer
+      type: object
+    info:
+      example:
+        firstName: firstName
+        lastName: lastName
+        country: country
+        company: company
+      properties:
+        firstName:
+          description: User's first name.
+          type: string
+        lastName:
+          description: User's last name.
+          type: string
+        company:
+          description: User's company.
+          type: string
+        country:
+          description: User's country.
+          type: string
+      type: object
+    callbackSecret:
+      example:
+        secret: secret
+      properties:
+        secret:
+          description: The secret used to sign the callback.
+          type: string
+      type: object
+  securitySchemes:
+    BasicAuth:
+      description: |
+        Basic authentication over `HTTPS`.<br>
+        You must provide `Base64("{email}:{password}")` in the `Basic` scheme of the `Authorization` header.
+      scheme: basic
+      type: http
+    JWTAuth:
+      description: |
+        JWT authentication over `HTTPS`.<br>
+        You must provide a JWT token value in the `Bearer` scheme of the `Authorization` header.
+      in: header
+      name: Authorization
+      type: apiKey
+x-samples-languages:
+- curl
+- javascript
+- node
+- java
+- python
+- php
+

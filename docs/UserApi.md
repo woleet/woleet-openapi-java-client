@@ -153,7 +153,7 @@ This endpoint does not need any parameter.
 
 <a name="getTokens"></a>
 # **getTokens**
-> List&lt;String&gt; getTokens()
+> Tokens getTokens()
 
 Get user&#39;s registered JWT tokens.
 
@@ -187,7 +187,7 @@ public class Example {
 
     UserApi apiInstance = new UserApi(defaultClient);
     try {
-      List<String> result = apiInstance.getTokens();
+      Tokens result = apiInstance.getTokens();
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling UserApi#getTokens");
@@ -205,7 +205,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**List&lt;String&gt;**
+[**Tokens**](Tokens.md)
 
 ### Authorization
 
@@ -256,7 +256,7 @@ public class Example {
     //JWTAuth.setApiKeyPrefix("Token");
 
     UserApi apiInstance = new UserApi(defaultClient);
-    InlineObject tokens = new InlineObject(); // InlineObject | 
+    Tokens tokens = new Tokens(); // Tokens | The list of JWT tokens to update.
     try {
       apiInstance.putTokens(tokens);
     } catch (ApiException e) {
@@ -274,7 +274,7 @@ public class Example {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **tokens** | [**InlineObject**](InlineObject.md)|  |
+ **tokens** | [**Tokens**](Tokens.md)| The list of JWT tokens to update. |
 
 ### Return type
 

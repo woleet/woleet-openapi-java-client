@@ -1,9 +1,11 @@
 # woleet-api-client
 
 Woleet API
-- API version: 1.8.0
+- API version: 1.10.0
 
-Welcome to **Woleet API reference documentation**.<br> It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/reference)** before reading this documentation. 
+Welcome to **Woleet API reference documentation**.<br>
+It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/reference)** before reading this documentation.
+
 
   For more information, please visit [https://www.woleet.io/](https://www.woleet.io/)
 
@@ -40,7 +42,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>io.woleet</groupId>
   <artifactId>woleet-api-client</artifactId>
-  <version>1.8.0</version>
+  <version>1.10.0</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -50,7 +52,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "io.woleet:woleet-api-client:1.8.0"
+compile "io.woleet:woleet-api-client:1.10.0"
 ```
 
 ### Others
@@ -63,7 +65,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/woleet-api-client-1.8.0.jar`
+* `target/woleet-api-client-1.10.0.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -132,7 +134,7 @@ Class | Method | HTTP request | Description
 *DomainApi* | [**searchDomainUsers**](docs/DomainApi.md#searchDomainUsers) | **GET** /domain/admin/users | Search for domain users.
 *DomainApi* | [**updateDomainUser**](docs/DomainApi.md#updateDomainUser) | **PUT** /domain/admin/user/{userId} | Update a domain user.
 *ReceiptApi* | [**getOTSReceipt**](docs/ReceiptApi.md#getOTSReceipt) | **GET** /receipt/{anchorId}/ots | Get the proof receipt of an anchor (OpenTimestamps proof format).
-*ReceiptApi* | [**getReceipt**](docs/ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorId} | Get the proof receipt of an anchor (Chainpoint 2.x proof format).
+*ReceiptApi* | [**getReceipt**](docs/ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorId} | Get the proof receipt of an anchor.
 *ReceiptApi* | [**verifyReceipt**](docs/ReceiptApi.md#verifyReceipt) | **POST** /receipt/verify | Verify a proof receipt.
 *SignatureRequestApi* | [**createSignatureRequest**](docs/SignatureRequestApi.md#createSignatureRequest) | **POST** /signatureRequest | Create a new signature request.
 *SignatureRequestApi* | [**delegateSignatureRequest**](docs/SignatureRequestApi.md#delegateSignatureRequest) | **POST** /signatureRequest/{requestId}/delegate | Sign a signature request by delegating the signature.
@@ -141,7 +143,8 @@ Class | Method | HTTP request | Description
 *SignatureRequestApi* | [**getSignatureRequest**](docs/SignatureRequestApi.md#getSignatureRequest) | **GET** /signatureRequest/{requestId} | Get a signature request by its identifier.
 *SignatureRequestApi* | [**getSignatureRequestAttestation**](docs/SignatureRequestApi.md#getSignatureRequestAttestation) | **GET** /signatureRequest/{requestId}/attestation | Download the Signature Attestation document of a signature request.
 *SignatureRequestApi* | [**getSignatureRequestProofBundle**](docs/SignatureRequestApi.md#getSignatureRequestProofBundle) | **GET** /signatureRequest/{requestId}/proofbundle | Get the proof bundle of a signature request.
-*SignatureRequestApi* | [**reportSignatureRequestFeedback**](docs/SignatureRequestApi.md#reportSignatureRequestFeedback) | **POST** /signatureRequest/{requestId}/feedback | Report feedback about a signature request.
+*SignatureRequestApi* | [**reportSignatureRequestEvent**](docs/SignatureRequestApi.md#reportSignatureRequestEvent) | **POST** /signatureRequest/{requestId}/event | Report an event on a signature request.
+*SignatureRequestApi* | [**reportSignatureRequestFeedback**](docs/SignatureRequestApi.md#reportSignatureRequestFeedback) | **POST** /signatureRequest/{requestId}/feedback | Report a feedback about a signature request.
 *SignatureRequestApi* | [**searchSignatureRequestIds**](docs/SignatureRequestApi.md#searchSignatureRequestIds) | **GET** /signatureRequestIds | Search for public signature request identifiers.
 *SignatureRequestApi* | [**searchSignatureRequests**](docs/SignatureRequestApi.md#searchSignatureRequests) | **GET** /signatureRequests | Search for signature requests.
 *SignatureRequestApi* | [**sendSignatureRequestOTP**](docs/SignatureRequestApi.md#sendSignatureRequestOTP) | **GET** /signatureRequest/{requestId}/otp/{signeeId} | Generate and send an OTP to a signer of a signature request.
@@ -167,11 +170,9 @@ Class | Method | HTTP request | Description
  - [AuthorizedSignee](docs/AuthorizedSignee.md)
  - [CallbackSecret](docs/CallbackSecret.md)
  - [Credits](docs/Credits.md)
- - [GetSignatureRequestProofBundle](docs/GetSignatureRequestProofBundle.md)
  - [Identity](docs/Identity.md)
  - [IdentityVerificationStatus](docs/IdentityVerificationStatus.md)
  - [Info](docs/Info.md)
- - [InlineObject](docs/InlineObject.md)
  - [Key](docs/Key.md)
  - [Receipt](docs/Receipt.md)
  - [ReceiptAnchorsNode](docs/ReceiptAnchorsNode.md)
@@ -180,13 +181,18 @@ Class | Method | HTTP request | Description
  - [ReceiptVerificationStatus](docs/ReceiptVerificationStatus.md)
  - [SignatureRequest](docs/SignatureRequest.md)
  - [SignatureRequestDelegate](docs/SignatureRequestDelegate.md)
+ - [SignatureRequestEvent](docs/SignatureRequestEvent.md)
  - [SignatureRequestFeedback](docs/SignatureRequestFeedback.md)
  - [SignatureRequestIds](docs/SignatureRequestIds.md)
+ - [SignatureRequestProofBundle](docs/SignatureRequestProofBundle.md)
  - [SignatureRequestSign](docs/SignatureRequestSign.md)
  - [SignatureRequestSignResult](docs/SignatureRequestSignResult.md)
  - [SignatureRequestState](docs/SignatureRequestState.md)
  - [SignatureRequests](docs/SignatureRequests.md)
+ - [SignatureVerificationStatus](docs/SignatureVerificationStatus.md)
+ - [TimestampVerificationStatus](docs/TimestampVerificationStatus.md)
  - [Token](docs/Token.md)
+ - [Tokens](docs/Tokens.md)
  - [User](docs/User.md)
  - [Users](docs/Users.md)
  - [Watcher](docs/Watcher.md)

@@ -2,6 +2,7 @@
 
 # AnchorIds
 
+An array of anchor identifiers.
 ## Properties
 
 Name | Type | Description | Notes
