@@ -1,7 +1,7 @@
 # woleet-api-client
 
 Woleet API
-- API version: 1.10.0
+- API version: 1.11.1
 
 Welcome to **Woleet API reference documentation**.<br>
 It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/reference)** before reading this documentation.
@@ -42,7 +42,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>io.woleet</groupId>
   <artifactId>woleet-api-client</artifactId>
-  <version>1.10.0</version>
+  <version>1.11.1</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -52,7 +52,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "io.woleet:woleet-api-client:1.10.0"
+compile "io.woleet:woleet-api-client:1.11.1"
 ```
 
 ### Others
@@ -65,7 +65,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/woleet-api-client-1.10.0.jar`
+* `target/woleet-api-client-1.11.1.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -137,7 +137,7 @@ Class | Method | HTTP request | Description
 *ReceiptApi* | [**getReceipt**](docs/ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorId} | Get the proof receipt of an anchor.
 *ReceiptApi* | [**verifyReceipt**](docs/ReceiptApi.md#verifyReceipt) | **POST** /receipt/verify | Verify a proof receipt.
 *SignatureRequestApi* | [**createSignatureRequest**](docs/SignatureRequestApi.md#createSignatureRequest) | **POST** /signatureRequest | Create a new signature request.
-*SignatureRequestApi* | [**delegateSignatureRequest**](docs/SignatureRequestApi.md#delegateSignatureRequest) | **POST** /signatureRequest/{requestId}/delegate | Sign a signature request by delegating the signature.
+*SignatureRequestApi* | [**delegateSignSignatureRequest**](docs/SignatureRequestApi.md#delegateSignSignatureRequest) | **POST** /signatureRequest/{requestId}/delegate | Sign a signature request by delegating the signature.
 *SignatureRequestApi* | [**deleteSignatureRequest**](docs/SignatureRequestApi.md#deleteSignatureRequest) | **DELETE** /signatureRequest/{requestId} | Delete a signature request.
 *SignatureRequestApi* | [**downloadSignatureRequestFile**](docs/SignatureRequestApi.md#downloadSignatureRequestFile) | **GET** /signatureRequest/{requestId}/file | Download the file to sign.
 *SignatureRequestApi* | [**getSignatureRequest**](docs/SignatureRequestApi.md#getSignatureRequest) | **GET** /signatureRequest/{requestId} | Get a signature request by its identifier.
@@ -155,9 +155,14 @@ Class | Method | HTTP request | Description
 *SignatureRequestApi* | [**uploadSignatureRequestFile**](docs/SignatureRequestApi.md#uploadSignatureRequestFile) | **POST** /signatureRequest/{requestId}/file | Upload the file to sign.
 *TokenApi* | [**generateToken**](docs/TokenApi.md#generateToken) | **GET** /token | Generate a JWT token.
 *TokenApi* | [**revokeToken**](docs/TokenApi.md#revokeToken) | **DELETE** /token | Revoke a JWT token.
+*UserApi* | [**deleteKey**](docs/UserApi.md#deleteKey) | **DELETE** /user/key/{key} | Delete a key and its value from the user&#39;s k/v store.
 *UserApi* | [**getCallbackSecret**](docs/UserApi.md#getCallbackSecret) | **GET** /user/callbackSecret | Get the current callback secret (null if not set).
 *UserApi* | [**getCredits**](docs/UserApi.md#getCredits) | **GET** /user/credits | Get user&#39;s credits.
+*UserApi* | [**getKey**](docs/UserApi.md#getKey) | **GET** /user/key/{key} | Read the value of a key from the user&#39;s k/v store.
 *UserApi* | [**getTokens**](docs/UserApi.md#getTokens) | **GET** /user/tokens | Get user&#39;s registered JWT tokens.
+*UserApi* | [**patchKey**](docs/UserApi.md#patchKey) | **PATCH** /user/key/{key} | Patch the value of a key in the user&#39;s k/v store.
+*UserApi* | [**postKey**](docs/UserApi.md#postKey) | **POST** /user/key/{key} | Create a new key and store its value in the user&#39;s k/v store.
+*UserApi* | [**putKey**](docs/UserApi.md#putKey) | **PUT** /user/key/{key} | Update the value of a key in the user&#39;s k/v store.
 *UserApi* | [**putTokens**](docs/UserApi.md#putTokens) | **PUT** /user/tokens | Update user&#39;s registered JWT tokens.
 *UserApi* | [**updateCallbackSecret**](docs/UserApi.md#updateCallbackSecret) | **PUT** /user/callbackSecret | Generates a new callback secret.
 

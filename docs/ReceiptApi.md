@@ -15,7 +15,7 @@ Method | HTTP request | Description
 
 Get the proof receipt of an anchor (OpenTimestamps proof format).
 
-Use this operation to retrieve the OpenTimestamps proof receipt associated to a given data anchor (note that this operation is NOT available for signature anchors).&lt;br&gt; This binary file is only available once the anchor status is SENT.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier need to be known). 
+Use this operation to retrieve the OpenTimestamps proof receipt associated to a given data anchor (note that this operation is NOT available for signature anchors).&lt;br&gt; This binary file is only available once the anchor status is SENT.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier needs to be known). 
 
 ### Example
 ```java
@@ -23,7 +23,6 @@ Use this operation to retrieve the OpenTimestamps proof receipt associated to a 
 import io.woleet.api.ApiClient;
 import io.woleet.api.ApiException;
 import io.woleet.api.Configuration;
-import io.woleet.api.auth.*;
 import io.woleet.api.models.*;
 import io.woleet.api.client.ReceiptApi;
 
@@ -31,17 +30,6 @@ public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("https://api.woleet.io/v1");
-    
-    // Configure HTTP basic authorization: BasicAuth
-    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-    BasicAuth.setUsername("YOUR USERNAME");
-    BasicAuth.setPassword("YOUR PASSWORD");
-
-    // Configure API key authorization: JWTAuth
-    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-    JWTAuth.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //JWTAuth.setApiKeyPrefix("Token");
 
     ReceiptApi apiInstance = new ReceiptApi(defaultClient);
     String anchorId = "anchorId_example"; // String | Identifier of the data anchor for which to build the proof receipt.
@@ -71,7 +59,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -91,7 +79,7 @@ Name | Type | Description  | Notes
 
 Get the proof receipt of an anchor.
 
-Use this operation to retrieve the proof receipt associated to a given anchor.&lt;br&gt; This JSON file is only available once the anchor status is SENT.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier need to be known). 
+Use this operation to retrieve the proof receipt associated to a given anchor.&lt;br&gt; This JSON file is only available once the anchor status is SENT.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier needs to be known). 
 
 ### Example
 ```java
@@ -99,7 +87,6 @@ Use this operation to retrieve the proof receipt associated to a given anchor.&l
 import io.woleet.api.ApiClient;
 import io.woleet.api.ApiException;
 import io.woleet.api.Configuration;
-import io.woleet.api.auth.*;
 import io.woleet.api.models.*;
 import io.woleet.api.client.ReceiptApi;
 
@@ -107,21 +94,10 @@ public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("https://api.woleet.io/v1");
-    
-    // Configure HTTP basic authorization: BasicAuth
-    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-    BasicAuth.setUsername("YOUR USERNAME");
-    BasicAuth.setPassword("YOUR PASSWORD");
-
-    // Configure API key authorization: JWTAuth
-    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-    JWTAuth.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //JWTAuth.setApiKeyPrefix("Token");
 
     ReceiptApi apiInstance = new ReceiptApi(defaultClient);
     String anchorId = "anchorId_example"; // String | Identifier of the anchor for which to build the proof receipt.
-    Boolean allowPartial = true; // Boolean | `true` if a partial proof receipt is to be returned when the proof of timestamp is not yet available (ie. the data or the signature has not yet been anchored).<br> If the proof of timestamp is availalble (anchor is SENT or CONFIRMED) a regular proof receipt is returned (with response code 200). Otherwise, a partial proof receipt not including the proof of timestamp is returned (response code 202).<br> The partial proof receipt of a signature anchor allows to verify the signature and the identity of the signer immediatly after signing, without having to wait for the anchoring process to complete. 
+    Boolean allowPartial = false; // Boolean | `true` if a partial proof receipt is to be returned when the proof of timestamp is not yet available (ie. the data or the signature has not yet been anchored).<br> If the proof of timestamp is availalble (anchor is SENT or CONFIRMED) a regular proof receipt is returned (with response code 200). Otherwise, a partial proof receipt not including the proof of timestamp is returned (response code 202).<br> The partial proof receipt of a signature anchor allows to verify the signature and the identity of the signer immediatly after signing, without having to wait for the anchoring process to complete. 
     try {
       Receipt result = apiInstance.getReceipt(anchorId, allowPartial);
       System.out.println(result);
@@ -141,7 +117,7 @@ public class Example {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **anchorId** | **String**| Identifier of the anchor for which to build the proof receipt. |
- **allowPartial** | **Boolean**| &#x60;true&#x60; if a partial proof receipt is to be returned when the proof of timestamp is not yet available (ie. the data or the signature has not yet been anchored).&lt;br&gt; If the proof of timestamp is availalble (anchor is SENT or CONFIRMED) a regular proof receipt is returned (with response code 200). Otherwise, a partial proof receipt not including the proof of timestamp is returned (response code 202).&lt;br&gt; The partial proof receipt of a signature anchor allows to verify the signature and the identity of the signer immediatly after signing, without having to wait for the anchoring process to complete.  | [optional]
+ **allowPartial** | **Boolean**| &#x60;true&#x60; if a partial proof receipt is to be returned when the proof of timestamp is not yet available (ie. the data or the signature has not yet been anchored).&lt;br&gt; If the proof of timestamp is availalble (anchor is SENT or CONFIRMED) a regular proof receipt is returned (with response code 200). Otherwise, a partial proof receipt not including the proof of timestamp is returned (response code 202).&lt;br&gt; The partial proof receipt of a signature anchor allows to verify the signature and the identity of the signer immediatly after signing, without having to wait for the anchoring process to complete.  | [optional] [default to false]
 
 ### Return type
 
@@ -149,7 +125,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -177,7 +153,6 @@ Use this operation to verify a proof receipt and get the timestamp of the proof.
 import io.woleet.api.ApiClient;
 import io.woleet.api.ApiException;
 import io.woleet.api.Configuration;
-import io.woleet.api.auth.*;
 import io.woleet.api.models.*;
 import io.woleet.api.client.ReceiptApi;
 
@@ -185,17 +160,6 @@ public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("https://api.woleet.io/v1");
-    
-    // Configure HTTP basic authorization: BasicAuth
-    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-    BasicAuth.setUsername("YOUR USERNAME");
-    BasicAuth.setPassword("YOUR PASSWORD");
-
-    // Configure API key authorization: JWTAuth
-    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-    JWTAuth.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //JWTAuth.setApiKeyPrefix("Token");
 
     ReceiptApi apiInstance = new ReceiptApi(defaultClient);
     Receipt receipt = new Receipt(); // Receipt | Proof receipt to verify.
@@ -225,7 +189,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+No authorization required
 
 ### HTTP request headers
 

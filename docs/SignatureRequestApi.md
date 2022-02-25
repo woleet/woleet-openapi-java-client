@@ -5,7 +5,7 @@ All URIs are relative to *https://api.woleet.io/v1*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**createSignatureRequest**](SignatureRequestApi.md#createSignatureRequest) | **POST** /signatureRequest | Create a new signature request.
-[**delegateSignatureRequest**](SignatureRequestApi.md#delegateSignatureRequest) | **POST** /signatureRequest/{requestId}/delegate | Sign a signature request by delegating the signature.
+[**delegateSignSignatureRequest**](SignatureRequestApi.md#delegateSignSignatureRequest) | **POST** /signatureRequest/{requestId}/delegate | Sign a signature request by delegating the signature.
 [**deleteSignatureRequest**](SignatureRequestApi.md#deleteSignatureRequest) | **DELETE** /signatureRequest/{requestId} | Delete a signature request.
 [**downloadSignatureRequestFile**](SignatureRequestApi.md#downloadSignatureRequestFile) | **GET** /signatureRequest/{requestId}/file | Download the file to sign.
 [**getSignatureRequest**](SignatureRequestApi.md#getSignatureRequest) | **GET** /signatureRequest/{requestId} | Get a signature request by its identifier.
@@ -98,13 +98,13 @@ Name | Type | Description  | Notes
 **200** | The created signature request. |  -  |
 **400** | Invalid request. More details are returned in the responsebody as a JSON object. |  -  |
 
-<a name="delegateSignatureRequest"></a>
-# **delegateSignatureRequest**
-> SignatureRequestSignResult delegateSignatureRequest(requestId, delegate)
+<a name="delegateSignSignatureRequest"></a>
+# **delegateSignSignatureRequest**
+> SignatureRequestSignResult delegateSignSignatureRequest(requestId, delegate)
 
 Sign a signature request by delegating the signature.
 
-A signer can use this operation to sign a signature request by delegating the signature to the platform.&lt;br&gt; When using this signature mode, the signature key of the signer is controled by the platform, which acts as a trusted third party.&lt;br&gt; The signature is automatically anchored on behalf of the owner of the signature request.&lt;br&gt; The signature anchor created is added to the list of signature anchors of the signature request.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to delegate a signature (authentication of the signer rely on the knowledge of his secret identifier and OTP, or on the control of his public key). 
+A signer can use this operation to sign a signature request by delegating the signature to the platform.&lt;br&gt; When using this signature mode, the signature key of the signer is controled by the platform, which acts as a trusted third party.&lt;br&gt; The signature is automatically anchored on behalf of the owner of the signature request.&lt;br&gt; The signature anchor created is added to the list of signature anchors of the signature request.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to delegate a signature (authentication of the signer rely on the knowledge of his secret identifier and OTP). 
 
 ### Example
 ```java
@@ -136,10 +136,10 @@ public class Example {
     String requestId = "requestId_example"; // String | Identifier of the signature request.
     SignatureRequestDelegate delegate = new SignatureRequestDelegate(); // SignatureRequestDelegate | Authentication information about the signer.
     try {
-      SignatureRequestSignResult result = apiInstance.delegateSignatureRequest(requestId, delegate);
+      SignatureRequestSignResult result = apiInstance.delegateSignSignatureRequest(requestId, delegate);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling SignatureRequestApi#delegateSignatureRequest");
+      System.err.println("Exception when calling SignatureRequestApi#delegateSignSignatureRequest");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -257,11 +257,11 @@ null (empty response body)
 
 <a name="downloadSignatureRequestFile"></a>
 # **downloadSignatureRequestFile**
-> File downloadSignatureRequestFile(requestId)
+> File downloadSignatureRequestFile(requestId, amended)
 
 Download the file to sign.
 
-Use this operation to download the file to be signed for a signature request.&lt;br&gt; The name of the file is included in the &#x60;Content-Disposition&#x60; header (see https://www.ietf.org/rfc/rfc6266.txt). 
+Use this operation to download the file to be signed for a signature request.&lt;br&gt; If the signature request is CLOSED or COMPLETED and the signed file is a PDF document that was uploaded to Woleet, this operation can also be used to download the amended document: this document is basically the signed file concatenated with the Signature Attestation document. The amended document contains the proof bundle as attachement, and is certified by Woleet.&lt;br&gt; The name of the file is included in the &#x60;Content-Disposition&#x60; header (see https://www.ietf.org/rfc/rfc6266.txt).&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to download the file to be signed for a signature request (but its identifier needs to be known). 
 
 ### Example
 ```java
@@ -269,7 +269,6 @@ Use this operation to download the file to be signed for a signature request.&lt
 import io.woleet.api.ApiClient;
 import io.woleet.api.ApiException;
 import io.woleet.api.Configuration;
-import io.woleet.api.auth.*;
 import io.woleet.api.models.*;
 import io.woleet.api.client.SignatureRequestApi;
 
@@ -277,22 +276,12 @@ public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("https://api.woleet.io/v1");
-    
-    // Configure HTTP basic authorization: BasicAuth
-    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-    BasicAuth.setUsername("YOUR USERNAME");
-    BasicAuth.setPassword("YOUR PASSWORD");
-
-    // Configure API key authorization: JWTAuth
-    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-    JWTAuth.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //JWTAuth.setApiKeyPrefix("Token");
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of the signature request.
+    Boolean amended = false; // Boolean | `true` if the amended version of the document is to be returned. 
     try {
-      File result = apiInstance.downloadSignatureRequestFile(requestId);
+      File result = apiInstance.downloadSignatureRequestFile(requestId, amended);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling SignatureRequestApi#downloadSignatureRequestFile");
@@ -310,6 +299,7 @@ public class Example {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **requestId** | **String**| Identifier of the signature request. |
+ **amended** | **Boolean**| &#x60;true&#x60; if the amended version of the document is to be returned.  | [optional] [default to false]
 
 ### Return type
 
@@ -317,7 +307,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -337,7 +327,7 @@ Name | Type | Description  | Notes
 
 Get a signature request by its identifier.
 
-Use this operation to retrieve a signature request by its identifier.
+Use this operation to retrieve a signature request by its identifier.&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to retrieve a signature request (but its identifier needs to be known).&lt;br&gt; Nevertheless, if the caller is authenticated as the owner of the signature request, additional information is returned. 
 
 ### Example
 ```java
@@ -422,7 +412,6 @@ Use this operation to retrieve the Signature Attestation document of a signature
 import io.woleet.api.ApiClient;
 import io.woleet.api.ApiException;
 import io.woleet.api.Configuration;
-import io.woleet.api.auth.*;
 import io.woleet.api.models.*;
 import io.woleet.api.client.SignatureRequestApi;
 
@@ -430,17 +419,6 @@ public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("https://api.woleet.io/v1");
-    
-    // Configure HTTP basic authorization: BasicAuth
-    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-    BasicAuth.setUsername("YOUR USERNAME");
-    BasicAuth.setPassword("YOUR PASSWORD");
-
-    // Configure API key authorization: JWTAuth
-    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-    JWTAuth.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //JWTAuth.setApiKeyPrefix("Token");
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of the signature request.
@@ -470,7 +448,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -490,7 +468,7 @@ Name | Type | Description  | Notes
 
 Get the proof bundle of a signature request.
 
-Use this operation to retrieve the proof bundle of a signature request.&lt;br&gt; The proof bundle is a JSON file containing all the pieces of evidence:&lt;br&gt; - the audit trail&lt;br&gt; - the proof receipt of the signature of the audit trail by the platform&lt;br&gt; - the proof receipts of the signature of the file by the signers&lt;br&gt; Consequently, the proof bundle is only available once all the following conditions are met:&lt;br&gt; - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)&lt;br&gt; - all the proof receipts are available (ie. all signatures have been anchored)&lt;br&gt; - the audit trail is generated and signed by the platform and its proof receipt is available (ie. its signature has been anchored)&lt;br&gt; Once these conditions are met, the platform sets the &#x60;proofBundleComplete&#x60; property to &#x60;true&#x60;.&lt;br&gt; If this endpoint is called before all these conditions are met, it returns only the available proof receipts (with a 202 status).&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to retrieve the proof receipts of a signature request (but its identifier needs to be known). 
+Use this operation to retrieve the proof bundle of a signature request.&lt;br&gt; The proof bundle is a JSON file containing all the pieces of evidence:&lt;br&gt; - the audit trail&lt;br&gt; - the proof receipt of the signature of the audit trail by the platform&lt;br&gt; - the proof receipts of the signature of the file by the signers&lt;br&gt; Consequently, the proof bundle is only available once all the following conditions are met:&lt;br&gt; - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)&lt;br&gt; - all the proof receipts are available (ie. all signatures have been anchored)&lt;br&gt; - the audit trail is generated and signed by the platform and its proof receipt is available (ie. its signature has been anchored)&lt;br&gt; Once these conditions are met, the platform sets the &#x60;proofBundleComplete&#x60; property to &#x60;true&#x60;.&lt;br&gt; If this endpoint is called before all these conditions are met, it returns only the available proof receipts (with a 202 status).&lt;br&gt; This is a publicly accessible endpoint: authentication is not required to retrieve the proof bundle of a signature request (but its identifier needs to be known). 
 
 ### Example
 ```java
@@ -498,7 +476,6 @@ Use this operation to retrieve the proof bundle of a signature request.&lt;br&gt
 import io.woleet.api.ApiClient;
 import io.woleet.api.ApiException;
 import io.woleet.api.Configuration;
-import io.woleet.api.auth.*;
 import io.woleet.api.models.*;
 import io.woleet.api.client.SignatureRequestApi;
 
@@ -506,17 +483,6 @@ public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("https://api.woleet.io/v1");
-    
-    // Configure HTTP basic authorization: BasicAuth
-    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-    BasicAuth.setUsername("YOUR USERNAME");
-    BasicAuth.setPassword("YOUR PASSWORD");
-
-    // Configure API key authorization: JWTAuth
-    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-    JWTAuth.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //JWTAuth.setApiKeyPrefix("Token");
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of the signature request.
@@ -546,7 +512,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -574,7 +540,6 @@ A signer can use this operation to report an event on a signature request.&lt;br
 import io.woleet.api.ApiClient;
 import io.woleet.api.ApiException;
 import io.woleet.api.Configuration;
-import io.woleet.api.auth.*;
 import io.woleet.api.models.*;
 import io.woleet.api.client.SignatureRequestApi;
 
@@ -582,17 +547,6 @@ public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("https://api.woleet.io/v1");
-    
-    // Configure HTTP basic authorization: BasicAuth
-    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-    BasicAuth.setUsername("YOUR USERNAME");
-    BasicAuth.setPassword("YOUR PASSWORD");
-
-    // Configure API key authorization: JWTAuth
-    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-    JWTAuth.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //JWTAuth.setApiKeyPrefix("Token");
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of the signature request.
@@ -623,7 +577,7 @@ null (empty response body)
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -652,7 +606,6 @@ A signer can use this operation to report a feedback to the owner of a signature
 import io.woleet.api.ApiClient;
 import io.woleet.api.ApiException;
 import io.woleet.api.Configuration;
-import io.woleet.api.auth.*;
 import io.woleet.api.models.*;
 import io.woleet.api.client.SignatureRequestApi;
 
@@ -660,17 +613,6 @@ public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("https://api.woleet.io/v1");
-    
-    // Configure HTTP basic authorization: BasicAuth
-    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-    BasicAuth.setUsername("YOUR USERNAME");
-    BasicAuth.setPassword("YOUR PASSWORD");
-
-    // Configure API key authorization: JWTAuth
-    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-    JWTAuth.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //JWTAuth.setApiKeyPrefix("Token");
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of the signature request.
@@ -701,7 +643,7 @@ null (empty response body)
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -718,7 +660,7 @@ null (empty response body)
 
 <a name="searchSignatureRequestIds"></a>
 # **searchSignatureRequestIds**
-> SignatureRequestIds searchSignatureRequestIds(page, size, hashToSign)
+> SignatureRequestIds searchSignatureRequestIds(hashToSign, page, size, userId)
 
 Search for public signature request identifiers.
 
@@ -730,7 +672,6 @@ Use this operation to retrieve the identifiers of all public signature requests 
 import io.woleet.api.ApiClient;
 import io.woleet.api.ApiException;
 import io.woleet.api.Configuration;
-import io.woleet.api.auth.*;
 import io.woleet.api.models.*;
 import io.woleet.api.client.SignatureRequestApi;
 
@@ -738,24 +679,14 @@ public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("https://api.woleet.io/v1");
-    
-    // Configure HTTP basic authorization: BasicAuth
-    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-    BasicAuth.setUsername("YOUR USERNAME");
-    BasicAuth.setPassword("YOUR PASSWORD");
-
-    // Configure API key authorization: JWTAuth
-    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-    JWTAuth.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //JWTAuth.setApiKeyPrefix("Token");
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
+    String hashToSign = "hashToSign_example"; // String | `hashToSign` to search for: all public signature requests whose `hashToSign` property is equal are returned. 
     Integer page = 0; // Integer | Index of the page to retrieve (from 0).
     Integer size = 20; // Integer | Number of signature request identifiers per page.
-    String hashToSign = "hashToSign_example"; // String | `hashToSign` to search for: all public signature requests whose `hashToSign` property is equal are returned. 
+    String userId = "userId_example"; // String | User identifier to use to filter out results: only public signature requests belonging to this user are returned. 
     try {
-      SignatureRequestIds result = apiInstance.searchSignatureRequestIds(page, size, hashToSign);
+      SignatureRequestIds result = apiInstance.searchSignatureRequestIds(hashToSign, page, size, userId);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling SignatureRequestApi#searchSignatureRequestIds");
@@ -772,9 +703,10 @@ public class Example {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **hashToSign** | **String**| &#x60;hashToSign&#x60; to search for: all public signature requests whose &#x60;hashToSign&#x60; property is equal are returned.  |
  **page** | **Integer**| Index of the page to retrieve (from 0). | [optional] [default to 0]
  **size** | **Integer**| Number of signature request identifiers per page. | [optional] [default to 20]
- **hashToSign** | **String**| &#x60;hashToSign&#x60; to search for: all public signature requests whose &#x60;hashToSign&#x60; property is equal are returned.  | [optional]
+ **userId** | **String**| User identifier to use to filter out results: only public signature requests belonging to this user are returned.  | [optional]
 
 ### Return type
 
@@ -782,7 +714,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -897,7 +829,6 @@ Use this operation to generate and send a new OTP (One Time Password) by SMS to 
 import io.woleet.api.ApiClient;
 import io.woleet.api.ApiException;
 import io.woleet.api.Configuration;
-import io.woleet.api.auth.*;
 import io.woleet.api.models.*;
 import io.woleet.api.client.SignatureRequestApi;
 
@@ -905,17 +836,6 @@ public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("https://api.woleet.io/v1");
-    
-    // Configure HTTP basic authorization: BasicAuth
-    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-    BasicAuth.setUsername("YOUR USERNAME");
-    BasicAuth.setPassword("YOUR PASSWORD");
-
-    // Configure API key authorization: JWTAuth
-    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-    JWTAuth.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //JWTAuth.setApiKeyPrefix("Token");
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of the signature request.
@@ -946,7 +866,7 @@ null (empty response body)
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -1055,7 +975,6 @@ A signer can use this operation to sign a signature request by registering a sig
 import io.woleet.api.ApiClient;
 import io.woleet.api.ApiException;
 import io.woleet.api.Configuration;
-import io.woleet.api.auth.*;
 import io.woleet.api.models.*;
 import io.woleet.api.client.SignatureRequestApi;
 
@@ -1063,17 +982,6 @@ public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("https://api.woleet.io/v1");
-    
-    // Configure HTTP basic authorization: BasicAuth
-    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-    BasicAuth.setUsername("YOUR USERNAME");
-    BasicAuth.setPassword("YOUR PASSWORD");
-
-    // Configure API key authorization: JWTAuth
-    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-    JWTAuth.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //JWTAuth.setApiKeyPrefix("Token");
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of the signature request.
@@ -1105,7 +1013,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+No authorization required
 
 ### HTTP request headers
 
@@ -1130,7 +1038,7 @@ Name | Type | Description  | Notes
 
 Change the state of a signature request.
 
-Use this operation to transition a **stateful** signature request to a new state.&lt;br&gt; Possible transitions are:&lt;br&gt; - from DRAFT to PENDING: start the signature request: the platform wait for the activation date (if any) and transition to IN_PROGRESS&lt;br&gt; - from PENDING to DRAFT: suspend the signature request: allow it to be updated&lt;br&gt; - from PENDING to CANCELED: cancel the signature request without waiting for the  activation date&lt;br&gt; - from IN_PROGRESS to CLOSED: close the signature request without waiting for all signatures to be colleted&lt;br&gt; - from IN_PROGRESS to CANCELED: cancel the signature request before all signatures get colleted&lt;br&gt; Note that **stateless** signature requests can only be transitioned to CLOLSED or CANCELED, which triggers the generation of the audit trail and its signature by the platform. 
+Use this operation to transition a **stateful** signature request to a new state.&lt;br&gt; Possible transitions are:&lt;br&gt; - from DRAFT to PENDING: start the signature request: the platform waits for the activation date (only if set) and transitions the signature request to IN_PROGRESS automatically&lt;br&gt; - from PENDING to DRAFT: suspend the signature request so that it can be updated&lt;br&gt; - from PENDING to CANCELED: cancel the signature request without waiting for the activation date&lt;br&gt; - from IN_PROGRESS to CLOSED: close the signature request before all signatures get colleted&lt;br&gt; - from IN_PROGRESS to CANCELED: cancel the signature request before all signatures get colleted&lt;br&gt; Note that **stateless** signature requests can only be transitioned to CLOSED or CANCELED, which triggers the generation of the audit trail and its signature by the platform. 
 
 ### Example
 ```java
@@ -1209,7 +1117,7 @@ Name | Type | Description  | Notes
 
 Update a signature request.
 
-Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;public&#x60;, &#x60;callbackURL&#x60;, &#x60;activation&#x60;, &#x60;deadline&#x60;, &#x60;identityURL&#x60;, &#x60;fileName&#x60;, &#x60;fileURL&#x60;, &#x60;lang&#x60;, &#x60;vars&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified.&lt;br&gt; Only **stateless** signature requests or **stateful** signature request in &#39;DRAFT&#39; state can be updated. 
+Use this operation to update a signature request.&lt;br&gt; Only the properties &#x60;name&#x60;, &#x60;public&#x60;, &#x60;callbackURL&#x60;, &#x60;activation&#x60;, &#x60;deadline&#x60;, &#x60;identityURL&#x60;, &#x60;fileName&#x60;, &#x60;fileURL&#x60;, &#x60;lang&#x60;, &#x60;vars&#x60;, &#x60;maxSignatures&#x60; and &#x60;authorizedSignees&#x60; can be modified.&lt;br&gt; Only **stateless** signature requests or **stateful** signature request in DRAFT state can be updated. 
 
 ### Example
 ```java
@@ -1288,7 +1196,7 @@ Name | Type | Description  | Notes
 
 Upload the file to sign.
 
-Use this operation to upload the file to be signed for a signature request.&lt;br&gt; The SHA256 hash of the uploaded file must be equal to the &#x60;hashToSign&#x60; property of the signature request or the upload fails.&lt;br&gt; Once uploaded, the file is stored and the &#x60;fileURL&#x60; property of the signature request is set, so that it can be used by a signature application to download and present the file to the signers.&lt;br&gt; Only **stateless** signature requests or **stateful** signature request in &#39;DRAFT&#39; state can be updated. **WARNING: the storage of the file to be signed is provided for convenience only: it is not required, and you should never upload a file if you have any concern about its privacy.** 
+Use this operation to upload the file to be signed for a signature request.&lt;br&gt; The SHA256 hash of the uploaded file must be equal to the &#x60;hashToSign&#x60; property of the signature request or the upload fails.&lt;br&gt; Once uploaded, the file is stored and the &#x60;fileURL&#x60; property of the signature request is set, so that it can be used by a signature application to download and present the file to the signers.&lt;br&gt; Only **stateless** signature requests or **stateful** signature request in DRAFT state can be updated. **WARNING: the storage of the file to be signed is provided for convenience only: it is not required, and you should never upload a file if you have any concern about its privacy.** 
 
 ### Example
 ```java

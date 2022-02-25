@@ -2,7 +2,7 @@ lazy val root = (project in file(".")).
   settings(
     organization := "io.woleet",
     name := "woleet-api-client",
-    version := "1.10.0",
+    version := "1.11.1",
     scalaVersion := "2.11.4",
     scalacOptions ++= Seq("-feature"),
     javacOptions in compile ++= Seq("-Xlint:deprecation"),

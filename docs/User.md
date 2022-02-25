@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **password** | **String** | Password of the user (it must be provided at creation time). | 
 **roles** | [**List&lt;RolesEnum&gt;**](#List&lt;RolesEnum&gt;) | Array of user roles. | 
 **info** | [**Info**](Info.md) |  | 
-**status** | [**StatusEnum**](#StatusEnum) | The status of the user:&lt;br&gt; - PENDING: the user email need to be validated&lt;br&gt; - APPROVED: the user can loging&lt;br&gt; - DISABLED: the user cannot login  | 
+**status** | [**StatusEnum**](#StatusEnum) | The status of the user:&lt;br&gt; - PENDING: the user email needs to be validated&lt;br&gt; - APPROVED: the user can loging&lt;br&gt; - DISABLED: the user cannot login  | 
 
 
 

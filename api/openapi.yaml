@@ -8,7 +8,7 @@ info:
     It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/reference)** before reading this documentation.
   termsOfService: https://doc.woleet.io/docs/terms-of-service
   title: Woleet API
-  version: 1.10.0
+  version: 1.11.1
 servers:
 - url: https://api.woleet.io/v1
 security:
@@ -228,6 +228,15 @@ paths:
         schema:
           type: string
         style: form
+      - description: |
+          User identifier to use to filter out results: only public anchors belonging to this user are returned.
+        explode: true
+        in: query
+        name: userId
+        required: false
+        schema:
+          type: string
+        style: form
       responses:
         "200":
           content:
@@ -239,6 +248,7 @@ paths:
         "400":
           description: Invalid request. More details are returned in the response
             body as a JSON object.
+      security: []
       summary: Search for public anchor identifiers.
       tags:
       - anchor
@@ -359,7 +369,7 @@ paths:
       description: |
         Use this operation to retrieve the proof receipt associated to a given anchor.<br>
         This JSON file is only available once the anchor status is SENT.<br>
-        This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier need to be known).
+        This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier needs to be known).
       operationId: getReceipt
       parameters:
       - description: Identifier of the anchor for which to build the proof receipt.
@@ -380,6 +390,7 @@ paths:
         name: allowPartial
         required: false
         schema:
+          default: false
           type: boolean
         style: form
       responses:
@@ -395,6 +406,7 @@ paths:
             If `allowPartial` is `true`: the partial proof receipt (returned in the response body).
         "404":
           description: No anchor matching the given identifier.
+      security: []
       summary: Get the proof receipt of an anchor.
       tags:
       - receipt
@@ -405,7 +417,7 @@ paths:
         Use this operation to retrieve the OpenTimestamps proof receipt associated to a given data anchor
         (note that this operation is NOT available for signature anchors).<br>
         This binary file is only available once the anchor status is SENT.<br>
-        This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier need to be known).
+        This is a publicly accessible endpoint: authentication is not required to retrieve a proof receipt (but the anchor identifier needs to be known).
       operationId: getOTSReceipt
       parameters:
       - description: Identifier of the data anchor for which to build the proof receipt.
@@ -427,6 +439,7 @@ paths:
           description: The proof receipt is not yet available.
         "404":
           description: No anchor matching the given identifier.
+      security: []
       summary: Get the proof receipt of an anchor (OpenTimestamps proof format).
       tags:
       - receipt
@@ -455,6 +468,7 @@ paths:
         "400":
           description: Invalid request. More details are returned in the response
             body as a JSON object.
+      security: []
       summary: Verify a proof receipt.
       tags:
       - receipt
@@ -497,12 +511,12 @@ paths:
       description: |
         Use this operation to transition a **stateful** signature request to a new state.<br>
         Possible transitions are:<br>
-        - from DRAFT to PENDING: start the signature request: the platform wait for the activation date (if any) and transition to IN_PROGRESS<br>
-        - from PENDING to DRAFT: suspend the signature request: allow it to be updated<br>
-        - from PENDING to CANCELED: cancel the signature request without waiting for the  activation date<br>
-        - from IN_PROGRESS to CLOSED: close the signature request without waiting for all signatures to be colleted<br>
+        - from DRAFT to PENDING: start the signature request: the platform waits for the activation date (only if set) and transitions the signature request to IN_PROGRESS automatically<br>
+        - from PENDING to DRAFT: suspend the signature request so that it can be updated<br>
+        - from PENDING to CANCELED: cancel the signature request without waiting for the activation date<br>
+        - from IN_PROGRESS to CLOSED: close the signature request before all signatures get colleted<br>
         - from IN_PROGRESS to CANCELED: cancel the signature request before all signatures get colleted<br>
-        Note that **stateless** signature requests can only be transitioned to CLOLSED or CANCELED,
+        Note that **stateless** signature requests can only be transitioned to CLOSED or CANCELED,
         which triggers the generation of the audit trail and its signature by the platform.
       operationId: transitionSignatureRequest
       parameters:
@@ -561,7 +575,6 @@ paths:
           application/json:
             schema:
               items:
-                example: john.doe@acme.com
                 type: string
               type: array
         description: |
@@ -627,6 +640,7 @@ paths:
         "429":
           description: Too many requests. A minimum delay of 1 second is required
             between two OTP generation.
+      security: []
       summary: Generate and send an OTP to a signer of a signature request.
       tags:
       - signatureRequest
@@ -683,6 +697,7 @@ paths:
         "429":
           description: Too many requests. A minimum delay of 1 second is required
             after providing an invalid OTP.
+      security: []
       summary: Sign a signature request by registering a signature.
       tags:
       - signatureRequest
@@ -697,8 +712,8 @@ paths:
         The signature is automatically anchored on behalf of the owner of the signature request.<br>
         The signature anchor created is added to the list of signature anchors of the signature request.<br>
         This is a publicly accessible endpoint: authentication is not required to delegate a signature
-        (authentication of the signer rely on the knowledge of his secret identifier and OTP, or on the control of his public key).
-      operationId: delegateSignatureRequest
+        (authentication of the signer rely on the knowledge of his secret identifier and OTP).
+      operationId: delegateSignSignatureRequest
       parameters:
       - description: Identifier of the signature request.
         explode: false
@@ -742,6 +757,10 @@ paths:
         "429":
           description: Too many requests. A minimum delay of 1 second is required
             after providing an invalid OTP.
+      security:
+      - BasicAuth: []
+      - JWTAuth: []
+      - {}
       summary: Sign a signature request by delegating the signature.
       tags:
       - signatureRequest
@@ -782,6 +801,7 @@ paths:
             signer identifier not found).
         "404":
           description: Signature request not found.
+      security: []
       summary: Report a feedback about a signature request.
       tags:
       - signatureRequest
@@ -823,6 +843,7 @@ paths:
             signer identifier not found).
         "404":
           description: Signature request not found.
+      security: []
       summary: Report an event on a signature request.
       tags:
       - signatureRequest
@@ -865,6 +886,7 @@ paths:
           description: Signature Attestation document not yet available.
         "404":
           description: Signature request not found.
+      security: []
       summary: Download the Signature Attestation document of a signature request.
       tags:
       - signatureRequest
@@ -883,7 +905,7 @@ paths:
         - the audit trail is generated and signed by the platform and its proof receipt is available (ie. its signature has been anchored)<br>
         Once these conditions are met, the platform sets the `proofBundleComplete` property to `true`.<br>
         If this endpoint is called before all these conditions are met, it returns only the available proof receipts (with a 202 status).<br>
-        This is a publicly accessible endpoint: authentication is not required to retrieve the proof receipts of a signature request (but its identifier needs to be known).
+        This is a publicly accessible endpoint: authentication is not required to retrieve the proof bundle of a signature request (but its identifier needs to be known).
       operationId: getSignatureRequestProofBundle
       parameters:
       - description: Identifier of the signature request.
@@ -910,6 +932,7 @@ paths:
             are missing or not all receipts are yet available).
         "404":
           description: Signature request not found.
+      security: []
       summary: Get the proof bundle of a signature request.
       tags:
       - signatureRequest
@@ -918,7 +941,10 @@ paths:
     get:
       description: |
         Use this operation to download the file to be signed for a signature request.<br>
-        The name of the file is included in the `Content-Disposition` header (see https://www.ietf.org/rfc/rfc6266.txt).
+        If the signature request is CLOSED or COMPLETED and the signed file is a PDF document that was uploaded to Woleet, this operation can also be used to download the amended document:
+        this document is basically the signed file concatenated with the Signature Attestation document. The amended document contains the proof bundle as attachement, and is certified by Woleet.<br>
+        The name of the file is included in the `Content-Disposition` header (see https://www.ietf.org/rfc/rfc6266.txt).<br>
+        This is a publicly accessible endpoint: authentication is not required to download the file to be signed for a signature request (but its identifier needs to be known).
       operationId: downloadSignatureRequestFile
       parameters:
       - description: Identifier of the signature request.
@@ -929,6 +955,16 @@ paths:
         schema:
           type: string
         style: simple
+      - description: |
+          `true` if the amended version of the document is to be returned.
+        explode: true
+        in: query
+        name: amended
+        required: false
+        schema:
+          default: false
+          type: boolean
+        style: form
       responses:
         "200":
           content:
@@ -942,6 +978,7 @@ paths:
             body as a JSON object.
         "404":
           description: Signature request not found.
+      security: []
       summary: Download the file to sign.
       tags:
       - signatureRequest
@@ -951,7 +988,7 @@ paths:
         Use this operation to upload the file to be signed for a signature request.<br>
         The SHA256 hash of the uploaded file must be equal to the `hashToSign` property of the signature request or the upload fails.<br>
         Once uploaded, the file is stored and the `fileURL` property of the signature request is set, so that it can be used by a signature application to download and present the file to the signers.<br>
-        Only **stateless** signature requests or **stateful** signature request in 'DRAFT' state can be updated.
+        Only **stateless** signature requests or **stateful** signature request in DRAFT state can be updated.
         **WARNING: the storage of the file to be signed is provided for convenience only: it is not required, and you should never upload a file if you have any concern about its privacy.**
       operationId: uploadSignatureRequestFile
       parameters:
@@ -1020,7 +1057,10 @@ paths:
       - signatureRequest
       x-accepts: application/json
     get:
-      description: Use this operation to retrieve a signature request by its identifier.
+      description: |
+        Use this operation to retrieve a signature request by its identifier.<br>
+        This is a publicly accessible endpoint: authentication is not required to retrieve a signature request (but its identifier needs to be known).<br>
+        Nevertheless, if the caller is authenticated as the owner of the signature request, additional information is returned.
       operationId: getSignatureRequest
       parameters:
       - description: Identifier of the signature request to retrieve.
@@ -1052,6 +1092,10 @@ paths:
           description: The signature request.
         "404":
           description: No signature request matching the given identifier.
+      security:
+      - BasicAuth: []
+      - JWTAuth: []
+      - {}
       summary: Get a signature request by its identifier.
       tags:
       - signatureRequest
@@ -1060,7 +1104,7 @@ paths:
       description: |
         Use this operation to update a signature request.<br>
         Only the properties `name`, `public`, `callbackURL`, `activation`, `deadline`, `identityURL`, `fileName`, `fileURL`, `lang`, `vars`, `maxSignatures` and `authorizedSignees` can be modified.<br>
-        Only **stateless** signature requests or **stateful** signature request in 'DRAFT' state can be updated.
+        Only **stateless** signature requests or **stateful** signature request in DRAFT state can be updated.
       operationId: updateSignatureRequest
       parameters:
       - description: Identifier of signature request to update.
@@ -1130,6 +1174,15 @@ paths:
         explode: true
         in: query
         name: hashToSign
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: |
+          User identifier to use to filter out results: only public signature requests belonging to this user are returned.
+        explode: true
+        in: query
+        name: userId
         required: false
         schema:
           type: string
@@ -1146,6 +1199,7 @@ paths:
         "400":
           description: Invalid request. More details are returned in the response
             body as a JSON object.
+      security: []
       summary: Search for public signature request identifiers.
       tags:
       - signatureRequest
@@ -1399,6 +1453,153 @@ paths:
       tags:
       - user
       x-accepts: application/json
+  /user/key/{key}:
+    delete:
+      operationId: deleteKey
+      parameters:
+      - description: |
+          The key to delete.
+        explode: false
+        in: path
+        name: key
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: |
+            The key is deleted.
+        "404":
+          description: |
+            Key not found.
+      summary: Delete a key and its value from the user's k/v store.
+      tags:
+      - user
+      x-accepts: application/json
+    get:
+      operationId: getKey
+      parameters:
+      - description: |
+          The key to read.
+        explode: false
+        in: path
+        name: key
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+          description: |
+            The key value.
+        "404":
+          description: |
+            Key not found.
+      summary: Read the value of a key from the user's k/v store.
+      tags:
+      - user
+      x-accepts: application/json
+    patch:
+      description: |
+        Patch the value of a key in the user's k/v store using a JSON merge patch
+        (see https://tools.ietf.org/html/rfc7386 for information about JSON merge patch).
+      operationId: patchKey
+      parameters:
+      - description: |
+          The key to patch.
+        explode: false
+        in: path
+        name: key
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        description: |
+          The JSON merge patch to apply.
+        required: true
+      responses:
+        "200":
+          description: |
+            The key value is patched.
+      summary: Patch the value of a key in the user's k/v store.
+      tags:
+      - user
+      x-codegen-request-body-name: value
+      x-contentType: application/json
+      x-accepts: application/json
+    post:
+      operationId: postKey
+      parameters:
+      - description: |
+          The key to create.
+        explode: false
+        in: path
+        name: key
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        description: |
+          The value to store.
+        required: true
+      responses:
+        "200":
+          description: |
+            The key value is stored.
+        "409":
+          description: |
+            The key already exists.
+      summary: Create a new key and store its value in the user's k/v store.
+      tags:
+      - user
+      x-codegen-request-body-name: value
+      x-contentType: application/json
+      x-accepts: application/json
+    put:
+      operationId: putKey
+      parameters:
+      - description: |
+          The key to update.
+        explode: false
+        in: path
+        name: key
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        description: |
+          The value to update.
+        required: true
+      responses:
+        "200":
+          description: |
+            The key value is updated.
+      summary: Update the value of a key in the user's k/v store.
+      tags:
+      - user
+      x-codegen-request-body-name: value
+      x-contentType: application/json
+      x-accepts: application/json
   /domain/admin/user:
     post:
       description: |
@@ -1600,39 +1801,42 @@ components:
         - the proof of signature (if applicable) is provided in the `signature` property.<br>
         If the proof receipt is partial (ie. does not contain the proof of timestamp) Chainpoint 2.x fields are not provided.
       example:
-        targetHash: targetHash
+        targetHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
         signature:
-          signedIssuerDomain: signedIssuerDomain
-          signature: signature
-          signedHash: signedHash
-          identityURL: identityURL
-          signedIdentity: signedIdentity
+          signedIssuerDomain: acme.com
+          signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
+          signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+          identityURL: https://wids.acme.com/identity
+          signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
           pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
-        merkleRoot: merkleRoot
+        merkleRoot: 55aaf75bb11ffc925e28940dfa9f0b48ed25ace18d561e41c95dd2aead65cc61
         proof:
-        - left: left
-          right: right
-        - left: left
-          right: right
+        - left: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+          right: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+        - left: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+          right: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
         anchors:
-        - sourceId: sourceId
-          type: type
-        - sourceId: sourceId
-          type: type
-        type: type
+        - sourceId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+          type: BTCOpReturn
+        - sourceId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+          type: BTCOpReturn
+        type: ChainpointSHA256v2
         partial: true
       properties:
         targetHash:
           description: SHA256 hash of the proven data or signature.
+          example: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           type: string
         type:
           description: |
             Chainpoint 2.x: Type of the proof receipt.<br>
             **Currently only 'ChainpointSHA256v2' is supported.**
+          example: ChainpointSHA256v2
           type: string
         merkleRoot:
           description: |
             Chainpoint 2.x: Root of the Merkle tree.
+          example: 55aaf75bb11ffc925e28940dfa9f0b48ed25ace18d561e41c95dd2aead65cc61
           type: string
         proof:
           description: |
@@ -1655,46 +1859,53 @@ components:
       type: object
     receipt_proof_node:
       example:
-        left: left
-        right: right
+        left: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+        right: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
       properties:
         left:
+          example: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           type: string
         right:
+          example: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           type: string
       type: object
     receipt_anchors_node:
       example:
-        sourceId: sourceId
-        type: type
+        sourceId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+        type: BTCOpReturn
       properties:
         type:
           description: |
             Type of the anchor.<br>
             **Currently only 'BTCOpReturn' is supported.**
+          example: BTCOpReturn
           type: string
         sourceId:
+          example: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           type: string
       type: object
     receipt_signature:
       description: Proof of signature (for proof of signature receipts only).
       example:
-        signedIssuerDomain: signedIssuerDomain
-        signature: signature
-        signedHash: signedHash
-        identityURL: identityURL
-        signedIdentity: signedIdentity
+        signedIssuerDomain: acme.com
+        signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
+        signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+        identityURL: https://wids.acme.com/identity
+        signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
         pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
       properties:
         signedHash:
-          description: SHA256 hash (ie. the fingerprint) of the signed file.
+          description: SHA256 hash of the signed file.
+          example: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           type: string
         signedIdentity:
           description: X500 Distinguished Name representing the signed identity.
+          example: CN=John Doe,EMAILADDRESS=john.doe@acme.com
           type: string
         signedIssuerDomain:
           description: Domain name of the identity issuer (ie. of the organization
             who verified the identity).
+          example: acme.com
           type: string
         pubKey:
           description: |
@@ -1706,9 +1917,11 @@ components:
           description: |
             Signature of the `signedHash` property using the public key `pubKey`, or, if any of `signedIdentity` or `signedIssuerDomain` is provided,
             signature of SHA256(`signedHash` + `signedIdentity` + `signedIssuerDomain`) using the public key `pubKey`.
+          example: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
           type: string
         identityURL:
           description: Web hook to use to verify the signer's identity.
+          example: https://wids.acme.com/identity
           type: string
       type: object
     otsReceipt:
@@ -1721,122 +1934,119 @@ components:
       type: string
     signatureRequest:
       example:
-        ordered: true
         fileName: NDA.pdf
-        auditTrailAnchorId: a3790416-16c3-4182-a310-9ef491c38a4c
-        created: 1620294758688
         identityURL: https://wids.acme.com/identity
         watchers:
         - commonName: John Doe
-          vars: '{"key":"value"}'
+          vars: '{"requesterName":"ACME Corp."}'
           lang: fr
           email: john.doe@acme.com
         - commonName: John Doe
-          vars: '{"key":"value"}'
+          vars: '{"requesterName":"ACME Corp."}'
           lang: fr
           email: john.doe@acme.com
-        hashToSign: c1a52fac4179685e102a5c2bca3342661c3b1d17644b5f22c8feec0b503a8a3e
-        maxSignatures: 10
+        hashToSign: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
         anchors:
         - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
-          signedIssuerDomain: signedIssuerDomain
-          signature: signature
+          signedIssuerDomain: acme.com
+          signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
           created: 1620294758688
           notifyByEmail: true
-          identityURL: identityURL
-          txId: txId
+          identityURL: https://wids.acme.com/identity
+          txId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           confirmations: 6
-          signedIdentity: signedIdentity
-          tags:
-          - tags
-          - tags
+          signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
+          tags: '["book","sci-fi"]'
           public: true
-          name: name
-          signedHash: signedHash
+          name: My anchor
+          signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           callbackURL: https://acme.com/callback/woleet/anchor
-          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          id: abcdef01-2345-6789-abcd-ef0123456789
           lastModified: 1620294759999
-          hash: hash
-          pubKey: pubKey
+          hash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+          pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
           status: WAIT
-          timestamp: 0
+          timestamp: 1620294759999
         - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
-          signedIssuerDomain: signedIssuerDomain
-          signature: signature
+          signedIssuerDomain: acme.com
+          signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
           created: 1620294758688
           notifyByEmail: true
-          identityURL: identityURL
-          txId: txId
+          identityURL: https://wids.acme.com/identity
+          txId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           confirmations: 6
-          signedIdentity: signedIdentity
-          tags:
-          - tags
-          - tags
+          signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
+          tags: '["book","sci-fi"]'
           public: true
-          name: name
-          signedHash: signedHash
+          name: My anchor
+          signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           callbackURL: https://acme.com/callback/woleet/anchor
-          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          id: abcdef01-2345-6789-abcd-ef0123456789
           lastModified: 1620294759999
-          hash: hash
-          pubKey: pubKey
+          hash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+          pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
           status: WAIT
-          timestamp: 0
-        auditTrailData: eyJhdWRpdENvbnRleHQiOnsiaWQiOiJiNzkwNDMyYi1kNjYyLTQ2MzMtOGNjMi0xMjc0ODZiMjYzYjgiLCJuYW1lIjoiU2FtcGxlIn0sImF1ZGl0RXZlbnRzIjpbeyJkYXRlIjoxNjIyMTk5NTA5NDExLCJ0eXBlIjoiQ0xPU0VEIn1dfQo=
+          timestamp: 1620294759999
+        baseVarsKey: mySignatureRequestsSharedVars
         public: true
         proofBundleComplete: true
+        callbackURL: https://acme.com/callback/woleet/signatureRequest
+        fileURL: https://acme.com/files/NDA.pdf
+        id: abcdef01-2345-6789-abcd-ef0123456789
+        vars: '{"requesterName":"ACME Corp."}'
+        lang: fr
+        deadline: 1720294759999
+        ordered: true
+        auditTrailAnchorId: abcdef01-2345-6789-abcd-ef0123456789
+        created: 1620294758688
+        maxSignatures: 10
+        auditTrailData: eyJhdWRpdENvbnRleHQiOnsiaWQiOiJiNzkwNDMyYi1kNjYyLTQ2MzMtOGNjMi0xMjc0ODZiMjYzYjgiLCJuYW1lIjoiU2FtcGxlIn0sImF1ZGl0RXZlbnRzIjpbeyJkYXRlIjoxNjIyMTk5NTA5NDExLCJ0eXBlIjoiQ0xPU0VEIn1dfQo=
         authorizedSignees:
         - commonName: John Doe
           identityURL: https://wids.acme.com/identity
           OTP: OTP
-          anchorId: anchorId
-          signedOn: 0
+          anchorId: abcdef01-2345-6789-abcd-ef0123456789
+          signedOn: 1620294759999
           countryCallingCode: "33"
           phone: "612345678"
           requiresOTP: true
           signsFaceToFace: true
-          feedbackMessage: feedbackMessage
-          vars: '{}'
+          feedbackMessage: Signer feedback message
+          vars: '{"requesterName":"ACME Corp."}'
           id: id
           lang: fr
           device: SERVER
-          feedbackSubject: feedbackSubject
-          auditTrailId: auditTrailId
+          feedbackSubject: Signer feedback subject
+          auditTrailId: abcdef01-2345-6789-abcd-ef0123456789
           email: john.doe@acme.com
           pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
         - commonName: John Doe
           identityURL: https://wids.acme.com/identity
           OTP: OTP
-          anchorId: anchorId
-          signedOn: 0
+          anchorId: abcdef01-2345-6789-abcd-ef0123456789
+          signedOn: 1620294759999
           countryCallingCode: "33"
           phone: "612345678"
           requiresOTP: true
           signsFaceToFace: true
-          feedbackMessage: feedbackMessage
-          vars: '{}'
+          feedbackMessage: Signer feedback message
+          vars: '{"requesterName":"ACME Corp."}'
           id: id
           lang: fr
           device: SERVER
-          feedbackSubject: feedbackSubject
-          auditTrailId: auditTrailId
+          feedbackSubject: Signer feedback subject
+          auditTrailId: abcdef01-2345-6789-abcd-ef0123456789
           email: john.doe@acme.com
           pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
         testMode: true
         name: Non-disclosure agreement
-        callbackURL: https://acme.com/callback/woleet/signatureRequest
-        fileURL: https://acme.com/files/NDA.pdf
-        id: a3790416-16c3-4182-a310-9ef491c38a4c
         lastModified: 1620294759999
-        vars: '{"requesterName":"ACME Corp."}'
-        lang: fr
         activation: 1720294759999
-        deadline: 1720294759999
       properties:
         id:
           description: Signature request identifier. It is allocated by the platform,
             and so must not be provided at creation time.
-          example: a3790416-16c3-4182-a310-9ef491c38a4c
+          example: abcdef01-2345-6789-abcd-ef0123456789
           readOnly: true
           type: string
         created:
@@ -1865,18 +2075,25 @@ components:
             - the `proofBundleComplete` property is set to `true` by the platform (which means that the proof bundle and the Signature Attestation document are ready to download)<br>
             The platform does a POST request on this URL with the signature request as a JSON object in the request body.<br>
             Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br>
-            Please refer to the <a target="_blank" href="https://doc.woleet.io/reference#using-callbacks">documentation</a> for more details.
+            Please refer to the <a target="_blank" href="https://doc.woleet.io/reference/using-callbacks">documentation</a> for more details.
           example: https://acme.com/callback/woleet/signatureRequest
           type: string
         vars:
           description: |
-            A set of variables (key/value pairs) that can be used to customize the signature request workflow.<br>
+            The set of variables (key/value pairs) to use to customize the signature request workflow.<br>
             Values must be of type null, boolean, string or number: nested JSON objects are not allowed.<br>
             In particular, these variables can be used to customize the various email sent and disable some of these emails.<br>
-            Please refer to the <a target="_blank" href="https://doc.woleet.io/reference#custom-signature-workflow">documentation</a> for more details.<br>
+            Please refer to the <a target="_blank" href="https://doc.woleet.io/reference/custom-signature-workflow">documentation</a> for more details.<br>
             **This property is only available to the owner and the signers of the signature request.**
           example: '{"requesterName":"ACME Corp."}'
           type: object
+        baseVarsKey:
+          description: |
+            The key of an object in the user's k/v store to use as the base value of the `vars` property.<br>
+            Properties defined in this object are overwritten by those defined in the `vars` property.<br>
+            **Use this property to store large customization variables shared by multiple signature requests (like email tempates).**
+          example: mySignatureRequestsSharedVars
+          type: string
         lang:
           description: The preferred language (provided as an ISO 639-1 string) to
             use when emailing the signers.
@@ -1889,14 +2106,16 @@ components:
           type: boolean
         hashToSign:
           description: |
-            SHA256 hash (ie. the fingerprint) of the file to sign.<br>
+            SHA256 hash of the file to sign.<br>
             The value must be provided as an hexadecimal lowercase string. The hash of the empty file is forbidden.<br>
-          example: c1a52fac4179685e102a5c2bca3342661c3b1d17644b5f22c8feec0b503a8a3e
+          example: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           type: string
         activation:
           description: |
             Date of activation of the signature request (in milliseconds since Unix epoch).<br>
-            When not set or null, no activation date is applied.
+            When set, the platform waits for it before transitioning the signature request from PENDING to IN_PROGRESS automatically.<br>
+            When not set, the platform transitions the signature request to IN_PROGRESS as soon as the signature request is transitioned to PENDING.<br>
+            **Only stateful signature request can have an activation date.**
           example: 1720294759999
           format: int64
           type: integer
@@ -1983,7 +2202,7 @@ components:
           description: |
             Identifier of the signature anchor created by the platform to sign the audit trail data.<br>
             This property is set only once the audit trail is generated and can be used to retrieve its proof receipt.
-          example: a3790416-16c3-4182-a310-9ef491c38a4c
+          example: abcdef01-2345-6789-abcd-ef0123456789
           readOnly: true
           type: string
         proofBundleComplete:
@@ -2004,15 +2223,15 @@ components:
       description: |
         State of the signature request.<br>
         If not set, the signature request is **stateless** and can be updated at any time (eg. to add new signers on the fly).<br>
-        If set to 'DRAFT' at creation time, the signature request is **stateful** and its state can be transitioned using the dedicated endpoint.<br>
+        If set to DRAFT at creation time, the signature request is **stateful** and its state can be transitioned using the `/signatureRequest/{requestId}/transition` endpoint.<br>
         Available states:<br>
-        - `DRAFT`: the signature request is being edited (only `DRAFT` signature requests can be updated)<br>
-        - `PENDING`: the signature request is awaiting for its activation date<br>
-        - `IN_PROGRESS`: the activation date has been reached, the signature request emails have been sent to the signers (if applicable) and the signatures are being collected<br>
-        - `COMPLETED`: all signatures have been collected<br>
-        - `CLOSED`: the signature request has been closed by the owner before all signatures could be collected<br>
-        - `CANCELED`: the signature request has been canceled by the owner before all signatures could be collected<br>
-        - `EXPIRED`: the deadline of the signature request has been reached before all signatures could be collected
+        - DRAFT: the signature request is being edited (only DRAFT signature requests can be updated)<br>
+        - PENDING: the signature request is awaiting for its activation date to be reached<br>
+        - IN_PROGRESS: the signature request emails have been sent to the signers (if applicable) and the signatures are being collected<br>
+        - COMPLETED: all signatures have been collected<br>
+        - CLOSED: the signature request has been closed by the owner before all signatures could be collected<br>
+        - CANCELED: the signature request has been canceled by the owner before all signatures could be collected<br>
+        - EXPIRED: the deadline of the signature request has been reached before all signatures could be collected
       enum:
       - DRAFT
       - PENDING
@@ -2029,228 +2248,222 @@ components:
         numberOfElements: 0
         size: 6
         content:
-        - ordered: true
-          fileName: NDA.pdf
-          auditTrailAnchorId: a3790416-16c3-4182-a310-9ef491c38a4c
-          created: 1620294758688
+        - fileName: NDA.pdf
           identityURL: https://wids.acme.com/identity
           watchers:
           - commonName: John Doe
-            vars: '{"key":"value"}'
+            vars: '{"requesterName":"ACME Corp."}'
             lang: fr
             email: john.doe@acme.com
           - commonName: John Doe
-            vars: '{"key":"value"}'
+            vars: '{"requesterName":"ACME Corp."}'
             lang: fr
             email: john.doe@acme.com
-          hashToSign: c1a52fac4179685e102a5c2bca3342661c3b1d17644b5f22c8feec0b503a8a3e
-          maxSignatures: 10
+          hashToSign: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           anchors:
           - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
-            signedIssuerDomain: signedIssuerDomain
-            signature: signature
+            signedIssuerDomain: acme.com
+            signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
             created: 1620294758688
             notifyByEmail: true
-            identityURL: identityURL
-            txId: txId
+            identityURL: https://wids.acme.com/identity
+            txId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
             confirmations: 6
-            signedIdentity: signedIdentity
-            tags:
-            - tags
-            - tags
+            signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
+            tags: '["book","sci-fi"]'
             public: true
-            name: name
-            signedHash: signedHash
+            name: My anchor
+            signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
             callbackURL: https://acme.com/callback/woleet/anchor
-            id: a3790416-16c3-4182-a310-9ef491c38a4c
+            id: abcdef01-2345-6789-abcd-ef0123456789
             lastModified: 1620294759999
-            hash: hash
-            pubKey: pubKey
+            hash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
             status: WAIT
-            timestamp: 0
+            timestamp: 1620294759999
           - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
-            signedIssuerDomain: signedIssuerDomain
-            signature: signature
+            signedIssuerDomain: acme.com
+            signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
             created: 1620294758688
             notifyByEmail: true
-            identityURL: identityURL
-            txId: txId
+            identityURL: https://wids.acme.com/identity
+            txId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
             confirmations: 6
-            signedIdentity: signedIdentity
-            tags:
-            - tags
-            - tags
+            signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
+            tags: '["book","sci-fi"]'
             public: true
-            name: name
-            signedHash: signedHash
+            name: My anchor
+            signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
             callbackURL: https://acme.com/callback/woleet/anchor
-            id: a3790416-16c3-4182-a310-9ef491c38a4c
+            id: abcdef01-2345-6789-abcd-ef0123456789
             lastModified: 1620294759999
-            hash: hash
-            pubKey: pubKey
+            hash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
             status: WAIT
-            timestamp: 0
-          auditTrailData: eyJhdWRpdENvbnRleHQiOnsiaWQiOiJiNzkwNDMyYi1kNjYyLTQ2MzMtOGNjMi0xMjc0ODZiMjYzYjgiLCJuYW1lIjoiU2FtcGxlIn0sImF1ZGl0RXZlbnRzIjpbeyJkYXRlIjoxNjIyMTk5NTA5NDExLCJ0eXBlIjoiQ0xPU0VEIn1dfQo=
+            timestamp: 1620294759999
+          baseVarsKey: mySignatureRequestsSharedVars
           public: true
           proofBundleComplete: true
+          callbackURL: https://acme.com/callback/woleet/signatureRequest
+          fileURL: https://acme.com/files/NDA.pdf
+          id: abcdef01-2345-6789-abcd-ef0123456789
+          vars: '{"requesterName":"ACME Corp."}'
+          lang: fr
+          deadline: 1720294759999
+          ordered: true
+          auditTrailAnchorId: abcdef01-2345-6789-abcd-ef0123456789
+          created: 1620294758688
+          maxSignatures: 10
+          auditTrailData: eyJhdWRpdENvbnRleHQiOnsiaWQiOiJiNzkwNDMyYi1kNjYyLTQ2MzMtOGNjMi0xMjc0ODZiMjYzYjgiLCJuYW1lIjoiU2FtcGxlIn0sImF1ZGl0RXZlbnRzIjpbeyJkYXRlIjoxNjIyMTk5NTA5NDExLCJ0eXBlIjoiQ0xPU0VEIn1dfQo=
           authorizedSignees:
           - commonName: John Doe
             identityURL: https://wids.acme.com/identity
             OTP: OTP
-            anchorId: anchorId
-            signedOn: 0
+            anchorId: abcdef01-2345-6789-abcd-ef0123456789
+            signedOn: 1620294759999
             countryCallingCode: "33"
             phone: "612345678"
             requiresOTP: true
             signsFaceToFace: true
-            feedbackMessage: feedbackMessage
-            vars: '{}'
+            feedbackMessage: Signer feedback message
+            vars: '{"requesterName":"ACME Corp."}'
             id: id
             lang: fr
             device: SERVER
-            feedbackSubject: feedbackSubject
-            auditTrailId: auditTrailId
+            feedbackSubject: Signer feedback subject
+            auditTrailId: abcdef01-2345-6789-abcd-ef0123456789
             email: john.doe@acme.com
             pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
           - commonName: John Doe
             identityURL: https://wids.acme.com/identity
             OTP: OTP
-            anchorId: anchorId
-            signedOn: 0
+            anchorId: abcdef01-2345-6789-abcd-ef0123456789
+            signedOn: 1620294759999
             countryCallingCode: "33"
             phone: "612345678"
             requiresOTP: true
             signsFaceToFace: true
-            feedbackMessage: feedbackMessage
-            vars: '{}'
+            feedbackMessage: Signer feedback message
+            vars: '{"requesterName":"ACME Corp."}'
             id: id
             lang: fr
             device: SERVER
-            feedbackSubject: feedbackSubject
-            auditTrailId: auditTrailId
+            feedbackSubject: Signer feedback subject
+            auditTrailId: abcdef01-2345-6789-abcd-ef0123456789
             email: john.doe@acme.com
             pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
           testMode: true
           name: Non-disclosure agreement
-          callbackURL: https://acme.com/callback/woleet/signatureRequest
-          fileURL: https://acme.com/files/NDA.pdf
-          id: a3790416-16c3-4182-a310-9ef491c38a4c
           lastModified: 1620294759999
-          vars: '{"requesterName":"ACME Corp."}'
-          lang: fr
           activation: 1720294759999
-          deadline: 1720294759999
-        - ordered: true
-          fileName: NDA.pdf
-          auditTrailAnchorId: a3790416-16c3-4182-a310-9ef491c38a4c
-          created: 1620294758688
+        - fileName: NDA.pdf
           identityURL: https://wids.acme.com/identity
           watchers:
           - commonName: John Doe
-            vars: '{"key":"value"}'
+            vars: '{"requesterName":"ACME Corp."}'
             lang: fr
             email: john.doe@acme.com
           - commonName: John Doe
-            vars: '{"key":"value"}'
+            vars: '{"requesterName":"ACME Corp."}'
             lang: fr
             email: john.doe@acme.com
-          hashToSign: c1a52fac4179685e102a5c2bca3342661c3b1d17644b5f22c8feec0b503a8a3e
-          maxSignatures: 10
+          hashToSign: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           anchors:
           - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
-            signedIssuerDomain: signedIssuerDomain
-            signature: signature
+            signedIssuerDomain: acme.com
+            signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
             created: 1620294758688
             notifyByEmail: true
-            identityURL: identityURL
-            txId: txId
+            identityURL: https://wids.acme.com/identity
+            txId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
             confirmations: 6
-            signedIdentity: signedIdentity
-            tags:
-            - tags
-            - tags
+            signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
+            tags: '["book","sci-fi"]'
             public: true
-            name: name
-            signedHash: signedHash
+            name: My anchor
+            signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
             callbackURL: https://acme.com/callback/woleet/anchor
-            id: a3790416-16c3-4182-a310-9ef491c38a4c
+            id: abcdef01-2345-6789-abcd-ef0123456789
             lastModified: 1620294759999
-            hash: hash
-            pubKey: pubKey
+            hash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
             status: WAIT
-            timestamp: 0
+            timestamp: 1620294759999
           - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
-            signedIssuerDomain: signedIssuerDomain
-            signature: signature
+            signedIssuerDomain: acme.com
+            signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
             created: 1620294758688
             notifyByEmail: true
-            identityURL: identityURL
-            txId: txId
+            identityURL: https://wids.acme.com/identity
+            txId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
             confirmations: 6
-            signedIdentity: signedIdentity
-            tags:
-            - tags
-            - tags
+            signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
+            tags: '["book","sci-fi"]'
             public: true
-            name: name
-            signedHash: signedHash
+            name: My anchor
+            signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
             callbackURL: https://acme.com/callback/woleet/anchor
-            id: a3790416-16c3-4182-a310-9ef491c38a4c
+            id: abcdef01-2345-6789-abcd-ef0123456789
             lastModified: 1620294759999
-            hash: hash
-            pubKey: pubKey
+            hash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
             status: WAIT
-            timestamp: 0
-          auditTrailData: eyJhdWRpdENvbnRleHQiOnsiaWQiOiJiNzkwNDMyYi1kNjYyLTQ2MzMtOGNjMi0xMjc0ODZiMjYzYjgiLCJuYW1lIjoiU2FtcGxlIn0sImF1ZGl0RXZlbnRzIjpbeyJkYXRlIjoxNjIyMTk5NTA5NDExLCJ0eXBlIjoiQ0xPU0VEIn1dfQo=
+            timestamp: 1620294759999
+          baseVarsKey: mySignatureRequestsSharedVars
           public: true
           proofBundleComplete: true
+          callbackURL: https://acme.com/callback/woleet/signatureRequest
+          fileURL: https://acme.com/files/NDA.pdf
+          id: abcdef01-2345-6789-abcd-ef0123456789
+          vars: '{"requesterName":"ACME Corp."}'
+          lang: fr
+          deadline: 1720294759999
+          ordered: true
+          auditTrailAnchorId: abcdef01-2345-6789-abcd-ef0123456789
+          created: 1620294758688
+          maxSignatures: 10
+          auditTrailData: eyJhdWRpdENvbnRleHQiOnsiaWQiOiJiNzkwNDMyYi1kNjYyLTQ2MzMtOGNjMi0xMjc0ODZiMjYzYjgiLCJuYW1lIjoiU2FtcGxlIn0sImF1ZGl0RXZlbnRzIjpbeyJkYXRlIjoxNjIyMTk5NTA5NDExLCJ0eXBlIjoiQ0xPU0VEIn1dfQo=
           authorizedSignees:
           - commonName: John Doe
             identityURL: https://wids.acme.com/identity
             OTP: OTP
-            anchorId: anchorId
-            signedOn: 0
+            anchorId: abcdef01-2345-6789-abcd-ef0123456789
+            signedOn: 1620294759999
             countryCallingCode: "33"
             phone: "612345678"
             requiresOTP: true
             signsFaceToFace: true
-            feedbackMessage: feedbackMessage
-            vars: '{}'
+            feedbackMessage: Signer feedback message
+            vars: '{"requesterName":"ACME Corp."}'
             id: id
             lang: fr
             device: SERVER
-            feedbackSubject: feedbackSubject
-            auditTrailId: auditTrailId
+            feedbackSubject: Signer feedback subject
+            auditTrailId: abcdef01-2345-6789-abcd-ef0123456789
             email: john.doe@acme.com
             pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
           - commonName: John Doe
             identityURL: https://wids.acme.com/identity
             OTP: OTP
-            anchorId: anchorId
-            signedOn: 0
+            anchorId: abcdef01-2345-6789-abcd-ef0123456789
+            signedOn: 1620294759999
             countryCallingCode: "33"
             phone: "612345678"
             requiresOTP: true
             signsFaceToFace: true
-            feedbackMessage: feedbackMessage
-            vars: '{}'
+            feedbackMessage: Signer feedback message
+            vars: '{"requesterName":"ACME Corp."}'
             id: id
             lang: fr
             device: SERVER
-            feedbackSubject: feedbackSubject
-            auditTrailId: auditTrailId
+            feedbackSubject: Signer feedback subject
+            auditTrailId: abcdef01-2345-6789-abcd-ef0123456789
             email: john.doe@acme.com
             pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
           testMode: true
           name: Non-disclosure agreement
-          callbackURL: https://acme.com/callback/woleet/signatureRequest
-          fileURL: https://acme.com/files/NDA.pdf
-          id: a3790416-16c3-4182-a310-9ef491c38a4c
           lastModified: 1620294759999
-          vars: '{"requesterName":"ACME Corp."}'
-          lang: fr
           activation: 1720294759999
-          deadline: 1720294759999
         first: true
       properties:
         content:
@@ -2324,19 +2537,19 @@ components:
         commonName: John Doe
         identityURL: https://wids.acme.com/identity
         OTP: OTP
-        anchorId: anchorId
-        signedOn: 0
+        anchorId: abcdef01-2345-6789-abcd-ef0123456789
+        signedOn: 1620294759999
         countryCallingCode: "33"
         phone: "612345678"
         requiresOTP: true
         signsFaceToFace: true
-        feedbackMessage: feedbackMessage
-        vars: '{}'
+        feedbackMessage: Signer feedback message
+        vars: '{"requesterName":"ACME Corp."}'
         id: id
         lang: fr
         device: SERVER
-        feedbackSubject: feedbackSubject
-        auditTrailId: auditTrailId
+        feedbackSubject: Signer feedback subject
+        auditTrailId: abcdef01-2345-6789-abcd-ef0123456789
         email: john.doe@acme.com
         pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
       properties:
@@ -2376,10 +2589,11 @@ components:
           type: boolean
         vars:
           description: |
-            A set of variables (key/value pairs) that can be used to customize the signature request workflow for this signer.<br>
+            The set of variables (key/value pairs) to use to customize the signature request workflow for this signer.<br>
             Values must be of type null, boolean, string or number: nested JSON objects are not allowed.<br>
             Variables defined here overwrites the ones defined at signature request level when emailing the signer.<br>
             **This property is only available to the owner and the signers of the signature request.**
+          example: '{"requesterName":"ACME Corp."}'
           type: object
         lang:
           description: |
@@ -2416,27 +2630,32 @@ components:
           description: |
             Last feedback subject reported by the signer to the owner of the signature request.<br>
             **This property is only available to the owner of the signature request.**
+          example: Signer feedback subject
           readOnly: true
           type: string
         feedbackMessage:
           description: |
             Last feedback message reported by the signer to the owner of the signature request.<br>
             **This property is only available to the owner of the signature request.**
+          example: Signer feedback message
           readOnly: true
           type: string
         anchorId:
           description: If the signer has signed, identifier of the signature anchor
             created.
+          example: abcdef01-2345-6789-abcd-ef0123456789
           readOnly: true
           type: string
         signedOn:
           description: If the signer has signed, date of signature (in milliseconds
             since Unix epoch).
+          example: 1620294759999
           format: int64
           readOnly: true
           type: integer
         auditTrailId:
           description: Identifier of the signer in the audit trail.
+          example: abcdef01-2345-6789-abcd-ef0123456789
           readOnly: true
           type: string
         id:
@@ -2454,7 +2673,7 @@ components:
       description: A watcher of the signature request.
       example:
         commonName: John Doe
-        vars: '{"key":"value"}'
+        vars: '{"requesterName":"ACME Corp."}'
         lang: fr
         email: john.doe@acme.com
       properties:
@@ -2468,10 +2687,10 @@ components:
           type: string
         vars:
           description: |
-            A set of variables (key/value pairs) that can be used to customize the signature request workflow for this watcher.<br>
+            The set of variables (key/value pairs) to use to customize the signature request workflow for this watcher.<br>
             Values must be of type null, boolean, string or number: nested JSON objects are not allowed.<br>
             Variables defined here overwrites the ones defined at signature request level when emailing the watcher.
-          example: '{"key":"value"}'
+          example: '{"requesterName":"ACME Corp."}'
           type: object
         lang:
           description: |
@@ -2488,6 +2707,7 @@ components:
           description: |
             Signature of the `hashToSign` property of the signature request using the public key `pubKey`, or, if any of `signedIdentity` or `signedIssuerDomain` is provided,
             signature of SHA256(`hashToSign` + `signedIdentity` + `signedIssuerDomain`) using the public key `pubKey`.
+          example: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
           type: string
         pubKey:
           description: Public key used to sign.
@@ -2497,16 +2717,19 @@ components:
           description: |
             X500 Distinguished Name representing the signed identity.<br>
             If set, the CN (common name) and EMAILADDRESS (email address) attributes must match the common name and email address of the signer as set in the signature request.
+          example: CN=John Doe,EMAILADDRESS=john.doe@acme.com
           type: string
         signedIssuerDomain:
           description: |
             Domain name of the identity issuer (ie. of the organization who verified the identity).<br>
             If set, the domain name of the identity URL must be included in the `signedIssuerDomain` domain name.
+          example: acme.com
           type: string
         identityURL:
           description: |
             Web hook to use to verify the signer's identity.<br>
             If set, it is used in place of the `identityURL` property of the signer to create the signature anchor.
+          example: https://wids.acme.com/identity
           type: string
         device:
           description: |
@@ -2523,10 +2746,12 @@ components:
           description: |
             Secret identifier of the signer (provided by email).<br>
             Only required if `pubKey` was not set for thìs signer.
+          example: abcdef01-2345-6789-abcd-ef0123456789
           type: string
         OTP:
           description: |
             OTP of the signer (only required if `requiresOTP` was set to `true` for thìs signer).
+          example: "123456"
           type: string
       required:
       - pubKey
@@ -2536,10 +2761,12 @@ components:
       properties:
         signeeId:
           description: Secret identifier of the signer (provided by email).
+          example: abcdef01-2345-6789-abcd-ef0123456789
           type: string
         OTP:
           description: |
             OTP of the signer (only required if `requiresOTP` was set to `true` for thìs signer).
+          example: "123456"
           type: string
       required:
       - signeeId
@@ -2548,12 +2775,15 @@ components:
       properties:
         signeeId:
           description: Secret identifier of the signer (provided by email).
+          example: abcdef01-2345-6789-abcd-ef0123456789
           type: string
         subject:
           description: Feedback subject to report to the owner of the signature request.
+          example: Signer feedback subject
           type: string
         message:
           description: Feedback message to report to the owner of the signature request.
+          example: Signer feedback message
           type: string
       required:
       - message
@@ -2564,6 +2794,7 @@ components:
       properties:
         signeeId:
           description: Secret identifier of the signer (provided by email).
+          example: abcdef01-2345-6789-abcd-ef0123456789
           type: string
         type:
           description: |
@@ -2584,6 +2815,7 @@ components:
           type: string
         comment:
           description: Comment related to the event to report.
+          example: Event comment
           type: string
       required:
       - signeeId
@@ -2591,79 +2823,80 @@ components:
       type: object
     signatureRequestSignResult:
       example:
-        anchorId: anchorId
+        anchorId: abcdef01-2345-6789-abcd-ef0123456789
       properties:
         anchorId:
           description: Identifier of the signature anchor created.
+          example: abcdef01-2345-6789-abcd-ef0123456789
           type: string
       type: object
     signatureRequestProofBundle:
       description: A bundle of all the pieces of evidence of a signature request.
       example:
         signatureReceipts:
-        - targetHash: targetHash
+        - targetHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           signature:
-            signedIssuerDomain: signedIssuerDomain
-            signature: signature
-            signedHash: signedHash
-            identityURL: identityURL
-            signedIdentity: signedIdentity
+            signedIssuerDomain: acme.com
+            signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
+            signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            identityURL: https://wids.acme.com/identity
+            signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
             pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
-          merkleRoot: merkleRoot
+          merkleRoot: 55aaf75bb11ffc925e28940dfa9f0b48ed25ace18d561e41c95dd2aead65cc61
           proof:
-          - left: left
-            right: right
-          - left: left
-            right: right
+          - left: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            right: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+          - left: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            right: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           anchors:
-          - sourceId: sourceId
-            type: type
-          - sourceId: sourceId
-            type: type
-          type: type
+          - sourceId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            type: BTCOpReturn
+          - sourceId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            type: BTCOpReturn
+          type: ChainpointSHA256v2
           partial: true
-        - targetHash: targetHash
+        - targetHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           signature:
-            signedIssuerDomain: signedIssuerDomain
-            signature: signature
-            signedHash: signedHash
-            identityURL: identityURL
-            signedIdentity: signedIdentity
+            signedIssuerDomain: acme.com
+            signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
+            signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            identityURL: https://wids.acme.com/identity
+            signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
             pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
-          merkleRoot: merkleRoot
+          merkleRoot: 55aaf75bb11ffc925e28940dfa9f0b48ed25ace18d561e41c95dd2aead65cc61
           proof:
-          - left: left
-            right: right
-          - left: left
-            right: right
+          - left: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            right: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+          - left: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            right: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           anchors:
-          - sourceId: sourceId
-            type: type
-          - sourceId: sourceId
-            type: type
-          type: type
+          - sourceId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            type: BTCOpReturn
+          - sourceId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            type: BTCOpReturn
+          type: ChainpointSHA256v2
           partial: true
         auditTrailReceipt:
-          targetHash: targetHash
+          targetHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           signature:
-            signedIssuerDomain: signedIssuerDomain
-            signature: signature
-            signedHash: signedHash
-            identityURL: identityURL
-            signedIdentity: signedIdentity
+            signedIssuerDomain: acme.com
+            signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
+            signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            identityURL: https://wids.acme.com/identity
+            signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
             pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
-          merkleRoot: merkleRoot
+          merkleRoot: 55aaf75bb11ffc925e28940dfa9f0b48ed25ace18d561e41c95dd2aead65cc61
           proof:
-          - left: left
-            right: right
-          - left: left
-            right: right
+          - left: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            right: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+          - left: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            right: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           anchors:
-          - sourceId: sourceId
-            type: type
-          - sourceId: sourceId
-            type: type
-          type: type
+          - sourceId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            type: BTCOpReturn
+          - sourceId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+            type: BTCOpReturn
+          type: ChainpointSHA256v2
           partial: true
         complete: true
         auditTrailData: auditTrailData
@@ -2690,32 +2923,30 @@ components:
     anchor:
       example:
         metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
-        signedIssuerDomain: signedIssuerDomain
-        signature: signature
+        signedIssuerDomain: acme.com
+        signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
         created: 1620294758688
         notifyByEmail: true
-        identityURL: identityURL
-        txId: txId
+        identityURL: https://wids.acme.com/identity
+        txId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
         confirmations: 6
-        signedIdentity: signedIdentity
-        tags:
-        - tags
-        - tags
+        signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
+        tags: '["book","sci-fi"]'
         public: true
-        name: name
-        signedHash: signedHash
+        name: My anchor
+        signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
         callbackURL: https://acme.com/callback/woleet/anchor
-        id: a3790416-16c3-4182-a310-9ef491c38a4c
+        id: abcdef01-2345-6789-abcd-ef0123456789
         lastModified: 1620294759999
-        hash: hash
-        pubKey: pubKey
+        hash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+        pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
         status: WAIT
-        timestamp: 0
+        timestamp: 1620294759999
       properties:
         id:
           description: Anchor identifier. It is allocated by the platform, and so
             must not be provided at creation time.
-          example: a3790416-16c3-4182-a310-9ef491c38a4c
+          example: abcdef01-2345-6789-abcd-ef0123456789
           readOnly: true
           type: string
         created:
@@ -2732,35 +2963,41 @@ components:
           type: integer
         name:
           description: Name of the anchor (doesn't need to be unique).
+          example: My anchor
           type: string
         hash:
           description: |
-            SHA256 hash (ie. the fingerprint) of the data to anchor.<br>
+            SHA256 hash of the data to anchor.<br>
             The value must be provided as an hexadecimal lowercase string. The hash of the empty file is forbidden.<br>
             **This property must not be provided when creating a signature anchor: it is automatically set at creation time to the SHA256 hash of the `signature` property provided, meaning that the signature is the actual anchored data.**
+          example: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           type: string
         signedHash:
           description: |
-            SHA256 hash (ie. the fingerprint) of the signed data.<br>
+            SHA256 hash of the signed data.<br>
             The value must be provided as an hexadecimal lowercase string. The hash of the empty file is forbidden.<br>
             **This property must not be provided when creating a data anchor.**
+          example: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           type: string
         signedIdentity:
           description: |
             X500 Distinguished Name representing the signed identity.<br>
             **This property must not be provided when creating a data anchor.**
+          example: CN=John Doe,EMAILADDRESS=john.doe@acme.com
           type: string
         signedIssuerDomain:
           description: |
             Domain name of the identity issuer (ie. of the organization who verified the identity).<br>
             If set, the domain name of the identity URL must be included in the `signedIssuerDomain` domain name.<br>
             **This property must not be provided when creating a data anchor.**
+          example: acme.com
           type: string
         pubKey:
           description: |
             Public key of the signer.<br>
             **Currently only Bitcoin addresses are supported.**<br>
             **This property must not be provided when creating a data anchor.**
+          example: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
           type: string
         signature:
           description: |
@@ -2768,6 +3005,7 @@ components:
             signature of SHA256(`signedHash` + `signedIdentity` + `signedIssuerDomain`) using the public key `pubKey`.<br>
             **Only Bitcoin signatures are currently supported.**<br>
             **This property must not be provided when creating a data anchor.**
+          example: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
           type: string
         identityURL:
           description: |
@@ -2787,6 +3025,7 @@ components:
             - `identity`: the X500 identity associated to the key claimed by the identity server - optional<br>
             - `key`: additional information about the key - optional<br>
             If `identity` is not provided, `signature` and `rightData` MUST be provided: in such a case the identity of the signer can be extracted from the TLS certificate.
+          example: https://wids.acme.com/identity
           type: string
         public:
           description: |
@@ -2800,6 +3039,7 @@ components:
           description: |
             Set of tags associated to the anchor. There is no restriction on tag names, except they cannot contain spaces.<br>
             Tags are aimed at classifying and searching anchors.
+          example: '["book","sci-fi"]'
           items:
             type: string
           type: array
@@ -2814,7 +3054,7 @@ components:
             Web hook to be called by the platform whenever the `status` property of the anchor changes:<br>
             the platform does a POST request on this URL with the anchor as a JSON object in the request body.<br>
             Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br>
-            Please refer to the <a target="_blank" href="https://doc.woleet.io/reference#using-callbacks">documentation</a> for more details.
+            Please refer to the <a target="_blank" href="https://doc.woleet.io/reference/using-callbacks">documentation</a> for more details.
           example: https://acme.com/callback/woleet/anchor
           type: string
         status:
@@ -2837,6 +3077,7 @@ components:
             This is actually the time of the Bitcoin block into which the anchoring process occurred (in milliseconds since Unix epoch).<br>
             Any data whose SHA256 hash equals this anchor's hash is proven to exist at that time and has not been modified since.<br>
             This property is set when the first confirmation of the Bitcoin block occurs. Once set, the associated proof receipt can be verified (without having to wait for 6 confirmations).
+          example: 1620294759999
           format: int64
           readOnly: true
           type: integer
@@ -2844,11 +3085,13 @@ components:
           description: |
             Number of confirmations of the Bitcoin block into which the anchoring process occurred.<br>
             This property is set when the first confirmation of the Bitcoin block occurs, and removed once the block is confirmed at least 6 times.
+          example: 6
           format: int32
           readOnly: true
           type: integer
         txId:
           description: Identifier of the Bitcoin transaction where the anchoring occurred.
+          example: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           readOnly: true
           type: string
       required:
@@ -2863,49 +3106,45 @@ components:
         size: 6
         content:
         - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
-          signedIssuerDomain: signedIssuerDomain
-          signature: signature
+          signedIssuerDomain: acme.com
+          signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
           created: 1620294758688
           notifyByEmail: true
-          identityURL: identityURL
-          txId: txId
+          identityURL: https://wids.acme.com/identity
+          txId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           confirmations: 6
-          signedIdentity: signedIdentity
-          tags:
-          - tags
-          - tags
+          signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
+          tags: '["book","sci-fi"]'
           public: true
-          name: name
-          signedHash: signedHash
+          name: My anchor
+          signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           callbackURL: https://acme.com/callback/woleet/anchor
-          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          id: abcdef01-2345-6789-abcd-ef0123456789
           lastModified: 1620294759999
-          hash: hash
-          pubKey: pubKey
+          hash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+          pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
           status: WAIT
-          timestamp: 0
+          timestamp: 1620294759999
         - metadata: '{"title":"Ubik","author":"Philip K. Dick","read":true,"rank":10.0}'
-          signedIssuerDomain: signedIssuerDomain
-          signature: signature
+          signedIssuerDomain: acme.com
+          signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
           created: 1620294758688
           notifyByEmail: true
-          identityURL: identityURL
-          txId: txId
+          identityURL: https://wids.acme.com/identity
+          txId: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           confirmations: 6
-          signedIdentity: signedIdentity
-          tags:
-          - tags
-          - tags
+          signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
+          tags: '["book","sci-fi"]'
           public: true
-          name: name
-          signedHash: signedHash
+          name: My anchor
+          signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           callbackURL: https://acme.com/callback/woleet/anchor
-          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          id: abcdef01-2345-6789-abcd-ef0123456789
           lastModified: 1620294759999
-          hash: hash
-          pubKey: pubKey
+          hash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+          pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
           status: WAIT
-          timestamp: 0
+          timestamp: 1620294759999
         first: true
       properties:
         content:
@@ -2979,70 +3218,70 @@ components:
         timestampVerificationStatus:
           code: VERIFIED
           text: text
-          confirmations: 5
-          timestamp: 1
+          confirmations: 6
+          timestamp: 1620294758688
         code: VERIFIED
         identityVerificationStatus:
           code: VERIFIED
-          signedIssuerDomain: signedIssuerDomain
+          signedIssuerDomain: acme.com
           certificates:
           - subject:
-              ST: ST
-              C: C
-              OU: OU
-              EMAILADDRESS: EMAILADDRESS
-              CN: CN
-              L: L
-              O: O
+              ST: Britanny
+              C: FR
+              OU: Sales Dept.
+              EMAILADDRESS: john.doe@acme.com
+              CN: John Doe
+              L: Rennes
+              O: ACME Corp.
             issuer:
-              ST: ST
-              C: C
-              OU: OU
-              EMAILADDRESS: EMAILADDRESS
-              CN: CN
-              L: L
-              O: O
+              ST: Britanny
+              C: FR
+              OU: Sales Dept.
+              EMAILADDRESS: john.doe@acme.com
+              CN: John Doe
+              L: Rennes
+              O: ACME Corp.
           - subject:
-              ST: ST
-              C: C
-              OU: OU
-              EMAILADDRESS: EMAILADDRESS
-              CN: CN
-              L: L
-              O: O
+              ST: Britanny
+              C: FR
+              OU: Sales Dept.
+              EMAILADDRESS: john.doe@acme.com
+              CN: John Doe
+              L: Rennes
+              O: ACME Corp.
             issuer:
-              ST: ST
-              C: C
-              OU: OU
-              EMAILADDRESS: EMAILADDRESS
-              CN: CN
-              L: L
-              O: O
+              ST: Britanny
+              C: FR
+              OU: Sales Dept.
+              EMAILADDRESS: john.doe@acme.com
+              CN: John Doe
+              L: Rennes
+              O: ACME Corp.
           identity:
-            commonName: Jim Smith
+            commonName: John Doe
             country: FR
-            organization: Woleet
+            organization: ACME Corp.
             locality: Rennes
-            organizationalUnit: Sales
+            organizationalUnit: Sales Dept.
           text: text
           key:
-            name: Jim Smith's key
+            name: John Doe key
             expiration: 1569542400000
             revokedAt: 1569542400000
-            pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
+            pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
             status: valid
           signedIdentity:
-            commonName: Jim Smith
+            commonName: John Doe
             country: FR
-            organization: Woleet
+            organization: ACME Corp.
             locality: Rennes
-            organizationalUnit: Sales
+            organizationalUnit: Sales Dept.
         text: text
         confirmations: 6
         signatureVerificationStatus:
           code: VERIFIED
           text: text
-        timestamp: 0
+        timestamp: 1620294758688
       properties:
         code:
           description: |
@@ -3067,11 +3306,13 @@ components:
           description: |
             Proven timestamp of the data (for a data anchor) or of the signature (for a signature anchor).<br>
             This is actually the time of the Bitcoin block into which the anchoring process occurred (in milliseconds since Unix epoch).
+          example: 1620294758688
           format: int64
           type: integer
         confirmations:
           description: Number of confirmations of the Bitcoin block into which the
             anchoring process occurred.
+          example: 6
           format: int32
           type: integer
         timestampVerificationStatus:
@@ -3085,8 +3326,8 @@ components:
       example:
         code: VERIFIED
         text: text
-        confirmations: 5
-        timestamp: 1
+        confirmations: 6
+        timestamp: 1620294758688
       properties:
         code:
           description: |
@@ -3118,11 +3359,13 @@ components:
           description: |
             Proven timestamp of the data (for a data anchor) or of the signature (for a signature anchor).<br>
             This is actually the time of the Bitcoin block into which the anchoring process occurred (in milliseconds since Unix epoch).
+          example: 1620294758688
           format: int64
           type: integer
         confirmations:
           description: Number of confirmations of the Bitcoin block into which the
             anchoring process occurred.
+          example: 6
           format: int32
           type: integer
       type: object
@@ -3153,59 +3396,59 @@ components:
     identityVerificationStatus:
       example:
         code: VERIFIED
-        signedIssuerDomain: signedIssuerDomain
+        signedIssuerDomain: acme.com
         certificates:
         - subject:
-            ST: ST
-            C: C
-            OU: OU
-            EMAILADDRESS: EMAILADDRESS
-            CN: CN
-            L: L
-            O: O
+            ST: Britanny
+            C: FR
+            OU: Sales Dept.
+            EMAILADDRESS: john.doe@acme.com
+            CN: John Doe
+            L: Rennes
+            O: ACME Corp.
           issuer:
-            ST: ST
-            C: C
-            OU: OU
-            EMAILADDRESS: EMAILADDRESS
-            CN: CN
-            L: L
-            O: O
+            ST: Britanny
+            C: FR
+            OU: Sales Dept.
+            EMAILADDRESS: john.doe@acme.com
+            CN: John Doe
+            L: Rennes
+            O: ACME Corp.
         - subject:
-            ST: ST
-            C: C
-            OU: OU
-            EMAILADDRESS: EMAILADDRESS
-            CN: CN
-            L: L
-            O: O
+            ST: Britanny
+            C: FR
+            OU: Sales Dept.
+            EMAILADDRESS: john.doe@acme.com
+            CN: John Doe
+            L: Rennes
+            O: ACME Corp.
           issuer:
-            ST: ST
-            C: C
-            OU: OU
-            EMAILADDRESS: EMAILADDRESS
-            CN: CN
-            L: L
-            O: O
+            ST: Britanny
+            C: FR
+            OU: Sales Dept.
+            EMAILADDRESS: john.doe@acme.com
+            CN: John Doe
+            L: Rennes
+            O: ACME Corp.
         identity:
-          commonName: Jim Smith
+          commonName: John Doe
           country: FR
-          organization: Woleet
+          organization: ACME Corp.
           locality: Rennes
-          organizationalUnit: Sales
+          organizationalUnit: Sales Dept.
         text: text
         key:
-          name: Jim Smith's key
+          name: John Doe key
           expiration: 1569542400000
           revokedAt: 1569542400000
-          pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
+          pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
           status: valid
         signedIdentity:
-          commonName: Jim Smith
+          commonName: John Doe
           country: FR
-          organization: Woleet
+          organization: ACME Corp.
           locality: Rennes
-          organizationalUnit: Sales
+          organizationalUnit: Sales Dept.
       properties:
         code:
           description: |
@@ -3244,6 +3487,7 @@ components:
         signedIssuerDomain:
           description: Domain name of the identity issuer (ie. of the organization
             who verified the identity).
+          example: acme.com
           type: string
         key:
           $ref: '#/components/schemas/key'
@@ -3251,21 +3495,21 @@ components:
     X509SubjectIssuer:
       example:
         subject:
-          ST: ST
-          C: C
-          OU: OU
-          EMAILADDRESS: EMAILADDRESS
-          CN: CN
-          L: L
-          O: O
+          ST: Britanny
+          C: FR
+          OU: Sales Dept.
+          EMAILADDRESS: john.doe@acme.com
+          CN: John Doe
+          L: Rennes
+          O: ACME Corp.
         issuer:
-          ST: ST
-          C: C
-          OU: OU
-          EMAILADDRESS: EMAILADDRESS
-          CN: CN
-          L: L
-          O: O
+          ST: Britanny
+          C: FR
+          OU: Sales Dept.
+          EMAILADDRESS: john.doe@acme.com
+          CN: John Doe
+          L: Rennes
+          O: ACME Corp.
       properties:
         subject:
           $ref: '#/components/schemas/X500Name'
@@ -3275,56 +3519,63 @@ components:
     X500Name:
       description: X500 Distinguished Name.
       example:
-        ST: ST
-        C: C
-        OU: OU
-        EMAILADDRESS: EMAILADDRESS
-        CN: CN
-        L: L
-        O: O
+        ST: Britanny
+        C: FR
+        OU: Sales Dept.
+        EMAILADDRESS: john.doe@acme.com
+        CN: John Doe
+        L: Rennes
+        O: ACME Corp.
       properties:
         C:
           description: Country code
+          example: FR
           type: string
         ST:
           description: State or Province
+          example: Britanny
           type: string
         L:
           description: Locality
+          example: Rennes
           type: string
         O:
           description: Organization
+          example: ACME Corp.
           type: string
         OU:
           description: Organizational Unit
+          example: Sales Dept.
           type: string
         CN:
           description: Common Name
+          example: John Doe
           type: string
         EMAILADDRESS:
           description: Email address
+          example: john.doe@acme.com
           type: string
       type: object
     identity:
       description: Signer's identity provided as a set of X.500 attributes (see https://www.ietf.org/rfc/rfc4519.txt).
       example:
-        commonName: Jim Smith
+        commonName: John Doe
         country: FR
-        organization: Woleet
+        organization: ACME Corp.
         locality: Rennes
-        organizationalUnit: Sales
+        organizationalUnit: Sales Dept.
       properties:
         commonName:
           description: commonName (CN) (2.5.4.3)
-          example: Jim Smith
+          example: John Doe
           type: string
         organization:
           description: organizationName (O) (2.5.4.10)
-          example: Woleet
+          example: ACME Corp.
           type: string
         organizationalUnit:
           description: organizationalUnitName (OU) (2.5.4.11)
-          example: Sales
+          example: Sales Dept.
           type: string
         locality:
           description: localityName (L) (2.5.4.7)
@@ -3340,19 +3591,19 @@ components:
     key:
       description: Key information.
       example:
-        name: Jim Smith's key
+        name: John Doe key
         expiration: 1569542400000
         revokedAt: 1569542400000
-        pubKey: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
+        pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
         status: valid
       properties:
         name:
           description: Key name.
-          example: Jim Smith's key
+          example: John Doe key
           type: string
         pubKey:
           description: Public key (bitcoin address when using BIP39 keys).
-          example: 1GChJMuyxvq28F3Uksqf5v7QkxQ4WLQdBh
+          example: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
           type: string
         status:
           description: |
@@ -3397,7 +3648,7 @@ components:
         - tokens
       properties:
         tokens:
-          description: Array of users matching the search criteria.
+          description: Array of tokens.
           items:
             type: string
           type: array
@@ -3406,21 +3657,30 @@ components:
       type: object
     credits:
       example:
-        signCredits: 6
-        credits: 0
-        signatureRequestCredits: 1
+        signCredits: 1234
+        smsCredits: 1234
+        credits: 1234
+        signatureRequestCredits: 1234
       properties:
         credits:
           description: The remaining number of anchoring credits of the authenticated
             user's account.
+          example: 1234
           type: integer
         signCredits:
           description: The remaining number of signature credits of the authenticated
             user's account.
+          example: 1234
           type: integer
         signatureRequestCredits:
           description: The remaining number of signature request credits of the authenticated
             user's account.
+          example: 1234
+          type: integer
+        smsCredits:
+          description: The remaining number of SMS credits of the authenticated user's
+            account.
+          example: 1234
           type: integer
       type: object
     user:
@@ -3430,20 +3690,20 @@ components:
         roles:
         - ROLE_USER
         - ROLE_USER
-        id: a3790416-16c3-4182-a310-9ef491c38a4c
+        id: abcdef01-2345-6789-abcd-ef0123456789
         lastModified: 1620294759999
-        email: email
+        email: john.doe@acme.com
         info:
-          firstName: firstName
-          lastName: lastName
-          country: country
-          company: company
+          firstName: John
+          lastName: Doe
+          country: United States
+          company: ACME Corp.
         status: PENDING
       properties:
         id:
           description: User identifier. It is allocated by the platform, and so must
             not be provided at creation time.
-          example: a3790416-16c3-4182-a310-9ef491c38a4c
+          example: abcdef01-2345-6789-abcd-ef0123456789
           readOnly: true
           type: string
         created:
@@ -3460,6 +3720,7 @@ components:
           type: integer
         email:
           description: Email of the user.
+          example: john.doe@acme.com
           type: string
         password:
           description: Password of the user (it must be provided at creation time).
@@ -3483,7 +3744,7 @@ components:
           default: PENDING
           description: |
             The status of the user:<br>
-            - PENDING: the user email need to be validated<br>
+            - PENDING: the user email needs to be validated<br>
             - APPROVED: the user can loging<br>
             - DISABLED: the user cannot login
           enum:
@@ -3510,28 +3771,28 @@ components:
           roles:
           - ROLE_USER
           - ROLE_USER
-          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          id: abcdef01-2345-6789-abcd-ef0123456789
           lastModified: 1620294759999
-          email: email
+          email: john.doe@acme.com
           info:
-            firstName: firstName
-            lastName: lastName
-            country: country
-            company: company
+            firstName: John
+            lastName: Doe
+            country: United States
+            company: ACME Corp.
           status: PENDING
         - password: password
           created: 1620294758688
           roles:
           - ROLE_USER
           - ROLE_USER
-          id: a3790416-16c3-4182-a310-9ef491c38a4c
+          id: abcdef01-2345-6789-abcd-ef0123456789
           lastModified: 1620294759999
-          email: email
+          email: john.doe@acme.com
           info:
-            firstName: firstName
-            lastName: lastName
-            country: country
-            company: company
+            firstName: John
+            lastName: Doe
+            country: United States
+            company: ACME Corp.
           status: PENDING
         first: true
       properties:
@@ -3559,23 +3820,29 @@ components:
           type: integer
       type: object
     info:
+      description: |
+        Information about the user.
       example:
-        firstName: firstName
-        lastName: lastName
-        country: country
-        company: company
+        firstName: John
+        lastName: Doe
+        country: United States
+        company: ACME Corp.
       properties:
         firstName:
           description: User's first name.
+          example: John
           type: string
         lastName:
           description: User's last name.
+          example: Doe
           type: string
         company:
           description: User's company.
+          example: ACME Corp.
           type: string
         country:
           description: User's country.
+          example: United States
           type: string
       type: object
     callbackSecret:

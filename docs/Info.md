@@ -2,6 +2,7 @@
 
 # Info
 
+Information about the user. 
 ## Properties
 
 Name | Type | Description | Notes

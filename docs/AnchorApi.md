@@ -316,7 +316,7 @@ Name | Type | Description  | Notes
 
 <a name="searchAnchorIds"></a>
 # **searchAnchorIds**
-> AnchorIds searchAnchorIds(page, size, hash, signedHash)
+> AnchorIds searchAnchorIds(page, size, hash, signedHash, userId)
 
 Search for public anchor identifiers.
 
@@ -328,7 +328,6 @@ Use this operation to retrieve the identifiers of all public anchors having a gi
 import io.woleet.api.ApiClient;
 import io.woleet.api.ApiException;
 import io.woleet.api.Configuration;
-import io.woleet.api.auth.*;
 import io.woleet.api.models.*;
 import io.woleet.api.client.AnchorApi;
 
@@ -336,25 +335,15 @@ public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("https://api.woleet.io/v1");
-    
-    // Configure HTTP basic authorization: BasicAuth
-    HttpBasicAuth BasicAuth = (HttpBasicAuth) defaultClient.getAuthentication("BasicAuth");
-    BasicAuth.setUsername("YOUR USERNAME");
-    BasicAuth.setPassword("YOUR PASSWORD");
-
-    // Configure API key authorization: JWTAuth
-    ApiKeyAuth JWTAuth = (ApiKeyAuth) defaultClient.getAuthentication("JWTAuth");
-    JWTAuth.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //JWTAuth.setApiKeyPrefix("Token");
 
     AnchorApi apiInstance = new AnchorApi(defaultClient);
     Integer page = 0; // Integer | Index of the page to retrieve (from 0).
     Integer size = 20; // Integer | Number of anchor identifiers per page.
     String hash = "hash_example"; // String | `hash` to search for: all public anchors whose `hash` property is equal are returned. 
     String signedHash = "signedHash_example"; // String | `signedHash` to search for: all public anchors whose `signedHash` property is equal are returned. 
+    String userId = "userId_example"; // String | User identifier to use to filter out results: only public anchors belonging to this user are returned. 
     try {
-      AnchorIds result = apiInstance.searchAnchorIds(page, size, hash, signedHash);
+      AnchorIds result = apiInstance.searchAnchorIds(page, size, hash, signedHash, userId);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling AnchorApi#searchAnchorIds");
@@ -375,6 +364,7 @@ Name | Type | Description  | Notes
  **size** | **Integer**| Number of anchor identifiers per page. | [optional] [default to 20]
  **hash** | **String**| &#x60;hash&#x60; to search for: all public anchors whose &#x60;hash&#x60; property is equal are returned.  | [optional]
  **signedHash** | **String**| &#x60;signedHash&#x60; to search for: all public anchors whose &#x60;signedHash&#x60; property is equal are returned.  | [optional]
+ **userId** | **String**| User identifier to use to filter out results: only public anchors belonging to this user are returned.  | [optional]
 
 ### Return type
 
@@ -382,7 +372,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[BasicAuth](../README.md#BasicAuth), [JWTAuth](../README.md#JWTAuth)
+No authorization required
 
 ### HTTP request headers
 
