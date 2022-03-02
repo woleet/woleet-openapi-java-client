@@ -8,7 +8,7 @@ info:
     It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/reference)** before reading this documentation.
   termsOfService: https://doc.woleet.io/docs/terms-of-service
   title: Woleet API
-  version: 1.11.1
+  version: 1.12.0
 servers:
 - url: https://api.woleet.io/v1
 security:
@@ -23,20 +23,18 @@ tags:
   name: signatureRequest
 - description: Create and revoke JWT tokens.
   name: token
-- description: Manage user information.
+- description: Manage user account.
   name: user
-- description: Manage domain users.
-  name: domain
 paths:
   /anchor:
     post:
       description: |
         Use this operation to create a new anchor of one of these two types:<br>
-        - a data anchor (generating a proof of existence receipt) allows to prove the existence of some data at some point in time.<br>
-        - a signature anchor (generating a proof of signature receipt) allows to prove the existence of the signature of some data at some point in time, the validity of the signature and the signer's identity.<br>
+        - a **data anchor** (to generate a *proof of timestamp* allowing to prove the existence of a data at some point in time).<br>
+        - a **signature anchor** (to generate a *proof of seal* allowing to prove the existence of the signature of a data at some point in time, the validity of the signature and the identity of the signer).<br>
         The properties `id`, `created`, `lastModified`, `status`, `timestamp` and `confirmations` are read-only and so must not be provided: they are managed by the platform and added to the returned anchor.<br>
         For data anchors, only the properties `name` and `hash` are required: the `hash` property must be the SHA256 hash of the data to anchor, and must be computed caller side. This allows not to leak the original data.<br>
-        For signature anchors, only the properties `name`, `signedHash`, `signature` and `pubKey` are required (though the `identityURL` property is highly recommended).<br>
+        For signature anchors, only the properties `name`, `signedHash`, `signature` and `pubKey` are required.<br>
         Be sure to have at least 1 anchoring credit on your account.
       operationId: createAnchor
       requestBody:
@@ -61,7 +59,6 @@ paths:
       summary: Create a new anchor.
       tags:
       - anchor
-      x-codegen-request-body-name: anchor
       x-contentType: application/json
       x-accepts: application/json
   /anchor/{anchorId}:
@@ -150,7 +147,6 @@ paths:
       summary: Update an anchor.
       tags:
       - anchor
-      x-codegen-request-body-name: anchor
       x-contentType: application/json
       x-accepts: application/json
   /anchor/{anchorId}/attestation:
@@ -301,7 +297,6 @@ paths:
         schema:
           default: created
           enum:
-          - id
           - created
           - hash
           - signedHash
@@ -448,7 +443,8 @@ paths:
     post:
       description: |
         Use this operation to verify a proof receipt and get the timestamp of the proof.<br>
-        For proof of signature receipts including an identity URL, this operation also verifies and returns information about the signer's identity.<br>
+        For a proof of seal/signaure receipt, this operation also verifies the signature.<br>
+        If the proof of seal/signature receipt includes an identity URL, this operation also verifies the identity of the signer.<br>
         This is a publicly accessible endpoint: authentication is not required to verify a proof receipt.
       operationId: verifyReceipt
       requestBody:
@@ -472,7 +468,6 @@ paths:
       summary: Verify a proof receipt.
       tags:
       - receipt
-      x-codegen-request-body-name: receipt
       x-contentType: application/json
       x-accepts: application/json
   /signatureRequest:
@@ -481,7 +476,7 @@ paths:
         Use this operation to create a new signature request.<br>
         The properties `id`, `created` and `lastModified` are read-only and so must not be provided: they are managed by the platform and added to the returned request.<br>
         Only the properties `name` and `hashToSign` are required: the `hashToSign` property must be the SHA256 hash of the file to sign.<br>
-        Be sure to have enough signature and anchoring credits on your account to fulfill the signature request (each registered signature costs you 1 signature and 1 anchoring credit).<br>
+        Be sure to have at least 1 signature request credit and enough signature and anchoring credits on your account to fulfill the signature request (each registered signature costs you 1 signature and 1 anchoring credit).<br>
       operationId: createSignatureRequest
       requestBody:
         content:
@@ -503,7 +498,6 @@ paths:
       summary: Create a new signature request.
       tags:
       - signatureRequest
-      x-codegen-request-body-name: signatureRequest
       x-contentType: application/json
       x-accepts: application/json
   /signatureRequest/{requestId}/transition:
@@ -552,7 +546,6 @@ paths:
       summary: Change the state of a signature request.
       tags:
       - signatureRequest
-      x-codegen-request-body-name: state
       x-contentType: application/json
       x-accepts: application/json
   /signatureRequest/{requestId}/remind:
@@ -597,7 +590,6 @@ paths:
       summary: Send a reminder email to a set of signers of a signature request.
       tags:
       - signatureRequest
-      x-codegen-request-body-name: signeeEmails
       x-contentType: application/json
       x-accepts: application/json
   /signatureRequest/{requestId}/otp/{signeeId}:
@@ -701,7 +693,6 @@ paths:
       summary: Sign a signature request by registering a signature.
       tags:
       - signatureRequest
-      x-codegen-request-body-name: signature
       x-contentType: application/json
       x-accepts: application/json
   /signatureRequest/{requestId}/delegate:
@@ -764,7 +755,6 @@ paths:
       summary: Sign a signature request by delegating the signature.
       tags:
       - signatureRequest
-      x-codegen-request-body-name: delegate
       x-contentType: application/json
       x-accepts: application/json
   /signatureRequest/{requestId}/feedback:
@@ -805,7 +795,6 @@ paths:
       summary: Report a feedback about a signature request.
       tags:
       - signatureRequest
-      x-codegen-request-body-name: feedback
       x-contentType: application/json
       x-accepts: application/json
   /signatureRequest/{requestId}/event:
@@ -847,7 +836,6 @@ paths:
       summary: Report an event on a signature request.
       tags:
       - signatureRequest
-      x-codegen-request-body-name: event
       x-contentType: application/json
       x-accepts: application/json
   /signatureRequest/{requestId}/attestation:
@@ -1139,7 +1127,6 @@ paths:
       summary: Update a signature request.
       tags:
       - signatureRequest
-      x-codegen-request-body-name: request
       x-contentType: application/json
       x-accepts: application/json
   /signatureRequestIds:
@@ -1252,7 +1239,6 @@ paths:
         schema:
           default: created
           enum:
-          - id
           - created
           - hashToSign
           type: string
@@ -1421,7 +1407,6 @@ paths:
       summary: Update user's registered JWT tokens.
       tags:
       - user
-      x-codegen-request-body-name: tokens
       x-contentType: application/json
       x-accepts: application/json
   /user/callbackSecret:
@@ -1453,345 +1438,6 @@ paths:
       tags:
       - user
       x-accepts: application/json
-  /user/key/{key}:
-    delete:
-      operationId: deleteKey
-      parameters:
-      - description: |
-          The key to delete.
-        explode: false
-        in: path
-        name: key
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          description: |
-            The key is deleted.
-        "404":
-          description: |
-            Key not found.
-      summary: Delete a key and its value from the user's k/v store.
-      tags:
-      - user
-      x-accepts: application/json
-    get:
-      operationId: getKey
-      parameters:
-      - description: |
-          The key to read.
-        explode: false
-        in: path
-        name: key
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: object
-          description: |
-            The key value.
-        "404":
-          description: |
-            Key not found.
-      summary: Read the value of a key from the user's k/v store.
-      tags:
-      - user
-      x-accepts: application/json
-    patch:
-      description: |
-        Patch the value of a key in the user's k/v store using a JSON merge patch
-        (see https://tools.ietf.org/html/rfc7386 for information about JSON merge patch).
-      operationId: patchKey
-      parameters:
-      - description: |
-          The key to patch.
-        explode: false
-        in: path
-        name: key
-        required: true
-        schema:
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-        description: |
-          The JSON merge patch to apply.
-        required: true
-      responses:
-        "200":
-          description: |
-            The key value is patched.
-      summary: Patch the value of a key in the user's k/v store.
-      tags:
-      - user
-      x-codegen-request-body-name: value
-      x-contentType: application/json
-      x-accepts: application/json
-    post:
-      operationId: postKey
-      parameters:
-      - description: |
-          The key to create.
-        explode: false
-        in: path
-        name: key
-        required: true
-        schema:
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-        description: |
-          The value to store.
-        required: true
-      responses:
-        "200":
-          description: |
-            The key value is stored.
-        "409":
-          description: |
-            The key already exists.
-      summary: Create a new key and store its value in the user's k/v store.
-      tags:
-      - user
-      x-codegen-request-body-name: value
-      x-contentType: application/json
-      x-accepts: application/json
-    put:
-      operationId: putKey
-      parameters:
-      - description: |
-          The key to update.
-        explode: false
-        in: path
-        name: key
-        required: true
-        schema:
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-        description: |
-          The value to update.
-        required: true
-      responses:
-        "200":
-          description: |
-            The key value is updated.
-      summary: Update the value of a key in the user's k/v store.
-      tags:
-      - user
-      x-codegen-request-body-name: value
-      x-contentType: application/json
-      x-accepts: application/json
-  /domain/admin/user:
-    post:
-      description: |
-        Use this operation to create a new domain user.<br>
-        The properties `id`, `created`, `lastModified`, `info` and `status` are read-only and so must not be provided: they are managed by the platform and added to the returned user.
-      operationId: createDomainUser
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/user'
-        description: User object to create (password must be provided).
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/user'
-          description: The created user.
-        "400":
-          description: Invalid request. More details are returned in the response
-            body as a JSON object.
-      summary: Create a new domain user.
-      tags:
-      - domain
-      x-codegen-request-body-name: user
-      x-contentType: application/json
-      x-accepts: application/json
-  /domain/admin/user/{userId}:
-    delete:
-      description: Use this operation to delete a domain user.
-      operationId: deleteDomainUser
-      parameters:
-      - description: Identifier of the domain user to delete.
-        explode: false
-        in: path
-        name: userId
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          description: The user is deleted.
-        "404":
-          description: No user matching the given identifier.
-      summary: Delete a domain user.
-      tags:
-      - domain
-      x-accepts: application/json
-    get:
-      description: Use this operation to retrieve a domain user by its identifier.
-      operationId: getDomainUser
-      parameters:
-      - description: Identifier of the domain user to retrieve.
-        explode: false
-        in: path
-        name: userId
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/user'
-          description: The user.
-        "404":
-          description: No user matching the given identifier.
-      summary: Get a domain user by its identifier.
-      tags:
-      - domain
-      x-accepts: application/json
-    put:
-      description: Use this operation to update a domain user.
-      operationId: updateDomainUser
-      parameters:
-      - description: Identifier of the domain user to update.
-        explode: false
-        in: path
-        name: userId
-        required: true
-        schema:
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/user'
-        description: User object to update.
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/user'
-          description: The updated user.
-        "400":
-          description: Invalid request. More details are returned in the response
-            body as a JSON object.
-        "404":
-          description: No user matching the given identifier.
-      summary: Update a domain user.
-      tags:
-      - domain
-      x-codegen-request-body-name: user
-      x-contentType: application/json
-      x-accepts: application/json
-  /domain/admin/users:
-    get:
-      description: |
-        Use this operation to list all domain users or search for domain users given their email.<br>
-        Paging and sorting is supported.
-      operationId: searchDomainUsers
-      parameters:
-      - description: Index of the page to retrieve (from 0).
-        explode: true
-        in: query
-        name: page
-        required: false
-        schema:
-          default: 0
-          type: integer
-        style: form
-      - description: Number of users per page.
-        explode: true
-        in: query
-        name: size
-        required: false
-        schema:
-          default: 20
-          type: integer
-        style: form
-      - description: |
-          Sorting direction: ASC for ascending DESC for descending.
-        explode: true
-        in: query
-        name: direction
-        required: false
-        schema:
-          default: ASC
-          enum:
-          - ASC
-          - DESC
-          type: string
-        style: form
-      - description: |
-          Sorting property: possible values are `email`, `created`, `roles`, `info.firstName`, `info.lastName`, `status`.
-        explode: true
-        in: query
-        name: sort
-        required: false
-        schema:
-          default: created
-          enum:
-          - email
-          - created
-          - roles
-          - info.firstName
-          - info.lastName
-          - status
-          type: string
-        style: form
-      - description: |
-          `email` to search for: a sub-string of the email.
-        explode: true
-        in: query
-        name: email
-        required: false
-        schema:
-          type: string
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/users'
-          description: An array of all users matching all search criteria, plus additional
-            paging and sorting information.
-        "400":
-          description: Invalid request. More details are returned in the response
-            body as a JSON object.
-      summary: Search for domain users.
-      tags:
-      - domain
-      x-accepts: application/json
 components:
   schemas:
     receipt:
@@ -1799,10 +1445,11 @@ components:
         A proof receipt:<br>
         - the proof of timestamp is provided as a Chainpoint 2.x proof receipt.<br>
         - the proof of signature (if applicable) is provided in the `signature` property.<br>
-        If the proof receipt is partial (ie. does not contain the proof of timestamp) Chainpoint 2.x fields are not provided.
+        If the proof receipt is partial (ie. does not contain the proof of timestamp) Chainpoint 2.x properties are not provided.
       example:
         targetHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
         signature:
+          signatureRequestURL: signatureRequestURL
           signedIssuerDomain: acme.com
           signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
           signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
@@ -1824,7 +1471,8 @@ components:
         partial: true
       properties:
         targetHash:
-          description: SHA256 hash of the proven data or signature.
+          description: |
+            Chainpoint 2.x: SHA256 hash of the proven data or signature.
           example: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           type: string
         type:
@@ -1852,7 +1500,7 @@ components:
           type: array
         partial:
           description: |
-            `true` if the receipt is partial (ie. does not contain the Chainpoint 2.x proof of timestamp)
+            `true` if the receipt is a partial receipt (ie. does not contain the Chainpoint 2.x proof of timestamp).
           type: boolean
         signature:
           $ref: '#/components/schemas/receipt_signature'
@@ -1885,8 +1533,9 @@ components:
           type: string
       type: object
     receipt_signature:
-      description: Proof of signature (for proof of signature receipts only).
+      description: Proof of signature (only for proof of seal/signature receipts).
       example:
+        signatureRequestURL: signatureRequestURL
         signedIssuerDomain: acme.com
         signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
         signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
@@ -1895,7 +1544,7 @@ components:
         pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
       properties:
         signedHash:
-          description: SHA256 hash of the signed file.
+          description: SHA256 hash of the signed data.
           example: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           type: string
         signedIdentity:
@@ -1903,8 +1552,7 @@ components:
           example: CN=John Doe,EMAILADDRESS=john.doe@acme.com
           type: string
         signedIssuerDomain:
-          description: Domain name of the identity issuer (ie. of the organization
-            who verified the identity).
+          description: Domain name of the identity server.
           example: acme.com
           type: string
         pubKey:
@@ -1920,8 +1568,14 @@ components:
           example: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
           type: string
         identityURL:
-          description: Web hook to use to verify the signer's identity.
+          description: |
+            Web hook of the identity server to use to verify the signer's identity.
           example: https://wids.acme.com/identity
+          type: string
+        signatureRequestURL:
+          description: |
+            URL of the signature request.<br>
+            **This property is only set for proof of signature receipts.**
           type: string
       type: object
     otsReceipt:
@@ -1958,6 +1612,7 @@ components:
           signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
           tags: '["book","sci-fi"]'
           public: true
+          signatureRequestId: abcdef01-2345-6789-abcd-ef0123456789
           name: My anchor
           signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           callbackURL: https://acme.com/callback/woleet/anchor
@@ -1978,6 +1633,7 @@ components:
           signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
           tags: '["book","sci-fi"]'
           public: true
+          signatureRequestId: abcdef01-2345-6789-abcd-ef0123456789
           name: My anchor
           signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           callbackURL: https://acme.com/callback/woleet/anchor
@@ -2075,7 +1731,7 @@ components:
             - the `proofBundleComplete` property is set to `true` by the platform (which means that the proof bundle and the Signature Attestation document are ready to download)<br>
             The platform does a POST request on this URL with the signature request as a JSON object in the request body.<br>
             Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br>
-            Please refer to the <a target="_blank" href="https://doc.woleet.io/reference/using-callbacks">documentation</a> for more details.
+            Please refer to <a target="_blank" href="https://doc.woleet.io/reference/using-callbacks">this documentation</a> for more details.
           example: https://acme.com/callback/woleet/signatureRequest
           type: string
         vars:
@@ -2083,7 +1739,7 @@ components:
             The set of variables (key/value pairs) to use to customize the signature request workflow.<br>
             Values must be of type null, boolean, string or number: nested JSON objects are not allowed.<br>
             In particular, these variables can be used to customize the various email sent and disable some of these emails.<br>
-            Please refer to the <a target="_blank" href="https://doc.woleet.io/reference/custom-signature-workflow">documentation</a> for more details.<br>
+            Please refer to <a target="_blank" href="https://doc.woleet.io/reference/custom-signature-workflow">this documentation</a> for more details.<br>
             **This property is only available to the owner and the signers of the signature request.**
           example: '{"requesterName":"ACME Corp."}'
           type: object
@@ -2129,8 +1785,8 @@ components:
           type: integer
         identityURL:
           description: |
-            Web hook to use to verify the signers' identity.<br>
-            If set, it is used to verify the identity of the signers at signature registration time.
+            Web hook of the identity server to use to verify the signer's identity.<br>
+            If set, it is used at signature registration time to verify the identity of the signers.
           example: https://wids.acme.com/identity
           type: string
         fileName:
@@ -2200,7 +1856,7 @@ components:
           type: string
         auditTrailAnchorId:
           description: |
-            Identifier of the signature anchor created by the platform to sign the audit trail data.<br>
+            Identifier of the signature anchor created by the platform to seal the audit trail data.<br>
             This property is set only once the audit trail is generated and can be used to retrieve its proof receipt.
           example: abcdef01-2345-6789-abcd-ef0123456789
           readOnly: true
@@ -2226,7 +1882,7 @@ components:
         If set to DRAFT at creation time, the signature request is **stateful** and its state can be transitioned using the `/signatureRequest/{requestId}/transition` endpoint.<br>
         Available states:<br>
         - DRAFT: the signature request is being edited (only DRAFT signature requests can be updated)<br>
-        - PENDING: the signature request is awaiting for its activation date to be reached<br>
+        - PENDING: the signature request is waiting for its activation date to be reached<br>
         - IN_PROGRESS: the signature request emails have been sent to the signers (if applicable) and the signatures are being collected<br>
         - COMPLETED: all signatures have been collected<br>
         - CLOSED: the signature request has been closed by the owner before all signatures could be collected<br>
@@ -2272,6 +1928,7 @@ components:
             signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
             tags: '["book","sci-fi"]'
             public: true
+            signatureRequestId: abcdef01-2345-6789-abcd-ef0123456789
             name: My anchor
             signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
             callbackURL: https://acme.com/callback/woleet/anchor
@@ -2292,6 +1949,7 @@ components:
             signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
             tags: '["book","sci-fi"]'
             public: true
+            signatureRequestId: abcdef01-2345-6789-abcd-ef0123456789
             name: My anchor
             signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
             callbackURL: https://acme.com/callback/woleet/anchor
@@ -2380,6 +2038,7 @@ components:
             signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
             tags: '["book","sci-fi"]'
             public: true
+            signatureRequestId: abcdef01-2345-6789-abcd-ef0123456789
             name: My anchor
             signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
             callbackURL: https://acme.com/callback/woleet/anchor
@@ -2400,6 +2059,7 @@ components:
             signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
             tags: '["book","sci-fi"]'
             public: true
+            signatureRequestId: abcdef01-2345-6789-abcd-ef0123456789
             name: My anchor
             signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
             callbackURL: https://acme.com/callback/woleet/anchor
@@ -2622,7 +2282,7 @@ components:
           type: string
         identityURL:
           description: |
-            Web hook to use to verify the signer's identity.<br>
+            Web hook of the identity server to use to verify the signer's identity.
             If set, this property overwrites the `identityURL` property defined at signature request level.
           example: https://wids.acme.com/identity
           type: string
@@ -2721,13 +2381,13 @@ components:
           type: string
         signedIssuerDomain:
           description: |
-            Domain name of the identity issuer (ie. of the organization who verified the identity).<br>
+            Domain name of the identity server.<br>
             If set, the domain name of the identity URL must be included in the `signedIssuerDomain` domain name.
           example: acme.com
           type: string
         identityURL:
           description: |
-            Web hook to use to verify the signer's identity.<br>
+            Web hook of the identity server to use to verify the signer's identity.<br>
             If set, it is used in place of the `identityURL` property of the signer to create the signature anchor.
           example: https://wids.acme.com/identity
           type: string
@@ -2836,6 +2496,7 @@ components:
         signatureReceipts:
         - targetHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           signature:
+            signatureRequestURL: signatureRequestURL
             signedIssuerDomain: acme.com
             signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
             signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
@@ -2857,6 +2518,7 @@ components:
           partial: true
         - targetHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           signature:
+            signatureRequestURL: signatureRequestURL
             signedIssuerDomain: acme.com
             signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
             signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
@@ -2879,6 +2541,7 @@ components:
         auditTrailReceipt:
           targetHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           signature:
+            signatureRequestURL: signatureRequestURL
             signedIssuerDomain: acme.com
             signature: IGcvQrBq8w7eJDekrOhy9sIqttmicMp47vzf77Dg4PJJfFdZVDVGeHki3pitfWrs6ysoccKUK0xEx7Da2Cb8ljw=
             signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
@@ -2933,6 +2596,7 @@ components:
         signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
         tags: '["book","sci-fi"]'
         public: true
+        signatureRequestId: abcdef01-2345-6789-abcd-ef0123456789
         name: My anchor
         signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
         callbackURL: https://acme.com/callback/woleet/anchor
@@ -2987,7 +2651,7 @@ components:
           type: string
         signedIssuerDomain:
           description: |
-            Domain name of the identity issuer (ie. of the organization who verified the identity).<br>
+            Domain name of the identity server.<br>
             If set, the domain name of the identity URL must be included in the `signedIssuerDomain` domain name.<br>
             **This property must not be provided when creating a data anchor.**
           example: acme.com
@@ -3010,22 +2674,17 @@ components:
         identityURL:
           description: |
             Web hook of the identity server to use to verify the signer's identity.<br>
-            This URL allows to retrieve the identity associated to the public key `pubKey`.
-            It can also be used to verify that the identity server (itself identified by the TLS certificate of the URL)
+            It is used to verify that the server knows the `pubKey` public key and to get or check the identity of the user owning that key.<br>
+            For proofs of seal, it is also used to verify that the identity server (itself identified by the TLS certificate of the URL)
             controls the key used to sign (ie. owns the private part of the key pair) by requesting it to sign some random data.<br>
-            This URL MUST use an HTTPS scheme with a valid and non expired TLS certificate.<br>
-            This URL MUST implement the following GET operation:<br>
-            Query parameters:<br>
-            - `pubKey`: the public key to be verified - mandatory<br>
-            - `leftData`: the left part of the data to be signed (generated randomly by the caller) - if set, the identity server MAY provide a `signature`<br>
-            Output:<br>
-            A JSON object with:
-            - `rightData`: the right part of the data signed (generated randomly by the identity server) - optional<br>
-            - `signature`: the signature of the string `leftData` + `rightData` using the public key `pubKey` - optional<br>
-            - `identity`: the X500 identity associated to the key claimed by the identity server - optional<br>
-            - `key`: additional information about the key - optional<br>
-            If `identity` is not provided, `signature` and `rightData` MUST be provided: in such a case the identity of the signer can be extracted from the TLS certificate.
+            Please refer to <a target="_blank" href="https://app.swaggerhub.com/apis-docs/Woleet/WoleetIDServerAPI/#/Identity/getIdentity">Woleet.ID Server documentation</a> for more details.
           example: https://wids.acme.com/identity
+          type: string
+        signatureRequestId:
+          description: |
+            If the anchor is a signature anchor, identifier of the signature request.
+          example: abcdef01-2345-6789-abcd-ef0123456789
+          readOnly: true
           type: string
         public:
           description: |
@@ -3054,7 +2713,7 @@ components:
             Web hook to be called by the platform whenever the `status` property of the anchor changes:<br>
             the platform does a POST request on this URL with the anchor as a JSON object in the request body.<br>
             Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br>
-            Please refer to the <a target="_blank" href="https://doc.woleet.io/reference/using-callbacks">documentation</a> for more details.
+            Please refer to <a target="_blank" href="https://doc.woleet.io/reference/using-callbacks">this documentation</a> for more details.
           example: https://acme.com/callback/woleet/anchor
           type: string
         status:
@@ -3074,7 +2733,7 @@ components:
         timestamp:
           description: |
             Proven timestamp of the data (for a data anchor) or of the signature (for a signature anchor).<br>
-            This is actually the time of the Bitcoin block into which the anchoring process occurred (in milliseconds since Unix epoch).<br>
+            This is the time of the Bitcoin block into which the anchoring process occurred (in milliseconds since Unix epoch).<br>
             Any data whose SHA256 hash equals this anchor's hash is proven to exist at that time and has not been modified since.<br>
             This property is set when the first confirmation of the Bitcoin block occurs. Once set, the associated proof receipt can be verified (without having to wait for 6 confirmations).
           example: 1620294759999
@@ -3116,6 +2775,7 @@ components:
           signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
           tags: '["book","sci-fi"]'
           public: true
+          signatureRequestId: abcdef01-2345-6789-abcd-ef0123456789
           name: My anchor
           signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           callbackURL: https://acme.com/callback/woleet/anchor
@@ -3136,6 +2796,7 @@ components:
           signedIdentity: CN=John Doe,EMAILADDRESS=john.doe@acme.com
           tags: '["book","sci-fi"]'
           public: true
+          signatureRequestId: abcdef01-2345-6789-abcd-ef0123456789
           name: My anchor
           signedHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
           callbackURL: https://acme.com/callback/woleet/anchor
@@ -3223,7 +2884,6 @@ components:
         code: VERIFIED
         identityVerificationStatus:
           code: VERIFIED
-          signedIssuerDomain: acme.com
           certificates:
           - subject:
               ST: Britanny
@@ -3270,12 +2930,6 @@ components:
             revokedAt: 1569542400000
             pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
             status: valid
-          signedIdentity:
-            commonName: John Doe
-            country: FR
-            organization: ACME Corp.
-            locality: Rennes
-            organizationalUnit: Sales Dept.
         text: text
         confirmations: 6
         signatureVerificationStatus:
@@ -3286,7 +2940,7 @@ components:
         code:
           description: |
             Proof receipt verification status code:<br>
-            - VERIFIED: success: the proof receipt is verified: both the proof of timestamp AND the proof of signature (if applicable) are valid<br>
+            - VERIFIED: success: the proof receipt is verified: both the proof of timestamp AND the proof of signature (if applicable) are valid (but the proof of identity may be invalid)<br>
             - INVALID_SIGNATURE: error: the proof of signature is invalid<br>
             - any other verification status code: the proof of timestamp is not ready or invalid
           enum:
@@ -3305,7 +2959,7 @@ components:
         timestamp:
           description: |
             Proven timestamp of the data (for a data anchor) or of the signature (for a signature anchor).<br>
-            This is actually the time of the Bitcoin block into which the anchoring process occurred (in milliseconds since Unix epoch).
+            This is the time of the Bitcoin block into which the anchoring process occurred (in milliseconds since Unix epoch).
           example: 1620294758688
           format: int64
           type: integer
@@ -3358,7 +3012,7 @@ components:
         timestamp:
           description: |
             Proven timestamp of the data (for a data anchor) or of the signature (for a signature anchor).<br>
-            This is actually the time of the Bitcoin block into which the anchoring process occurred (in milliseconds since Unix epoch).
+            This is the time of the Bitcoin block into which the anchoring process occurred (in milliseconds since Unix epoch).
           example: 1620294758688
           format: int64
           type: integer
@@ -3396,7 +3050,6 @@ components:
     identityVerificationStatus:
       example:
         code: VERIFIED
-        signedIssuerDomain: acme.com
         certificates:
         - subject:
             ST: Britanny
@@ -3443,12 +3096,6 @@ components:
           revokedAt: 1569542400000
           pubKey: 1Ddk3zx55biVKXodadBVbRC5txWG7YwGAx
           status: valid
-        signedIdentity:
-          commonName: John Doe
-          country: FR
-          organization: ACME Corp.
-          locality: Rennes
-          organizationalUnit: Sales Dept.
       properties:
         code:
           description: |
@@ -3483,12 +3130,7 @@ components:
         identity:
           $ref: '#/components/schemas/identity'
         signedIdentity:
-          $ref: '#/components/schemas/identity'
-        signedIssuerDomain:
-          description: Domain name of the identity issuer (ie. of the organization
-            who verified the identity).
-          example: acme.com
-          type: string
+          $ref: '#/components/schemas/signedIdentity'
         key:
           $ref: '#/components/schemas/key'
       type: object
@@ -3555,9 +3197,9 @@ components:
           description: Email address
           example: john.doe@acme.com
           type: string
-      type: object
     identity:
-      description: Signer's identity provided as a set of X.500 attributes (see https://www.ietf.org/rfc/rfc4519.txt).
+      description: Signer's identity as returned by the identity server, provided
+        as a set of X.500 attributes (see https://www.ietf.org/rfc/rfc4519.txt).
       example:
         commonName: John Doe
         country: FR
@@ -3588,6 +3230,11 @@ components:
       required:
       - commonName
       type: object
+    signedIdentity:
+      allOf:
+      - $ref: '#/components/schemas/identity'
+      description: Signed identity as included in the signed data, provided as a set
+        of X.500 attributes (see https://www.ietf.org/rfc/rfc4519.txt).
     key:
       description: Key information.
       example:
@@ -3682,168 +3329,6 @@ components:
             account.
           example: 1234
           type: integer
-      type: object
-    user:
-      example:
-        password: password
-        created: 1620294758688
-        roles:
-        - ROLE_USER
-        - ROLE_USER
-        id: abcdef01-2345-6789-abcd-ef0123456789
-        lastModified: 1620294759999
-        email: john.doe@acme.com
-        info:
-          firstName: John
-          lastName: Doe
-          country: United States
-          company: ACME Corp.
-        status: PENDING
-      properties:
-        id:
-          description: User identifier. It is allocated by the platform, and so must
-            not be provided at creation time.
-          example: abcdef01-2345-6789-abcd-ef0123456789
-          readOnly: true
-          type: string
-        created:
-          description: Date of creation (in milliseconds since Unix epoch).
-          example: 1620294758688
-          format: int64
-          readOnly: true
-          type: integer
-        lastModified:
-          description: Date of last modification (in milliseconds since Unix epoch).
-          example: 1620294759999
-          format: int64
-          readOnly: true
-          type: integer
-        email:
-          description: Email of the user.
-          example: john.doe@acme.com
-          type: string
-        password:
-          description: Password of the user (it must be provided at creation time).
-          type: string
-        roles:
-          description: Array of user roles.
-          items:
-            default: ROLE_USER
-            description: |
-              User role:<br>
-              - ROLE_USER: regular domain user<br>
-              - ROLE_DOMAIN_ADMIN: domain administrator.
-            enum:
-            - ROLE_USER
-            - ROLE_DOMAIN_ADMIN
-            type: string
-          type: array
-        info:
-          $ref: '#/components/schemas/info'
-        status:
-          default: PENDING
-          description: |
-            The status of the user:<br>
-            - PENDING: the user email needs to be validated<br>
-            - APPROVED: the user can loging<br>
-            - DISABLED: the user cannot login
-          enum:
-          - PENDING
-          - APPROVED
-          - DISABLED
-          type: string
-      required:
-      - email
-      - info
-      - password
-      - roles
-      - status
-      type: object
-    users:
-      example:
-        number: 1
-        last: true
-        numberOfElements: 0
-        size: 6
-        content:
-        - password: password
-          created: 1620294758688
-          roles:
-          - ROLE_USER
-          - ROLE_USER
-          id: abcdef01-2345-6789-abcd-ef0123456789
-          lastModified: 1620294759999
-          email: john.doe@acme.com
-          info:
-            firstName: John
-            lastName: Doe
-            country: United States
-            company: ACME Corp.
-          status: PENDING
-        - password: password
-          created: 1620294758688
-          roles:
-          - ROLE_USER
-          - ROLE_USER
-          id: abcdef01-2345-6789-abcd-ef0123456789
-          lastModified: 1620294759999
-          email: john.doe@acme.com
-          info:
-            firstName: John
-            lastName: Doe
-            country: United States
-            company: ACME Corp.
-          status: PENDING
-        first: true
-      properties:
-        content:
-          description: Array of users matching the search criteria.
-          items:
-            $ref: '#/components/schemas/user'
-          type: array
-        first:
-          description: |
-            `true` if this is the first page.
-          type: boolean
-        last:
-          description: |
-            `true` if this is the last page.
-          type: boolean
-        numberOfElements:
-          description: Number of users in the retrieved page.
-          type: integer
-        size:
-          description: Number of users per page.
-          type: integer
-        number:
-          description: Index of the retrieved page (from 0).
-          type: integer
-      type: object
-    info:
-      description: |
-        Information about the user.
-      example:
-        firstName: John
-        lastName: Doe
-        country: United States
-        company: ACME Corp.
-      properties:
-        firstName:
-          description: User's first name.
-          example: John
-          type: string
-        lastName:
-          description: User's last name.
-          example: Doe
-          type: string
-        company:
-          description: User's company.
-          example: ACME Corp.
-          type: string
-        country:
-          description: User's country.
-          example: United States
-          type: string
       type: object
     callbackSecret:
       example:

@@ -3,6 +3,7 @@
 # Anchors
 
 An array of anchors.
+
 ## Properties
 
 Name | Type | Description | Notes

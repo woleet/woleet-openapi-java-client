@@ -29,7 +29,7 @@ Method | HTTP request | Description
 
 Create a new signature request.
 
-Use this operation to create a new signature request.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60; and &#x60;lastModified&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned request.&lt;br&gt; Only the properties &#x60;name&#x60; and &#x60;hashToSign&#x60; are required: the &#x60;hashToSign&#x60; property must be the SHA256 hash of the file to sign.&lt;br&gt; Be sure to have enough signature and anchoring credits on your account to fulfill the signature request (each registered signature costs you 1 signature and 1 anchoring credit).&lt;br&gt; 
+Use this operation to create a new signature request.&lt;br&gt; The properties &#x60;id&#x60;, &#x60;created&#x60; and &#x60;lastModified&#x60; are read-only and so must not be provided: they are managed by the platform and added to the returned request.&lt;br&gt; Only the properties &#x60;name&#x60; and &#x60;hashToSign&#x60; are required: the &#x60;hashToSign&#x60; property must be the SHA256 hash of the file to sign.&lt;br&gt; Be sure to have at least 1 signature request credit and enough signature and anchoring credits on your account to fulfill the signature request (each registered signature costs you 1 signature and 1 anchoring credit).&lt;br&gt; 
 
 ### Example
 ```java
@@ -100,7 +100,7 @@ Name | Type | Description  | Notes
 
 <a name="delegateSignSignatureRequest"></a>
 # **delegateSignSignatureRequest**
-> SignatureRequestSignResult delegateSignSignatureRequest(requestId, delegate)
+> SignatureRequestSignResult delegateSignSignatureRequest(requestId, signatureRequestDelegate)
 
 Sign a signature request by delegating the signature.
 
@@ -134,9 +134,9 @@ public class Example {
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of the signature request.
-    SignatureRequestDelegate delegate = new SignatureRequestDelegate(); // SignatureRequestDelegate | Authentication information about the signer.
+    SignatureRequestDelegate signatureRequestDelegate = new SignatureRequestDelegate(); // SignatureRequestDelegate | Authentication information about the signer.
     try {
-      SignatureRequestSignResult result = apiInstance.delegateSignSignatureRequest(requestId, delegate);
+      SignatureRequestSignResult result = apiInstance.delegateSignSignatureRequest(requestId, signatureRequestDelegate);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling SignatureRequestApi#delegateSignSignatureRequest");
@@ -154,7 +154,7 @@ public class Example {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **requestId** | **String**| Identifier of the signature request. |
- **delegate** | [**SignatureRequestDelegate**](SignatureRequestDelegate.md)| Authentication information about the signer. |
+ **signatureRequestDelegate** | [**SignatureRequestDelegate**](SignatureRequestDelegate.md)| Authentication information about the signer. |
 
 ### Return type
 
@@ -528,7 +528,7 @@ No authorization required
 
 <a name="reportSignatureRequestEvent"></a>
 # **reportSignatureRequestEvent**
-> reportSignatureRequestEvent(requestId, event)
+> reportSignatureRequestEvent(requestId, signatureRequestEvent)
 
 Report an event on a signature request.
 
@@ -550,9 +550,9 @@ public class Example {
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of the signature request.
-    SignatureRequestEvent event = new SignatureRequestEvent(); // SignatureRequestEvent | Event to report.
+    SignatureRequestEvent signatureRequestEvent = new SignatureRequestEvent(); // SignatureRequestEvent | Event to report.
     try {
-      apiInstance.reportSignatureRequestEvent(requestId, event);
+      apiInstance.reportSignatureRequestEvent(requestId, signatureRequestEvent);
     } catch (ApiException e) {
       System.err.println("Exception when calling SignatureRequestApi#reportSignatureRequestEvent");
       System.err.println("Status code: " + e.getCode());
@@ -569,7 +569,7 @@ public class Example {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **requestId** | **String**| Identifier of the signature request. |
- **event** | [**SignatureRequestEvent**](SignatureRequestEvent.md)| Event to report. |
+ **signatureRequestEvent** | [**SignatureRequestEvent**](SignatureRequestEvent.md)| Event to report. |
 
 ### Return type
 
@@ -594,7 +594,7 @@ No authorization required
 
 <a name="reportSignatureRequestFeedback"></a>
 # **reportSignatureRequestFeedback**
-> reportSignatureRequestFeedback(requestId, feedback)
+> reportSignatureRequestFeedback(requestId, signatureRequestFeedback)
 
 Report a feedback about a signature request.
 
@@ -616,9 +616,9 @@ public class Example {
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of the signature request.
-    SignatureRequestFeedback feedback = new SignatureRequestFeedback(); // SignatureRequestFeedback | Feedback to report.
+    SignatureRequestFeedback signatureRequestFeedback = new SignatureRequestFeedback(); // SignatureRequestFeedback | Feedback to report.
     try {
-      apiInstance.reportSignatureRequestFeedback(requestId, feedback);
+      apiInstance.reportSignatureRequestFeedback(requestId, signatureRequestFeedback);
     } catch (ApiException e) {
       System.err.println("Exception when calling SignatureRequestApi#reportSignatureRequestFeedback");
       System.err.println("Status code: " + e.getCode());
@@ -635,7 +635,7 @@ public class Example {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **requestId** | **String**| Identifier of the signature request. |
- **feedback** | [**SignatureRequestFeedback**](SignatureRequestFeedback.md)| Feedback to report. |
+ **signatureRequestFeedback** | [**SignatureRequestFeedback**](SignatureRequestFeedback.md)| Feedback to report. |
 
 ### Return type
 
@@ -790,7 +790,7 @@ Name | Type | Description  | Notes
  **page** | **Integer**| Index of the page to retrieve (from 0). | [optional] [default to 0]
  **size** | **Integer**| Number of anchors per page. | [optional] [default to 20]
  **direction** | **String**| Sorting direction: ASC for ascending DESC for descending.  | [optional] [default to ASC] [enum: ASC, DESC]
- **sort** | **String**| Sorting property: possible values are limited to &#x60;created&#x60; and &#x60;hashToSign&#x60;.  | [optional] [default to created] [enum: id, created, hashToSign]
+ **sort** | **String**| Sorting property: possible values are limited to &#x60;created&#x60; and &#x60;hashToSign&#x60;.  | [optional] [default to created] [enum: created, hashToSign]
  **name** | **String**| &#x60;name&#x60; to search for: all signature requests whose &#x60;name&#x60; property contains this sub-string are returned.&lt;br&gt; **WARNING: Searching by name can timeout on a large signature request set.**  | [optional]
  **hashToSign** | **String**| &#x60;hashToSign&#x60; to search for: all signature requests whose &#x60;hashToSign&#x60; property is equal are returned.  | [optional]
  **states** | [**List&lt;String&gt;**](String.md)| States to search for: all signature requests whose &#x60;state&#x60; property is part of theses states are returned.  | [optional] [enum: DRAFT, PENDING, IN_PROGRESS, COMPLETED, CLOSED, CANCELED, EXPIRED]
@@ -884,7 +884,7 @@ No authorization required
 
 <a name="sendSignatureRequestReminder"></a>
 # **sendSignatureRequestReminder**
-> sendSignatureRequestReminder(requestId, signeeEmails)
+> sendSignatureRequestReminder(requestId, requestBody)
 
 Send a reminder email to a set of signers of a signature request.
 
@@ -918,9 +918,9 @@ public class Example {
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of the signature request.
-    List<String> signeeEmails = Arrays.asList(); // List<String> | The list of emails of the authorized signers who will receive the reminder email. 
+    List<String> requestBody = Arrays.asList(); // List<String> | The list of emails of the authorized signers who will receive the reminder email. 
     try {
-      apiInstance.sendSignatureRequestReminder(requestId, signeeEmails);
+      apiInstance.sendSignatureRequestReminder(requestId, requestBody);
     } catch (ApiException e) {
       System.err.println("Exception when calling SignatureRequestApi#sendSignatureRequestReminder");
       System.err.println("Status code: " + e.getCode());
@@ -937,7 +937,7 @@ public class Example {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **requestId** | **String**| Identifier of the signature request. |
- **signeeEmails** | [**List&lt;String&gt;**](String.md)| The list of emails of the authorized signers who will receive the reminder email.  |
+ **requestBody** | [**List&lt;String&gt;**](String.md)| The list of emails of the authorized signers who will receive the reminder email.  |
 
 ### Return type
 
@@ -963,7 +963,7 @@ null (empty response body)
 
 <a name="signSignatureRequest"></a>
 # **signSignatureRequest**
-> SignatureRequestSignResult signSignatureRequest(requestId, signature)
+> SignatureRequestSignResult signSignatureRequest(requestId, signatureRequestSign)
 
 Sign a signature request by registering a signature.
 
@@ -985,9 +985,9 @@ public class Example {
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of the signature request.
-    SignatureRequestSign signature = new SignatureRequestSign(); // SignatureRequestSign | Signature to register.
+    SignatureRequestSign signatureRequestSign = new SignatureRequestSign(); // SignatureRequestSign | Signature to register.
     try {
-      SignatureRequestSignResult result = apiInstance.signSignatureRequest(requestId, signature);
+      SignatureRequestSignResult result = apiInstance.signSignatureRequest(requestId, signatureRequestSign);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling SignatureRequestApi#signSignatureRequest");
@@ -1005,7 +1005,7 @@ public class Example {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **requestId** | **String**| Identifier of the signature request. |
- **signature** | [**SignatureRequestSign**](SignatureRequestSign.md)| Signature to register. |
+ **signatureRequestSign** | [**SignatureRequestSign**](SignatureRequestSign.md)| Signature to register. |
 
 ### Return type
 
@@ -1034,7 +1034,7 @@ No authorization required
 
 <a name="transitionSignatureRequest"></a>
 # **transitionSignatureRequest**
-> SignatureRequest transitionSignatureRequest(requestId, state)
+> SignatureRequest transitionSignatureRequest(requestId, body)
 
 Change the state of a signature request.
 
@@ -1068,9 +1068,9 @@ public class Example {
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of the signature request.
-    String state = "state_example"; // String | New state of the signature request.
+    String body = "body_example"; // String | New state of the signature request.
     try {
-      SignatureRequest result = apiInstance.transitionSignatureRequest(requestId, state);
+      SignatureRequest result = apiInstance.transitionSignatureRequest(requestId, body);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling SignatureRequestApi#transitionSignatureRequest");
@@ -1088,7 +1088,7 @@ public class Example {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **requestId** | **String**| Identifier of the signature request. |
- **state** | **String**| New state of the signature request. |
+ **body** | **String**| New state of the signature request. |
 
 ### Return type
 
@@ -1113,7 +1113,7 @@ Name | Type | Description  | Notes
 
 <a name="updateSignatureRequest"></a>
 # **updateSignatureRequest**
-> SignatureRequest updateSignatureRequest(requestId, request)
+> SignatureRequest updateSignatureRequest(requestId, signatureRequest)
 
 Update a signature request.
 
@@ -1147,9 +1147,9 @@ public class Example {
 
     SignatureRequestApi apiInstance = new SignatureRequestApi(defaultClient);
     String requestId = "requestId_example"; // String | Identifier of signature request to update.
-    SignatureRequest request = new SignatureRequest(); // SignatureRequest | SignatureRequest object to update.
+    SignatureRequest signatureRequest = new SignatureRequest(); // SignatureRequest | SignatureRequest object to update.
     try {
-      SignatureRequest result = apiInstance.updateSignatureRequest(requestId, request);
+      SignatureRequest result = apiInstance.updateSignatureRequest(requestId, signatureRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling SignatureRequestApi#updateSignatureRequest");
@@ -1167,7 +1167,7 @@ public class Example {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **requestId** | **String**| Identifier of signature request to update. |
- **request** | [**SignatureRequest**](SignatureRequest.md)| SignatureRequest object to update. |
+ **signatureRequest** | [**SignatureRequest**](SignatureRequest.md)| SignatureRequest object to update. |
 
 ### Return type
 

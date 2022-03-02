@@ -3,6 +3,7 @@
 # SignatureRequestProofBundle
 
 A bundle of all the pieces of evidence of a signature request.
+
 ## Properties
 
 Name | Type | Description | Notes

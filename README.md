@@ -1,7 +1,7 @@
 # woleet-api-client
 
 Woleet API
-- API version: 1.11.1
+- API version: 1.12.0
 
 Welcome to **Woleet API reference documentation**.<br>
 It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/reference)** before reading this documentation.
@@ -42,7 +42,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>io.woleet</groupId>
   <artifactId>woleet-api-client</artifactId>
-  <version>1.11.1</version>
+  <version>1.12.0</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -52,7 +52,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "io.woleet:woleet-api-client:1.11.1"
+compile "io.woleet:woleet-api-client:1.12.0"
 ```
 
 ### Others
@@ -65,7 +65,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/woleet-api-client-1.11.1.jar`
+* `target/woleet-api-client-1.12.0.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
@@ -128,11 +128,6 @@ Class | Method | HTTP request | Description
 *AnchorApi* | [**searchAnchorIds**](docs/AnchorApi.md#searchAnchorIds) | **GET** /anchorIds | Search for public anchor identifiers.
 *AnchorApi* | [**searchAnchors**](docs/AnchorApi.md#searchAnchors) | **GET** /anchors | Search for anchors.
 *AnchorApi* | [**updateAnchor**](docs/AnchorApi.md#updateAnchor) | **PUT** /anchor/{anchorId} | Update an anchor.
-*DomainApi* | [**createDomainUser**](docs/DomainApi.md#createDomainUser) | **POST** /domain/admin/user | Create a new domain user.
-*DomainApi* | [**deleteDomainUser**](docs/DomainApi.md#deleteDomainUser) | **DELETE** /domain/admin/user/{userId} | Delete a domain user.
-*DomainApi* | [**getDomainUser**](docs/DomainApi.md#getDomainUser) | **GET** /domain/admin/user/{userId} | Get a domain user by its identifier.
-*DomainApi* | [**searchDomainUsers**](docs/DomainApi.md#searchDomainUsers) | **GET** /domain/admin/users | Search for domain users.
-*DomainApi* | [**updateDomainUser**](docs/DomainApi.md#updateDomainUser) | **PUT** /domain/admin/user/{userId} | Update a domain user.
 *ReceiptApi* | [**getOTSReceipt**](docs/ReceiptApi.md#getOTSReceipt) | **GET** /receipt/{anchorId}/ots | Get the proof receipt of an anchor (OpenTimestamps proof format).
 *ReceiptApi* | [**getReceipt**](docs/ReceiptApi.md#getReceipt) | **GET** /receipt/{anchorId} | Get the proof receipt of an anchor.
 *ReceiptApi* | [**verifyReceipt**](docs/ReceiptApi.md#verifyReceipt) | **POST** /receipt/verify | Verify a proof receipt.
@@ -155,14 +150,9 @@ Class | Method | HTTP request | Description
 *SignatureRequestApi* | [**uploadSignatureRequestFile**](docs/SignatureRequestApi.md#uploadSignatureRequestFile) | **POST** /signatureRequest/{requestId}/file | Upload the file to sign.
 *TokenApi* | [**generateToken**](docs/TokenApi.md#generateToken) | **GET** /token | Generate a JWT token.
 *TokenApi* | [**revokeToken**](docs/TokenApi.md#revokeToken) | **DELETE** /token | Revoke a JWT token.
-*UserApi* | [**deleteKey**](docs/UserApi.md#deleteKey) | **DELETE** /user/key/{key} | Delete a key and its value from the user&#39;s k/v store.
 *UserApi* | [**getCallbackSecret**](docs/UserApi.md#getCallbackSecret) | **GET** /user/callbackSecret | Get the current callback secret (null if not set).
 *UserApi* | [**getCredits**](docs/UserApi.md#getCredits) | **GET** /user/credits | Get user&#39;s credits.
-*UserApi* | [**getKey**](docs/UserApi.md#getKey) | **GET** /user/key/{key} | Read the value of a key from the user&#39;s k/v store.
 *UserApi* | [**getTokens**](docs/UserApi.md#getTokens) | **GET** /user/tokens | Get user&#39;s registered JWT tokens.
-*UserApi* | [**patchKey**](docs/UserApi.md#patchKey) | **PATCH** /user/key/{key} | Patch the value of a key in the user&#39;s k/v store.
-*UserApi* | [**postKey**](docs/UserApi.md#postKey) | **POST** /user/key/{key} | Create a new key and store its value in the user&#39;s k/v store.
-*UserApi* | [**putKey**](docs/UserApi.md#putKey) | **PUT** /user/key/{key} | Update the value of a key in the user&#39;s k/v store.
 *UserApi* | [**putTokens**](docs/UserApi.md#putTokens) | **PUT** /user/tokens | Update user&#39;s registered JWT tokens.
 *UserApi* | [**updateCallbackSecret**](docs/UserApi.md#updateCallbackSecret) | **PUT** /user/callbackSecret | Generates a new callback secret.
 
@@ -177,7 +167,6 @@ Class | Method | HTTP request | Description
  - [Credits](docs/Credits.md)
  - [Identity](docs/Identity.md)
  - [IdentityVerificationStatus](docs/IdentityVerificationStatus.md)
- - [Info](docs/Info.md)
  - [Key](docs/Key.md)
  - [Receipt](docs/Receipt.md)
  - [ReceiptAnchorsNode](docs/ReceiptAnchorsNode.md)
@@ -195,11 +184,10 @@ Class | Method | HTTP request | Description
  - [SignatureRequestState](docs/SignatureRequestState.md)
  - [SignatureRequests](docs/SignatureRequests.md)
  - [SignatureVerificationStatus](docs/SignatureVerificationStatus.md)
+ - [SignedIdentity](docs/SignedIdentity.md)
  - [TimestampVerificationStatus](docs/TimestampVerificationStatus.md)
  - [Token](docs/Token.md)
  - [Tokens](docs/Tokens.md)
- - [User](docs/User.md)
- - [Users](docs/Users.md)
  - [Watcher](docs/Watcher.md)
  - [X500Name](docs/X500Name.md)
  - [X509SubjectIssuer](docs/X509SubjectIssuer.md)

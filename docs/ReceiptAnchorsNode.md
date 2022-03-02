@@ -2,6 +2,7 @@
 
 # ReceiptAnchorsNode
 
+
 ## Properties
 
 Name | Type | Description | Notes
