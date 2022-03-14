@@ -134,11 +134,11 @@ public class SignatureRequestProofBundle {
   }
 
    /**
-   * &#x60;true&#x60; if all pieces of evidence are present in the proof bundle, or &#x60;false&#x60; if not&lt;br&gt; All the following conditions must be met:&lt;br&gt; - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)&lt;br&gt; - the audit trail is generated and signed by the platform&lt;br&gt; - all the proof receipts are available 
+   * &#x60;true&#x60; if all pieces of evidence are present in the proof bundle, or &#x60;false&#x60; if not.&lt;br&gt; All the following conditions must be met: - the signature request is COMPLETED (by the platform) or CLOSED (by the requester) - the audit trail is generated and signed by the platform - all the proof receipts are available 
    * @return complete
   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(value = "`true` if all pieces of evidence are present in the proof bundle, or `false` if not<br> All the following conditions must be met:<br> - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)<br> - the audit trail is generated and signed by the platform<br> - all the proof receipts are available ")
+  @ApiModelProperty(value = "`true` if all pieces of evidence are present in the proof bundle, or `false` if not.<br> All the following conditions must be met: - the signature request is COMPLETED (by the platform) or CLOSED (by the requester) - the audit trail is generated and signed by the platform - all the proof receipts are available ")
 
   public Boolean getComplete() {
     return complete;

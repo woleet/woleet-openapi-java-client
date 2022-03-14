@@ -50,7 +50,7 @@ public class SignatureRequestSign {
   private String identityURL;
 
   /**
-   * Type of device used to sign:&lt;br&gt; - SERVER: Woleet.ID Server or equivalent&lt;br&gt; - MOBILE: Woleet.ID Mobile or equivalent&lt;br&gt; - NANO: Ledger Nano S or equivalent 
+   * Type of device used to sign: - SERVER: Woleet.ID Server or equivalent - MOBILE: Woleet.ID Mobile or equivalent - NANO: Ledger Nano S or equivalent 
    */
   @JsonAdapter(DeviceEnum.Adapter.class)
   public enum DeviceEnum {
@@ -233,11 +233,11 @@ public class SignatureRequestSign {
   }
 
    /**
-   * Type of device used to sign:&lt;br&gt; - SERVER: Woleet.ID Server or equivalent&lt;br&gt; - MOBILE: Woleet.ID Mobile or equivalent&lt;br&gt; - NANO: Ledger Nano S or equivalent 
+   * Type of device used to sign: - SERVER: Woleet.ID Server or equivalent - MOBILE: Woleet.ID Mobile or equivalent - NANO: Ledger Nano S or equivalent 
    * @return device
   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(value = "Type of device used to sign:<br> - SERVER: Woleet.ID Server or equivalent<br> - MOBILE: Woleet.ID Mobile or equivalent<br> - NANO: Ledger Nano S or equivalent ")
+  @ApiModelProperty(value = "Type of device used to sign: - SERVER: Woleet.ID Server or equivalent - MOBILE: Woleet.ID Mobile or equivalent - NANO: Ledger Nano S or equivalent ")
 
   public DeviceEnum getDevice() {
     return device;

@@ -30,9 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A proof receipt:&lt;br&gt; - the proof of timestamp is provided as a Chainpoint 2.x proof receipt.&lt;br&gt; - the proof of signature (if applicable) is provided in the &#x60;signature&#x60; property.&lt;br&gt; If the proof receipt is partial (ie. does not contain the proof of timestamp) Chainpoint 2.x properties are not provided. 
+ * A proof receipt: - the proof of timestamp is provided as a Chainpoint 2.x proof receipt. - the proof of signature (if applicable) is provided in the &#x60;signature&#x60; property.  If the proof receipt is partial (ie. does not contain the proof of timestamp) Chainpoint 2.x properties are not provided. 
  */
-@ApiModel(description = "A proof receipt:<br> - the proof of timestamp is provided as a Chainpoint 2.x proof receipt.<br> - the proof of signature (if applicable) is provided in the `signature` property.<br> If the proof receipt is partial (ie. does not contain the proof of timestamp) Chainpoint 2.x properties are not provided. ")
+@ApiModel(description = "A proof receipt: - the proof of timestamp is provided as a Chainpoint 2.x proof receipt. - the proof of signature (if applicable) is provided in the `signature` property.  If the proof receipt is partial (ie. does not contain the proof of timestamp) Chainpoint 2.x properties are not provided. ")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class Receipt {
   public static final String SERIALIZED_NAME_TARGET_HASH = "targetHash";

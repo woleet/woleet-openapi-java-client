@@ -39,7 +39,7 @@ public class Key {
   private String pubKey;
 
   /**
-   * Key status:&lt;br&gt; &#x60;valid&#x60;: the key is valid and can be used to sign&lt;br&gt; &#x60;expired&#x60;: the key expired at &#x60;expiration&#x60;&lt;br&gt; &#x60;revoked&#x60;: the key was revoked at &#x60;revokedAt&#x60; 
+   * Key status: - &#x60;valid&#x60;: the key is valid and can be used to sign - &#x60;expired&#x60;: the key expired at &#x60;expiration&#x60; - &#x60;revoked&#x60;: the key was revoked at &#x60;revokedAt&#x60; 
    */
   @JsonAdapter(StatusEnum.Adapter.class)
   public enum StatusEnum {
@@ -153,11 +153,11 @@ public class Key {
   }
 
    /**
-   * Key status:&lt;br&gt; &#x60;valid&#x60;: the key is valid and can be used to sign&lt;br&gt; &#x60;expired&#x60;: the key expired at &#x60;expiration&#x60;&lt;br&gt; &#x60;revoked&#x60;: the key was revoked at &#x60;revokedAt&#x60; 
+   * Key status: - &#x60;valid&#x60;: the key is valid and can be used to sign - &#x60;expired&#x60;: the key expired at &#x60;expiration&#x60; - &#x60;revoked&#x60;: the key was revoked at &#x60;revokedAt&#x60; 
    * @return status
   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(example = "valid", value = "Key status:<br> `valid`: the key is valid and can be used to sign<br> `expired`: the key expired at `expiration`<br> `revoked`: the key was revoked at `revokedAt` ")
+  @ApiModelProperty(example = "valid", value = "Key status: - `valid`: the key is valid and can be used to sign - `expired`: the key expired at `expiration` - `revoked`: the key was revoked at `revokedAt` ")
 
   public StatusEnum getStatus() {
     return status;

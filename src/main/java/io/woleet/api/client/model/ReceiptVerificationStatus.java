@@ -33,7 +33,7 @@ import java.io.IOException;
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class ReceiptVerificationStatus {
   /**
-   * Proof receipt verification status code:&lt;br&gt; - VERIFIED: success: the proof receipt is verified: both the proof of timestamp AND the proof of signature (if applicable) are valid (but the proof of identity may be invalid)&lt;br&gt; - INVALID_SIGNATURE: error: the proof of signature is invalid&lt;br&gt; - any other verification status code: the proof of timestamp is not ready or invalid 
+   * Proof receipt verification status code: - VERIFIED: success: the proof receipt is verified: both the proof of timestamp AND the proof of signature (if applicable) are valid (but the proof of identity may be invalid) - INVALID_SIGNATURE: error: the proof of signature is invalid - any other verification status code: the proof of timestamp is not ready or invalid 
    */
   @JsonAdapter(CodeEnum.Adapter.class)
   public enum CodeEnum {
@@ -125,11 +125,11 @@ public class ReceiptVerificationStatus {
   }
 
    /**
-   * Proof receipt verification status code:&lt;br&gt; - VERIFIED: success: the proof receipt is verified: both the proof of timestamp AND the proof of signature (if applicable) are valid (but the proof of identity may be invalid)&lt;br&gt; - INVALID_SIGNATURE: error: the proof of signature is invalid&lt;br&gt; - any other verification status code: the proof of timestamp is not ready or invalid 
+   * Proof receipt verification status code: - VERIFIED: success: the proof receipt is verified: both the proof of timestamp AND the proof of signature (if applicable) are valid (but the proof of identity may be invalid) - INVALID_SIGNATURE: error: the proof of signature is invalid - any other verification status code: the proof of timestamp is not ready or invalid 
    * @return code
   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(value = "Proof receipt verification status code:<br> - VERIFIED: success: the proof receipt is verified: both the proof of timestamp AND the proof of signature (if applicable) are valid (but the proof of identity may be invalid)<br> - INVALID_SIGNATURE: error: the proof of signature is invalid<br> - any other verification status code: the proof of timestamp is not ready or invalid ")
+  @ApiModelProperty(value = "Proof receipt verification status code: - VERIFIED: success: the proof receipt is verified: both the proof of timestamp AND the proof of signature (if applicable) are valid (but the proof of identity may be invalid) - INVALID_SIGNATURE: error: the proof of signature is invalid - any other verification status code: the proof of timestamp is not ready or invalid ")
 
   public CodeEnum getCode() {
     return code;

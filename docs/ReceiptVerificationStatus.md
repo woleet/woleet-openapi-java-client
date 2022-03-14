@@ -7,7 +7,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**code** | [**CodeEnum**](#CodeEnum) | Proof receipt verification status code:&lt;br&gt; - VERIFIED: success: the proof receipt is verified: both the proof of timestamp AND the proof of signature (if applicable) are valid (but the proof of identity may be invalid)&lt;br&gt; - INVALID_SIGNATURE: error: the proof of signature is invalid&lt;br&gt; - any other verification status code: the proof of timestamp is not ready or invalid  |  [optional]
+**code** | [**CodeEnum**](#CodeEnum) | Proof receipt verification status code: - VERIFIED: success: the proof receipt is verified: both the proof of timestamp AND the proof of signature (if applicable) are valid (but the proof of identity may be invalid) - INVALID_SIGNATURE: error: the proof of signature is invalid - any other verification status code: the proof of timestamp is not ready or invalid  |  [optional]
 **text** | **String** | Proof receipt verification status text giving more insight about verification errors. |  [optional]
 **timestamp** | **Long** | Proven timestamp of the data (for a data anchor) or of the signature (for a signature anchor).&lt;br&gt; This is the time of the Bitcoin block into which the anchoring process occurred (in milliseconds since Unix epoch).  |  [optional]
 **confirmations** | **Integer** | Number of confirmations of the Bitcoin block into which the anchoring process occurred. |  [optional]

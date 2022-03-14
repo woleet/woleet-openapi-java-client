@@ -231,11 +231,11 @@ public class SignatureRequest {
   }
 
    /**
-   * Web hook to be called by the platform whenever:&lt;br&gt; - the &#x60;state&#x60; property changes&lt;br&gt; - a new signature is registered&lt;br&gt; - the &#x60;proofBundleComplete&#x60; property is set to &#x60;true&#x60; by the platform (which means that the proof bundle and the Signature Attestation document are ready to download)&lt;br&gt; The platform does a POST request on this URL with the signature request as a JSON object in the request body.&lt;br&gt; Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the &#x60;x-woleet-signature&#x60; header.&lt;br&gt; Please refer to &lt;a target&#x3D;\&quot;_blank\&quot; href&#x3D;\&quot;https://doc.woleet.io/reference/using-callbacks\&quot;&gt;this documentation&lt;/a&gt; for more details. 
+   * Web hook to be called by the platform whenever: - the &#x60;state&#x60; property changes - a new signature is registered - the &#x60;proofBundleComplete&#x60; property is set to &#x60;true&#x60; by the platform (which means that the proof bundle and the Signature Attestation document are ready to download)  The platform does a POST request on this URL with the signature request as a JSON object in the request body.&lt;br&gt; Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the &#x60;x-woleet-signature&#x60; header.&lt;br&gt; Please refer to &lt;a target&#x3D;\&quot;_blank\&quot; href&#x3D;\&quot;https://doc.woleet.io/reference/using-callbacks\&quot;&gt;this documentation&lt;/a&gt; for more details. 
    * @return callbackURL
   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(example = "https://acme.com/callback/woleet/signatureRequest", value = "Web hook to be called by the platform whenever:<br> - the `state` property changes<br> - a new signature is registered<br> - the `proofBundleComplete` property is set to `true` by the platform (which means that the proof bundle and the Signature Attestation document are ready to download)<br> The platform does a POST request on this URL with the signature request as a JSON object in the request body.<br> Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br> Please refer to <a target=\"_blank\" href=\"https://doc.woleet.io/reference/using-callbacks\">this documentation</a> for more details. ")
+  @ApiModelProperty(example = "https://acme.com/callback/woleet/signatureRequest", value = "Web hook to be called by the platform whenever: - the `state` property changes - a new signature is registered - the `proofBundleComplete` property is set to `true` by the platform (which means that the proof bundle and the Signature Attestation document are ready to download)  The platform does a POST request on this URL with the signature request as a JSON object in the request body.<br> Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br> Please refer to <a target=\"_blank\" href=\"https://doc.woleet.io/reference/using-callbacks\">this documentation</a> for more details. ")
 
   public String getCallbackURL() {
     return callbackURL;
@@ -546,11 +546,11 @@ public class SignatureRequest {
   }
 
    /**
-   * List of all watchers to notify by email about the progress of the signature request.&lt;br&gt; The set of events being notified are:&lt;br&gt; - the signature request is activated&lt;br&gt; - a signer signs the signature request&lt;br&gt; - the signature request is canceled&lt;br&gt; - the signature request is closed or completed and the Signature Attestation document is ready **This property is only available to the owner of the signature request.** 
+   * List of all watchers to notify by email about the progress of the signature request.&lt;br&gt; The set of events being notified are: - the signature request is activated - a signer signs the signature request - the signature request is canceled - the signature request is closed or completed and the Signature Attestation document is ready  **This property is only available to the owner of the signature request.** 
    * @return watchers
   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(value = "List of all watchers to notify by email about the progress of the signature request.<br> The set of events being notified are:<br> - the signature request is activated<br> - a signer signs the signature request<br> - the signature request is canceled<br> - the signature request is closed or completed and the Signature Attestation document is ready **This property is only available to the owner of the signature request.** ")
+  @ApiModelProperty(value = "List of all watchers to notify by email about the progress of the signature request.<br> The set of events being notified are: - the signature request is activated - a signer signs the signature request - the signature request is canceled - the signature request is closed or completed and the Signature Attestation document is ready  **This property is only available to the owner of the signature request.** ")
 
   public List<Watcher> getWatchers() {
     return watchers;

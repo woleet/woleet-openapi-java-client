@@ -100,7 +100,7 @@ public class Anchor {
   private String callbackURL;
 
   /**
-   * Status of the anchor:&lt;br&gt; - WAIT: waiting to be processed by the platform (the proof receipt is not yet available for download)&lt;br&gt; - NEW: waiting to be sent to the blockchain (the proof receipt is not yet available for download)&lt;br&gt; - SENT: sent to the blockchain (the proof receipt is ready to download)&lt;br&gt; - CONFIRMED: confirmed at least 6 times by the blockchain (the proof receipt can be verified) 
+   * Status of the anchor: - WAIT: waiting to be processed by the platform (the proof receipt is not yet available for download) - NEW: waiting to be sent to the blockchain (the proof receipt is not yet available for download) - SENT: sent to the blockchain (the proof receipt is ready to download) - CONFIRMED: confirmed at least 6 times by the blockchain (the proof receipt can be verified) 
    */
   @JsonAdapter(StatusEnum.Adapter.class)
   public enum StatusEnum {
@@ -514,11 +514,11 @@ public class Anchor {
   }
 
    /**
-   * Web hook to be called by the platform whenever the &#x60;status&#x60; property of the anchor changes:&lt;br&gt; the platform does a POST request on this URL with the anchor as a JSON object in the request body.&lt;br&gt; Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the &#x60;x-woleet-signature&#x60; header.&lt;br&gt; Please refer to &lt;a target&#x3D;\&quot;_blank\&quot; href&#x3D;\&quot;https://doc.woleet.io/reference/using-callbacks\&quot;&gt;this documentation&lt;/a&gt; for more details. 
+   * Web hook to be called by the platform whenever the &#x60;status&#x60; property of the anchor changes: the platform does a POST request on this URL with the anchor as a JSON object in the request body.&lt;br&gt; Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the &#x60;x-woleet-signature&#x60; header.&lt;br&gt; Please refer to &lt;a target&#x3D;\&quot;_blank\&quot; href&#x3D;\&quot;https://doc.woleet.io/reference/using-callbacks\&quot;&gt;this documentation&lt;/a&gt; for more details. 
    * @return callbackURL
   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(example = "https://acme.com/callback/woleet/anchor", value = "Web hook to be called by the platform whenever the `status` property of the anchor changes:<br> the platform does a POST request on this URL with the anchor as a JSON object in the request body.<br> Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br> Please refer to <a target=\"_blank\" href=\"https://doc.woleet.io/reference/using-callbacks\">this documentation</a> for more details. ")
+  @ApiModelProperty(example = "https://acme.com/callback/woleet/anchor", value = "Web hook to be called by the platform whenever the `status` property of the anchor changes: the platform does a POST request on this URL with the anchor as a JSON object in the request body.<br> Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br> Please refer to <a target=\"_blank\" href=\"https://doc.woleet.io/reference/using-callbacks\">this documentation</a> for more details. ")
 
   public String getCallbackURL() {
     return callbackURL;
@@ -531,11 +531,11 @@ public class Anchor {
 
 
    /**
-   * Status of the anchor:&lt;br&gt; - WAIT: waiting to be processed by the platform (the proof receipt is not yet available for download)&lt;br&gt; - NEW: waiting to be sent to the blockchain (the proof receipt is not yet available for download)&lt;br&gt; - SENT: sent to the blockchain (the proof receipt is ready to download)&lt;br&gt; - CONFIRMED: confirmed at least 6 times by the blockchain (the proof receipt can be verified) 
+   * Status of the anchor: - WAIT: waiting to be processed by the platform (the proof receipt is not yet available for download) - NEW: waiting to be sent to the blockchain (the proof receipt is not yet available for download) - SENT: sent to the blockchain (the proof receipt is ready to download) - CONFIRMED: confirmed at least 6 times by the blockchain (the proof receipt can be verified) 
    * @return status
   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(value = "Status of the anchor:<br> - WAIT: waiting to be processed by the platform (the proof receipt is not yet available for download)<br> - NEW: waiting to be sent to the blockchain (the proof receipt is not yet available for download)<br> - SENT: sent to the blockchain (the proof receipt is ready to download)<br> - CONFIRMED: confirmed at least 6 times by the blockchain (the proof receipt can be verified) ")
+  @ApiModelProperty(value = "Status of the anchor: - WAIT: waiting to be processed by the platform (the proof receipt is not yet available for download) - NEW: waiting to be sent to the blockchain (the proof receipt is not yet available for download) - SENT: sent to the blockchain (the proof receipt is ready to download) - CONFIRMED: confirmed at least 6 times by the blockchain (the proof receipt can be verified) ")
 
   public StatusEnum getStatus() {
     return status;

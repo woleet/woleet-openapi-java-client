@@ -29,9 +29,10 @@ paths:
   /anchor:
     post:
       description: |
-        Use this operation to create a new anchor of one of these two types:<br>
-        - a **data anchor** (to generate a *proof of timestamp* allowing to prove the existence of a data at some point in time).<br>
-        - a **signature anchor** (to generate a *proof of seal* allowing to prove the existence of the signature of a data at some point in time, the validity of the signature and the identity of the signer).<br>
+        Use this operation to create a new anchor of one of these two types:
+        - a **data anchor** (to generate a *proof of timestamp* allowing to prove the existence of a data at some point in time)
+        - a **signature anchor** (to generate a *proof of seal* allowing to prove the existence of the signature of a data at some point in time, the validity of the signature and the identity of the signer)
+
         The properties `id`, `created`, `lastModified`, `status`, `timestamp` and `confirmations` are read-only and so must not be provided: they are managed by the platform and added to the returned anchor.<br>
         For data anchors, only the properties `name` and `hash` are required: the `hash` property must be the SHA256 hash of the data to anchor, and must be computed caller side. This allows not to leak the original data.<br>
         For signature anchors, only the properties `name`, `signedHash`, `signature` and `pubKey` are required.<br>
@@ -153,7 +154,7 @@ paths:
     get:
       description: |
         Use this operation to retrieve the Proof Attestation document of an anchor.<br>
-        This PDF file is only available once the anchor is CONFIRMED.
+        This PDF file is only available once the anchor status is CONFIRMED.
       operationId: getAnchorAttestation
       parameters:
       - description: Identifier of the anchor.
@@ -504,12 +505,13 @@ paths:
     post:
       description: |
         Use this operation to transition a **stateful** signature request to a new state.<br>
-        Possible transitions are:<br>
-        - from DRAFT to PENDING: start the signature request: the platform waits for the activation date (only if set) and transitions the signature request to IN_PROGRESS automatically<br>
-        - from PENDING to DRAFT: suspend the signature request so that it can be updated<br>
-        - from PENDING to CANCELED: cancel the signature request without waiting for the activation date<br>
-        - from IN_PROGRESS to CLOSED: close the signature request before all signatures get colleted<br>
-        - from IN_PROGRESS to CANCELED: cancel the signature request before all signatures get colleted<br>
+        Possible transitions are:
+        - from DRAFT to PENDING: start the signature request: the platform waits for the activation date (only if set) and transitions the signature request to IN_PROGRESS automatically
+        - from PENDING to DRAFT: suspend the signature request so that it can be updated
+        - from PENDING to CANCELED: cancel the signature request without waiting for the activation date
+        - from IN_PROGRESS to CLOSED: close the signature request before all signatures get colleted
+        - from IN_PROGRESS to CANCELED: cancel the signature request before all signatures get colleted
+
         Note that **stateless** signature requests can only be transitioned to CLOSED or CANCELED,
         which triggers the generation of the audit trail and its signature by the platform.
       operationId: transitionSignatureRequest
@@ -843,14 +845,16 @@ paths:
       description: |
         Use this operation to retrieve the Signature Attestation document of a signature request.<br>
         This PDF file summarizes the signature request and includes the proof bundle as an attachement.<br>
-        The proof bundle is a JSON file containing all the pieces of evidence:<br>
-        - the audit trail<br>
-        - the proof receipt of the signature of the audit trail by the platform<br>
-        - the proof receipts of the signature of the file by the signers<br>
-        Consequently, the signature attestation is only available once all the following conditions are met:<br>
-        - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)<br>
-        - all the proof receipts are available (ie. all signatures have been anchored)<br>
-        - the audit trail is generated and signed by the platform and its proof receipt is available (ie. its signature has been anchored)<br>
+        The proof bundle is a JSON file containing all the pieces of evidence:
+        - the audit trail
+        - the proof receipt of the signature of the audit trail by the platform
+        - the proof receipts of the signature of the file by the signers
+
+        Consequently, the signature attestation is only available once all the following conditions are met:
+        - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)
+        - all the proof receipts are available (ie. all signatures have been anchored)
+        - the audit trail is generated and signed by the platform and its proof receipt is available (ie. its signature has been anchored)
+
         Once these conditions are met, the platform sets the `proofBundleComplete` property to `true`.<br>
         This is a publicly accessible endpoint: authentication is not required to retrieve the signature attestation of a signature request (but its identifier needs to be known).
       operationId: getSignatureRequestAttestation
@@ -883,14 +887,16 @@ paths:
     get:
       description: |
         Use this operation to retrieve the proof bundle of a signature request.<br>
-        The proof bundle is a JSON file containing all the pieces of evidence:<br>
-        - the audit trail<br>
-        - the proof receipt of the signature of the audit trail by the platform<br>
-        - the proof receipts of the signature of the file by the signers<br>
-        Consequently, the proof bundle is only available once all the following conditions are met:<br>
-        - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)<br>
-        - all the proof receipts are available (ie. all signatures have been anchored)<br>
-        - the audit trail is generated and signed by the platform and its proof receipt is available (ie. its signature has been anchored)<br>
+        The proof bundle is a JSON file containing all the pieces of evidence:
+        - the audit trail
+        - the proof receipt of the signature of the audit trail by the platform
+        - the proof receipts of the signature of the file by the signers
+
+        Consequently, the proof bundle is only available once all the following conditions are met:
+        - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)
+        - all the proof receipts are available (ie. all signatures have been anchored)
+        - the audit trail is generated and signed by the platform and its proof receipt is available (ie. its signature has been anchored)
+
         Once these conditions are met, the platform sets the `proofBundleComplete` property to `true`.<br>
         If this endpoint is called before all these conditions are met, it returns only the available proof receipts (with a 202 status).<br>
         This is a publicly accessible endpoint: authentication is not required to retrieve the proof bundle of a signature request (but its identifier needs to be known).
@@ -1442,9 +1448,10 @@ components:
   schemas:
     receipt:
       description: |
-        A proof receipt:<br>
-        - the proof of timestamp is provided as a Chainpoint 2.x proof receipt.<br>
-        - the proof of signature (if applicable) is provided in the `signature` property.<br>
+        A proof receipt:
+        - the proof of timestamp is provided as a Chainpoint 2.x proof receipt.
+        - the proof of signature (if applicable) is provided in the `signature` property.
+
         If the proof receipt is partial (ie. does not contain the proof of timestamp) Chainpoint 2.x properties are not provided.
       example:
         targetHash: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
@@ -1725,10 +1732,11 @@ components:
           $ref: '#/components/schemas/signatureRequestState'
         callbackURL:
           description: |
-            Web hook to be called by the platform whenever:<br>
-            - the `state` property changes<br>
-            - a new signature is registered<br>
-            - the `proofBundleComplete` property is set to `true` by the platform (which means that the proof bundle and the Signature Attestation document are ready to download)<br>
+            Web hook to be called by the platform whenever:
+            - the `state` property changes
+            - a new signature is registered
+            - the `proofBundleComplete` property is set to `true` by the platform (which means that the proof bundle and the Signature Attestation document are ready to download)
+
             The platform does a POST request on this URL with the signature request as a JSON object in the request body.<br>
             Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br>
             Please refer to <a target="_blank" href="https://doc.woleet.io/reference/using-callbacks">this documentation</a> for more details.
@@ -1822,11 +1830,12 @@ components:
         watchers:
           description: |
             List of all watchers to notify by email about the progress of the signature request.<br>
-            The set of events being notified are:<br>
-            - the signature request is activated<br>
-            - a signer signs the signature request<br>
-            - the signature request is canceled<br>
+            The set of events being notified are:
+            - the signature request is activated
+            - a signer signs the signature request
+            - the signature request is canceled
             - the signature request is closed or completed and the Signature Attestation document is ready
+
             **This property is only available to the owner of the signature request.**
           items:
             $ref: '#/components/schemas/watcher'
@@ -1880,13 +1889,13 @@ components:
         State of the signature request.<br>
         If not set, the signature request is **stateless** and can be updated at any time (eg. to add new signers on the fly).<br>
         If set to DRAFT at creation time, the signature request is **stateful** and its state can be transitioned using the `/signatureRequest/{requestId}/transition` endpoint.<br>
-        Available states:<br>
-        - DRAFT: the signature request is being edited (only DRAFT signature requests can be updated)<br>
-        - PENDING: the signature request is waiting for its activation date to be reached<br>
-        - IN_PROGRESS: the signature request emails have been sent to the signers (if applicable) and the signatures are being collected<br>
-        - COMPLETED: all signatures have been collected<br>
-        - CLOSED: the signature request has been closed by the owner before all signatures could be collected<br>
-        - CANCELED: the signature request has been canceled by the owner before all signatures could be collected<br>
+        Available states:
+        - DRAFT: the signature request is being edited (only DRAFT signature requests can be updated)
+        - PENDING: the signature request is waiting for its activation date to be reached
+        - IN_PROGRESS: the signature request emails have been sent to the signers (if applicable) and the signatures are being collected
+        - COMPLETED: all signatures have been collected
+        - CLOSED: the signature request has been closed by the owner before all signatures could be collected
+        - CANCELED: the signature request has been canceled by the owner before all signatures could be collected
         - EXPIRED: the deadline of the signature request has been reached before all signatures could be collected
       enum:
       - DRAFT
@@ -2270,10 +2279,11 @@ components:
           type: string
         device:
           description: |
-            The type of device the signer should use to sign:<br>
-            - SERVER: Woleet.ID Server or equivalent<br>
-            - MOBILE: Woleet.ID Mobile or equivalent<br>
-            - NANO: Ledger Nano S or equivalent<br>
+            The type of device the signer should use to sign:
+            - SERVER: Woleet.ID Server or equivalent
+            - MOBILE: Woleet.ID Mobile or equivalent
+            - NANO: Ledger Nano S or equivalent
+
             If set, the signature application can use it to propose only the corresponding signature mode.
           enum:
           - SERVER
@@ -2393,9 +2403,9 @@ components:
           type: string
         device:
           description: |
-            Type of device used to sign:<br>
-            - SERVER: Woleet.ID Server or equivalent<br>
-            - MOBILE: Woleet.ID Mobile or equivalent<br>
+            Type of device used to sign:
+            - SERVER: Woleet.ID Server or equivalent
+            - MOBILE: Woleet.ID Mobile or equivalent
             - NANO: Ledger Nano S or equivalent
           enum:
           - SERVER
@@ -2458,7 +2468,7 @@ components:
           type: string
         type:
           description: |
-            Type of the event to report:<br>
+            Type of the event to report:
             - DATA_VERIFIED: the signer verified the integrity (ie. hash) of the data to sign
             - DATA_REVIEWED: the signer reviewed and acceted the data to sign
             - TCU_ACCEPTED: the signer reviewed and accepted the TCU
@@ -2576,10 +2586,10 @@ components:
           type: string
         complete:
           description: |
-            `true` if all pieces of evidence are present in the proof bundle, or `false` if not<br>
-            All the following conditions must be met:<br>
-            - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)<br>
-            - the audit trail is generated and signed by the platform<br>
+            `true` if all pieces of evidence are present in the proof bundle, or `false` if not.<br>
+            All the following conditions must be met:
+            - the signature request is COMPLETED (by the platform) or CLOSED (by the requester)
+            - the audit trail is generated and signed by the platform
             - all the proof receipts are available
           type: boolean
       type: object
@@ -2710,18 +2720,17 @@ components:
           type: object
         callbackURL:
           description: |
-            Web hook to be called by the platform whenever the `status` property of the anchor changes:<br>
-            the platform does a POST request on this URL with the anchor as a JSON object in the request body.<br>
+            Web hook to be called by the platform whenever the `status` property of the anchor changes: the platform does a POST request on this URL with the anchor as a JSON object in the request body.<br>
             Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br>
             Please refer to <a target="_blank" href="https://doc.woleet.io/reference/using-callbacks">this documentation</a> for more details.
           example: https://acme.com/callback/woleet/anchor
           type: string
         status:
           description: |
-            Status of the anchor:<br>
-            - WAIT: waiting to be processed by the platform (the proof receipt is not yet available for download)<br>
-            - NEW: waiting to be sent to the blockchain (the proof receipt is not yet available for download)<br>
-            - SENT: sent to the blockchain (the proof receipt is ready to download)<br>
+            Status of the anchor:
+            - WAIT: waiting to be processed by the platform (the proof receipt is not yet available for download)
+            - NEW: waiting to be sent to the blockchain (the proof receipt is not yet available for download)
+            - SENT: sent to the blockchain (the proof receipt is ready to download)
             - CONFIRMED: confirmed at least 6 times by the blockchain (the proof receipt can be verified)
           enum:
           - WAIT
@@ -2939,9 +2948,9 @@ components:
       properties:
         code:
           description: |
-            Proof receipt verification status code:<br>
-            - VERIFIED: success: the proof receipt is verified: both the proof of timestamp AND the proof of signature (if applicable) are valid (but the proof of identity may be invalid)<br>
-            - INVALID_SIGNATURE: error: the proof of signature is invalid<br>
+            Proof receipt verification status code:
+            - VERIFIED: success: the proof receipt is verified: both the proof of timestamp AND the proof of signature (if applicable) are valid (but the proof of identity may be invalid)
+            - INVALID_SIGNATURE: error: the proof of signature is invalid
             - any other verification status code: the proof of timestamp is not ready or invalid
           enum:
           - VERIFIED
@@ -2985,17 +2994,15 @@ components:
       properties:
         code:
           description: |
-            Timestamp verification status code:<br>
+            Timestamp verification status code:
             - VERIFIED: success: the proof receipt is verified<br>
-            The receipt format is valid, the transaction is present in the Bitcoin blockchain and confirmed at least once,
-            the receipt contains a valid Merkle proof linking its `targetHash` property to the transaction's `OP_RETURN` field.<br>
-            The creation time and the number of confirmation of the block containing the transaction is returned
-            in the `timestamp` and `confirmations` properties.<br>
+            The receipt format is valid, the transaction is present in the Bitcoin blockchain and confirmed at least once, the receipt contains a valid Merkle proof linking its `targetHash` property to the transaction's `OP_RETURN` field.<br>
+            The creation time and the number of confirmation of the block containing the transaction is returned in the `timestamp` and `confirmations` properties.<br>
             Any data whose SHA256 hash matches the proof receipt's `targetHash` is proven to exist at that time and has not been modified since.<br>
-            - TX_NOT_SENT: warning: the transaction has not yet been sent to the blockchain (ie. the data or the signature has not yet been anchored)<br>
-            - TX_NOT_CONFIRMED: warning: the transaction is not yet confirmed by the blockchain (ie. not yet included in a block)<br>
-            - TX_NOT_FOUND: error: the receipt's `anchors` property does not include a valid Bitcoin transaction<br>
-            - INVALID_PROOF: error: the receipt's `proof` property is not a valid Merkle proof<br>
+            - TX_NOT_SENT: warning: the transaction has not yet been sent to the blockchain (ie. the data or the signature has not yet been anchored)
+            - TX_NOT_CONFIRMED: warning: the transaction is not yet confirmed by the blockchain (ie. not yet included in a block)
+            - TX_NOT_FOUND: error: the receipt's `anchors` property does not include a valid Bitcoin transaction
+            - INVALID_PROOF: error: the receipt's `proof` property is not a valid Merkle proof
             - TX_MISMATCH_RECEIPT: error: the receipt's `merkleRoot` property does not match the transaction's `OP_RETURN` field
           enum:
           - VERIFIED
@@ -3030,13 +3037,12 @@ components:
       properties:
         code:
           description: |
-            Signature verification status code:<br>
+            Signature verification status code:
             - VERIFIED: success: the receipt's `signature` property is a valid signature of `signedHash`,
             or, if any of `signedIdentity` or `signedIssuerDomain` is provided, a valid signature of
-            SHA256(`signedHash` + `signedIdentity` + `signedIssuerDomain`)
-            using the public key `pubKey`.<br>
-            - SIGNATURE_MISMATCH_RECEIPT: error: the receipt's `targetHash` does not match the SHA256 hash of `signature`.<br>
-            - INVALID_SIGNATURE: error: the receipt's `signature` property is invalid.
+            SHA256(`signedHash` + `signedIdentity` + `signedIssuerDomain`) using the public key `pubKey`
+            - SIGNATURE_MISMATCH_RECEIPT: error: the receipt's `targetHash` does not match the SHA256 hash of `signature`
+            - INVALID_SIGNATURE: error: the receipt's `signature` property is invalid
           enum:
           - VERIFIED
           - INVALID_SIGNATURE
@@ -3099,16 +3105,16 @@ components:
       properties:
         code:
           description: |
-            Identity verification status code:<br>
+            Identity verification status code:
             - VERIFIED: success: the signature key is controlled by the identity server (ie. the server provided a valid proof of ownership of the key),<br>
             and/or the signature key matches an identity on the identity server (ie. the server claimed the signer identity),<br>
             and/or the identity is signed (ie. the signer claimed his identity by including it in the signed data),<br>
-            and/or the signed identity matches the one on the identity server (both the signer and the identity server claim the identity),<br>
-            - HTTP_ERROR: error: the identity URL cannot be called or returned an HTTP error other than 404<br>
-            - IDENTITY_NOT_FOUND: error: the key does not match any identity on the identity server (ie. the identity URL returned a HTTP error 404)<br>
-            - IDENTITY_MISMATCH: error: the signed identity mismatches the identity on the identity server<br>
-            - INVALID_SIGNATURE: error: the identity server returned an invalid signature (ie. the server failed to provide a valid proof of ownership of the key)<br>
-            - DEPRECATED_KEY: error: the key expired or was revoked before the signature timestamp.
+            and/or the signed identity matches the one on the identity server (both the signer and the identity server claim the identity)
+            - HTTP_ERROR: error: the identity URL cannot be called or returned an HTTP error other than 404
+            - IDENTITY_NOT_FOUND: error: the key does not match any identity on the identity server (ie. the identity URL returned a HTTP error 404)
+            - IDENTITY_MISMATCH: error: the signed identity mismatches the identity on the identity server
+            - INVALID_SIGNATURE: error: the identity server returned an invalid signature (ie. the server failed to provide a valid proof of ownership of the key)
+            - DEPRECATED_KEY: error: the key expired or was revoked before the signature timestamp
           enum:
           - VERIFIED
           - HTTP_ERROR
@@ -3254,10 +3260,10 @@ components:
           type: string
         status:
           description: |
-            Key status:<br>
-            `valid`: the key is valid and can be used to sign<br>
-            `expired`: the key expired at `expiration`<br>
-            `revoked`: the key was revoked at `revokedAt`
+            Key status:
+            - `valid`: the key is valid and can be used to sign
+            - `expired`: the key expired at `expiration`
+            - `revoked`: the key was revoked at `revokedAt`
           enum:
           - valid
           - expired

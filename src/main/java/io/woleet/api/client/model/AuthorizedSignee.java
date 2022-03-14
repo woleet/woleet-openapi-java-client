@@ -66,7 +66,7 @@ public class AuthorizedSignee {
   private String pubKey;
 
   /**
-   * The type of device the signer should use to sign:&lt;br&gt; - SERVER: Woleet.ID Server or equivalent&lt;br&gt; - MOBILE: Woleet.ID Mobile or equivalent&lt;br&gt; - NANO: Ledger Nano S or equivalent&lt;br&gt; If set, the signature application can use it to propose only the corresponding signature mode. 
+   * The type of device the signer should use to sign: - SERVER: Woleet.ID Server or equivalent - MOBILE: Woleet.ID Mobile or equivalent - NANO: Ledger Nano S or equivalent  If set, the signature application can use it to propose only the corresponding signature mode. 
    */
   @JsonAdapter(DeviceEnum.Adapter.class)
   public enum DeviceEnum {
@@ -365,11 +365,11 @@ public class AuthorizedSignee {
   }
 
    /**
-   * The type of device the signer should use to sign:&lt;br&gt; - SERVER: Woleet.ID Server or equivalent&lt;br&gt; - MOBILE: Woleet.ID Mobile or equivalent&lt;br&gt; - NANO: Ledger Nano S or equivalent&lt;br&gt; If set, the signature application can use it to propose only the corresponding signature mode. 
+   * The type of device the signer should use to sign: - SERVER: Woleet.ID Server or equivalent - MOBILE: Woleet.ID Mobile or equivalent - NANO: Ledger Nano S or equivalent  If set, the signature application can use it to propose only the corresponding signature mode. 
    * @return device
   **/
   @javax.annotation.Nullable
-  @ApiModelProperty(value = "The type of device the signer should use to sign:<br> - SERVER: Woleet.ID Server or equivalent<br> - MOBILE: Woleet.ID Mobile or equivalent<br> - NANO: Ledger Nano S or equivalent<br> If set, the signature application can use it to propose only the corresponding signature mode. ")
+  @ApiModelProperty(value = "The type of device the signer should use to sign: - SERVER: Woleet.ID Server or equivalent - MOBILE: Woleet.ID Mobile or equivalent - NANO: Ledger Nano S or equivalent  If set, the signature application can use it to propose only the corresponding signature mode. ")
 
   public DeviceEnum getDevice() {
     return device;
