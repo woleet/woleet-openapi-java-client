@@ -8,7 +8,7 @@ info:
     It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/reference)** before reading this documentation.
   termsOfService: https://doc.woleet.io/docs/terms-of-service
   title: Woleet API
-  version: 1.12.0
+  version: 1.13.0
 servers:
 - url: https://api.woleet.io/v1
 security:
@@ -36,7 +36,7 @@ paths:
         The properties `id`, `created`, `lastModified`, `status`, `timestamp` and `confirmations` are read-only and so must not be provided: they are managed by the platform and added to the returned anchor.<br>
         For data anchors, only the properties `name` and `hash` are required: the `hash` property must be the SHA256 hash of the data to anchor, and must be computed caller side. This allows not to leak the original data.<br>
         For signature anchors, only the properties `name`, `signedHash`, `signature` and `pubKey` are required.<br>
-        Be sure to have at least 1 anchoring credit on your account.
+        Be sure to have at least 1 timestamp credit (for a data anchor) or 1 seal credit (for a signature anchor).
       operationId: createAnchor
       requestBody:
         content:
@@ -477,7 +477,7 @@ paths:
         Use this operation to create a new signature request.<br>
         The properties `id`, `created` and `lastModified` are read-only and so must not be provided: they are managed by the platform and added to the returned request.<br>
         Only the properties `name` and `hashToSign` are required: the `hashToSign` property must be the SHA256 hash of the file to sign.<br>
-        Be sure to have at least 1 signature request credit and enough signature and anchoring credits on your account to fulfill the signature request (each registered signature costs you 1 signature and 1 anchoring credit).<br>
+        Be sure to have at least 1 signature request credit, plus enough signature and SMS credits to fulfill the signature request.<br>
       operationId: createSignatureRequest
       requestBody:
         content:
@@ -680,7 +680,7 @@ paths:
             key or secret signer identifier not found, or invalid OTP).
         "402":
           description: Insufficient credits. The owner of the signature request runs
-            out of signature or anchoring credit.
+            out of signature credit.
         "403":
           description: Forbidden. The signature request is not in progress, the maximum
             number of signatures has been reached or the OTP has expired.
@@ -739,7 +739,7 @@ paths:
             signer identifier not found, or invalid OTP).
         "402":
           description: Insufficient credits. The owner of the signature request runs
-            out of signature or anchoring credit.
+            out of signature credit.
         "403":
           description: Forbidden. The signature request is not in progress, the maximum
             number of signatures has been reached or the OTP has expired.
@@ -1363,8 +1363,8 @@ paths:
       x-accepts: application/json
   /user/credits:
     get:
-      description: Use this operation to get the remaining signature and anchoring
-        credits of the authenticated user.
+      description: Use this operation to get the remaining credits of the authenticated
+        user.
       operationId: getCredits
       responses:
         "200":
@@ -1372,7 +1372,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/credits'
-          description: The remaining signature and anchoring credits.
+          description: The remaining credits.
       summary: Get user's credits.
       tags:
       - user
@@ -1737,7 +1737,7 @@ components:
             - a new signature is registered
             - the `proofBundleComplete` property is set to `true` by the platform (which means that the proof bundle and the Signature Attestation document are ready to download)
 
-            The platform does a POST request on this URL with the signature request as a JSON object in the request body.<br>
+            The platform does a POST request on this URL with the signature request as a JSON object in the request body. The domain of the URL must resolve to an external IP address.<br>
             Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br>
             Please refer to <a target="_blank" href="https://doc.woleet.io/reference/using-callbacks">this documentation</a> for more details.
           example: https://acme.com/callback/woleet/signatureRequest
@@ -2720,7 +2720,8 @@ components:
           type: object
         callbackURL:
           description: |
-            Web hook to be called by the platform whenever the `status` property of the anchor changes: the platform does a POST request on this URL with the anchor as a JSON object in the request body.<br>
+            Web hook to be called by the platform whenever the `status` property of the anchor changes.<br>
+            The platform does a POST request on this URL with the anchor as a JSON object in the request body. The domain of the URL must resolve to an external IP address.<br>
             Verifying the authenticity of the callback can be done by checking the HMAC-SHA1 signature of the request body provided by the platform in the `x-woleet-signature` header.<br>
             Please refer to <a target="_blank" href="https://doc.woleet.io/reference/using-callbacks">this documentation</a> for more details.
           example: https://acme.com/callback/woleet/anchor
@@ -3313,11 +3314,17 @@ components:
         signCredits: 1234
         smsCredits: 1234
         credits: 1234
+        sealCredits: 1234
         signatureRequestCredits: 1234
       properties:
         credits:
-          description: The remaining number of anchoring credits of the authenticated
+          description: The remaining number of timestamp credits of the authenticated
             user's account.
+          example: 1234
+          type: integer
+        sealCredits:
+          description: The remaining number of seal credits of the authenticated user's
+            account.
           example: 1234
           type: integer
         signCredits:

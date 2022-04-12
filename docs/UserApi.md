@@ -87,7 +87,7 @@ This endpoint does not need any parameter.
 
 Get user&#39;s credits.
 
-Use this operation to get the remaining signature and anchoring credits of the authenticated user.
+Use this operation to get the remaining credits of the authenticated user.
 
 ### Example
 ```java
@@ -149,7 +149,7 @@ This endpoint does not need any parameter.
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | The remaining signature and anchoring credits. |  -  |
+**200** | The remaining credits. |  -  |
 
 <a name="getTokens"></a>
 # **getTokens**

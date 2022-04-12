@@ -1,7 +1,7 @@
 # woleet-api-client
 
 Woleet API
-- API version: 1.12.0
+- API version: 1.13.0
 
 Welcome to **Woleet API reference documentation**.<br>
 It is highly recommanded to read the chapters **[introducing Woleet API concepts](https://doc.woleet.io/reference)** before reading this documentation.
@@ -42,7 +42,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>io.woleet</groupId>
   <artifactId>woleet-api-client</artifactId>
-  <version>1.12.0</version>
+  <version>1.13.0</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -52,7 +52,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "io.woleet:woleet-api-client:1.12.0"
+compile "io.woleet:woleet-api-client:1.13.0"
 ```
 
 ### Others
@@ -65,7 +65,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-* `target/woleet-api-client-1.12.0.jar`
+* `target/woleet-api-client-1.13.0.jar`
 * `target/lib/*.jar`
 
 ## Getting Started
